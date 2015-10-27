@@ -1,0 +1,31 @@
+<t-menu>
+     <t-submenu label="About" >
+         <!-- use anchor tags!! -->
+        <t-item aria-selected onClick="redirect('/about')" label="About"></t-item>
+        <t-item onClick="redirect('/status')" label="Status"></t-item>
+        <t-item onClick="redirect('/samples')" label="Samples"></t-item>
+     </t-submenu>
+    <!-- use anchor tags!! -->
+    <t-item onClick="redirect('/settings')" label="Settings"></t-item>
+<!--     <t-submenu label="Elements" >
+        @foreach (var category in ViewBag.ComponentMenu)
+        {
+           <t-submenu label="@category.DisplayName" aria-selected="@category.Opened">
+                    @foreach (var component in category.Components)
+                    {
+                         <t-item class="component-link " label="@component.DisplayName" data-component="@component.Name" data-category="@category.Category" aria-selected="@component.Selected" ></t-item>
+                    }
+           </t-submenu>
+        }
+    </t-submenu> -->
+</t-menu>
+
+<script type="text/javascript" src="/scripts/elements.js"></script>
+<script>
+    //this is __BAD__, first of all it shouldn't be global function
+    //second if this function doesn't do much apart from simple plain
+    //redirection then it should be handled using anchor tags
+    function redirect(url) {
+        window.location = url;
+    }
+</script>

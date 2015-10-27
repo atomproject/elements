@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+
+    {% include head.html %}
+
+</head>
+<body class="layout horizontal center center-justified">
+
+    <div class="overlay"></div>
+
+    <t-scaffold id="scaff" scaffold-type="atom">
+        <nav-toolbar>
+            <div class="product-logo" >
+                <a href="/index">
+                    <img src="/assets/logos/atom-grey.png" id="prod_brand" />
+                </a>
+            </div>
+        </nav-toolbar>
+
+        <header-toolbar style="width:100%">
+            <div class="horizontal layout center">
+                <span id="selectedComponent">Welcome</span>
+                <span class="flex"></span>
+                <span class="badge-alpha-testing">Alpha testing</span>
+            </div>
+        </header-toolbar>
+
+        <nav-content>
+            {% include menu.html %}
+        </nav-content>
+
+        {{ content }}
+    </t-scaffold>
+
+    {% include footer.html %}
+
+    <script>
+        window.addEventListener('WebComponentsReady', function (e) {
+            var overlay = document.querySelector('.overlay');
+
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+title: Jekyll is awesome for blogs
+email: tejankarajinkya@gmail.com
+description: > # this means to ignore newlines until "baseurl:"
+  Test repo for experimenting with jekyll
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "http://yourdomain.com" # the base hostname & protocol for your site
+permalink: none
+markdown: kramdown
