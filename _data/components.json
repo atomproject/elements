@@ -1,6 +1,6 @@
 [{
     "category": "dataComponents",
-    "DisplayName": "Data Elements",
+    "displayName": "Data Elements",
     "components": [{
         "name": "t-table",
         "displayName": "Table",
@@ -8,7 +8,7 @@
     }]
 }, {
     "category": "formComponents",
-    "DisplayName": "Form Basic Elements",
+    "displayName": "Form Basic Elements",
     "components": [{
         "name": "t-input",
         "displayName": "Input Field",
@@ -28,12 +28,10 @@
         "name": "t-checkbox-group",
         "displayName": "Checkbox List",
         "icon": "Checkbox"
-
     }, {
         "name": "t-dropdown",
         "displayName": "Dropdown",
         "icon": "Dropdown"
-
     }, {
         "name": "t-slider",
         "displayName": "Slider",
@@ -61,11 +59,11 @@
     }]
 }, {
     "category": "compositeformComponents",
-    "DisplayName": "Form Composite Elements",
+    "displayName": "Form Composite Elements",
     "components": []
 }, {
     "category": "pageComponents",
-    "DisplayName": "Page Elements",
+    "displayName": "Page Elements",
     "components": [{
         "name": "t-loader",
         "displayName": "Loader",

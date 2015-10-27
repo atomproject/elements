@@ -7,17 +7,23 @@
      </t-submenu>
     <!-- use anchor tags!! -->
     <t-item onClick="redirect('/settings')" label="Settings"></t-item>
-<!--     <t-submenu label="Elements" >
-        @foreach (var category in ViewBag.ComponentMenu)
-        {
-           <t-submenu label="@category.DisplayName" aria-selected="@category.Opened">
-                    @foreach (var component in category.Components)
-                    {
-                         <t-item class="component-link " label="@component.DisplayName" data-component="@component.Name" data-category="@category.Category" aria-selected="@component.Selected" ></t-item>
-                    }
-           </t-submenu>
-        }
-    </t-submenu> -->
+    <t-submenu label="Elements" >
+        {% for category in site.data.components %}
+            <t-submenu
+                label="{{ category.displayName }}"
+                {% if category.opened %} aria-selected {% endif %}>
+                {% for component in category.components %}
+                    <t-item
+                        class="component-link"
+                        label="{{ component.displayName }}"
+                        data-component="{{ component.name }}"
+                        data-category="{{ category.category }}"
+                        aria-selected="{{ component.selected }}">
+                    </t-item>
+                {% endfor %}
+            </t-submenu>
+        {% endfor %}
+    </t-submenu>
 </t-menu>
 
 <script type="text/javascript" src="/scripts/elements.js"></script>
