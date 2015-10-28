@@ -2,13 +2,15 @@
 layout: default
 ---
 
+{% capture component_folder %}{{ site.base_url }}/bower_components/{{ page.component_name }}{% endcapture %}
+
 <div id="elementContent" class="content layout vertical fit content-component">
     <div id="tabBar" class="layout horizontal center-justified">
-        <paper-tabs  noink selected="2">
-            <paper-tab>Design Considerations</paper-tab>
+        <paper-tabs noink selected="2">
+<!--             <paper-tab>Design Considerations</paper-tab>
             <paper-tab>Dev Zone</paper-tab>
             <paper-tab>Demo</paper-tab>
-        </paper-tabs>
+ -->        </paper-tabs>
     </div>
     <iron-pages selected="2" class="flex" style="position:relative">
         <div class="fit designTabWrapper">
@@ -16,19 +18,19 @@ layout: default
                 <marked-element>
                     <div class="markdown-html"></div>
                     <script type="text/markdown">
-                        @ViewBag.DesignDoc
+                        # Add design deocument here
                     </script>
                 </marked-element>
             </div>
         </div>
         <div class="fit">
-            <iframe id="idIframe" src="@componentFolder" width="100%"></iframe>
+            <iframe id="idIframe" src="{{ component_folder }}" width="100%"></iframe>
         </div>
         <div class="fit">
             <t-demo-atom>
                 <div class="demo-content" style="width:100%">
                     <div class="demo-canvas"></div>
-                    <device-view id="deviceView" src="@deviceView"></device-view>
+                    <device-view id="deviceView" src="{{ component_folder }}/demo"></device-view>
                 </div>
                 <div class="right-panel">
                     <div class="layout horizontal property-panel-Header" >
@@ -36,8 +38,11 @@ layout: default
                         <t-button id="tablet" ico="hardware:tablet-mac" toggles></t-button>
                         <t-button id="phone" ico="hardware:smartphone" toggles></t-button>
                     </div>
-                    {{ content }}
-                    <t-component-panel metadata-source="@metadata" property-source="@property" component="@ViewBag.Component"></t-component-panel>
+                    <t-component-panel
+                        metadata-source="{{ component_folder }}/demo/metadata.html"
+                        property-source="{{ component_folder }}/property.json"
+                        component="{{ page.component_name }}">
+                    </t-component-panel>
                 </div>
                 <prism-element></prism-element>
                 <div class="code-content">

@@ -8,25 +8,27 @@
     <!-- use anchor tags!! -->
     <t-item onClick="redirect('/settings')" label="Settings"></t-item>
     <t-submenu label="Elements" >
-        {% for category in site.data.components %}
-            <t-submenu
-                label="{{ category.displayName }}"
-                {% if category.opened %} aria-selected {% endif %}>
-                {% for component in category.components %}
-                    <t-item
-                        class="component-link"
-                        label="{{ component.displayName }}"
-                        data-component="{{ component.name }}"
-                        data-category="{{ category.category }}"
-                        aria-selected="{{ component.selected }}">
-                    </t-item>
-                {% endfor %}
-            </t-submenu>
+        {% for category in site.data.categories %}
+            {% assign component_pages = site.pages | where:"component_category",category.name %}
+            {% if component_pages.size > 0 %}
+                <t-submenu
+                    label="{{ category.displayName }}"
+                    {% if category.opened %} aria-selected {% endif %}>
+                    {% for page in component_pages %}
+                        <t-item
+                            class="component-link"
+                            label="{{ page.component_display_name }}"
+                            data-component="{{ page.component_name }}"
+                            onclick="redirect('{{ site.base_url }}/elements/{{ page.component_name }}.html')"
+                            data-category="{{ category.name }}">
+                        </t-item>
+                    {% endfor %}
+                </t-submenu>
+            {% endif %}
         {% endfor %}
     </t-submenu>
 </t-menu>
 
-<script type="text/javascript" src="/scripts/elements.js"></script>
 <script>
     //this is __BAD__, first of all it shouldn't be global function
     //second if this function doesn't do much apart from simple plain

@@ -1,0 +1,13 @@
+[{
+    "name": "data",
+    "displayName": "Data Elements"
+}, {
+    "name": "form",
+    "displayName": "Form Basic Elements"
+}, {
+    "name": "form-composite",
+    "displayName": "Form Composite Elements"
+}, {
+    "name": "page",
+    "displayName": "Page Elements"
+}]
