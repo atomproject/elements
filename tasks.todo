@@ -1,6 +1,13 @@
  ☐ Auto generate the title for pages for elements
+
  ☐ Metadata file should be moved to the atom project
- ☐ Metadata file should specify its own dependencies
+ ✔ Metadata file should specify its own dependencies @done (15-10-29 19:03)
+
  ☐ Find out why the paper tabs needs a declaration in head.html.
+
  ☐ Set up build process with gulp so that `bower_components` can be excluded
- ☐ 
+
+ ☐ Support for loading design doc
+
+ ☐ Tabs aren't working properly
+ ☐ You tube demo isn't working properly
