@@ -1,12 +1,12 @@
 <t-menu>
      <t-submenu label="About" >
          <!-- use anchor tags!! -->
-        <t-item aria-selected onClick="redirect('{{ site.base_url }}/about')" label="About"></t-item>
-        <t-item onClick="redirect('{{ site.base_url }}/status')" label="Status"></t-item>
-        <t-item onClick="redirect('{{ site.base_url }}/samples')" label="Samples"></t-item>
+        <t-item aria-selected onClick="redirect('{{ site.baseurl }}/about')" label="About"></t-item>
+        <t-item onClick="redirect('{{ site.baseurl }}/status')" label="Status"></t-item>
+        <t-item onClick="redirect('{{ site.baseurl }}/samples')" label="Samples"></t-item>
      </t-submenu>
     <!-- use anchor tags!! -->
-    <t-item onClick="redirect('{{ site.base_url }}/settings')" label="Settings"></t-item>
+    <t-item onClick="redirect('{{ site.baseurl }}/settings')" label="Settings"></t-item>
     <t-submenu label="Elements" >
         {% for category in site.data.categories %}
             {% assign component_pages = site.pages | where:"component_category",category.name %}
@@ -19,7 +19,7 @@
                             class="component-link"
                             label="{{ page.component_display_name }}"
                             data-component="{{ page.component_name }}"
-                            onclick="redirect('{{ site.base_url }}/elements/{{ page.component_display_name | slugify  }}')"
+                            onclick="redirect('{{ site.baseurl }}/{{ page.component_display_name | slugify  }}')"
                             data-category="{{ category.name }}">
                         </t-item>
                     {% endfor %}
