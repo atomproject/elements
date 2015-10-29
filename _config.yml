@@ -13,3 +13,9 @@ defaults:
       type: "pages"
     values:
       layout: "default"
+  -
+    scope:
+      path: "elements"
+      type: "pages"
+    values:
+      layout: "element"
