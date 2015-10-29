@@ -19,7 +19,7 @@
                             class="component-link"
                             label="{{ page.component_display_name }}"
                             data-component="{{ page.component_name }}"
-                            onclick="redirect('{{ site.base_url }}/elements/{{ page.component_name }}.html')"
+                            onclick="redirect('{{ site.base_url }}/elements/{{ page.component_display_name | slugify  }}.html')"
                             data-category="{{ category.name }}">
                         </t-item>
                     {% endfor %}
