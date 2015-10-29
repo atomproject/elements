@@ -2,7 +2,9 @@
 layout: default
 ---
 
-{% capture component_folder %}{{ site.baseurl }}/bower_components/{{ page.component_name }}{% endcapture %}
+{% capture bower_component_dir %}{{ site.baseurl }}/bower_components/{{ page.component_name }}{% endcapture %}
+
+{% capture component_dir %}{{ site.baseurl }}/elements/{{ page.component_display_name | slugify }}{% endcapture %}
 
 <div id="elementContent" class="content layout vertical fit content-component">
     <div id="tabBar" class="layout horizontal center-justified">
@@ -24,13 +26,13 @@ layout: default
             </div>
         </div>
         <div class="fit">
-            <iframe id="idIframe" src="{{ component_folder }}" width="100%"></iframe>
+            <iframe id="idIframe" src="{{ bower_component_dir }}" width="100%"></iframe>
         </div>
         <div class="fit">
             <t-demo-atom>
                 <div class="demo-content" style="width:100%">
                     <div class="demo-canvas"></div>
-                    <device-view id="deviceView" src="{{ component_folder }}/demo"></device-view>
+                    <device-view id="deviceView" src="{{ bower_component_dir }}/demo"></device-view>
                 </div>
                 <div class="right-panel">
                     <div class="layout horizontal property-panel-Header" >
@@ -39,8 +41,8 @@ layout: default
                         <t-button id="phone" ico="hardware:smartphone" toggles></t-button>
                     </div>
                     <t-component-panel
-                        metadata-source="{{ component_folder }}/demo/metadata.html"
-                        property-source="{{ component_folder }}/property.json"
+                        metadata-source="{{ component_dir }}/metadata.html"
+                        property-source="{{ bower_component_dir }}/property.json"
                         component="{{ page.component_name }}">
                     </t-component-panel>
                 </div>
