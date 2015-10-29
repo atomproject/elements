@@ -6,6 +6,15 @@ baseurl: "/elements" # the subpath of your site, e.g. /blog
 url: "http://yourdomain.com" # the base hostname & protocol for your site
 permalink: none
 markdown: kramdown
+include:
+  - ".nojekyll"
+exclude:
+  - "bower_components"
+  - "bower.json"
+  - "node_modules"
+  - "package.json"
+  - "*.todo"
+  - "*.sh"
 defaults:
   -
     scope:
