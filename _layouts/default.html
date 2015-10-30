@@ -20,9 +20,16 @@
 
         <header-toolbar style="width:100%">
             <div class="horizontal layout center">
-                <span id="selectedComponent">{{ page.title }}</span>
+                {% if page.component_name %}
+                    <span id="selectedComponent">{{ page.component_display_name }}</span>
+                    <a class="buildStatus" href="{{ site.travis_base_url }}/{{ page.component_name }}">
+                        <img src="{{ site.travis_base_url }}/{{ page.component_name }}.svg?branch=master" alt="Build Status">
+                    </a>
+                {% else %}
+                    <span id="selectedComponent">{{ page.title }}</span>
+                {% endif %}
                 <span class="flex"></span>
-                <span class="badge-alpha-testing">Alpha testing</span>
+                <span class="badge-alpha-testing">Alpha</span>
             </div>
         </header-toolbar>
 

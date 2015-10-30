@@ -1,13 +1,13 @@
 [{
     "name": "data",
-    "displayName": "Data Elements"
+    "displayName": "Data"
 }, {
     "name": "form",
-    "displayName": "Form Basic Elements"
+    "displayName": "Form Basic"
 }, {
     "name": "form-composite",
-    "displayName": "Form Composite Elements"
+    "displayName": "Form Composite"
 }, {
     "name": "page",
-    "displayName": "Page Elements"
+    "displayName": "Page"
 }]

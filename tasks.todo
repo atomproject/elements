@@ -19,3 +19,7 @@
  ✔ Update the README.md file. @high @done (15-10-30 12:14)
  ☐ Rename metadata file to demo-snippet.html
  ☐ Create element scaffolder. @high
+ ☐ Remove unnecessary cruft (gulp related things) from README.md file
+ ☐ The readme file reads like a paragraph __BAD__
+ ✔ Change category display names @done (15-10-30 17:35)
+ ✔ Show build status @done (15-10-30 16:25)
