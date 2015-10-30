@@ -8,4 +8,4 @@ else
 fi
 
 cp -r bower_components _site
-htmlproof ./_site --disable-external
+# htmlproof ./_site --disable-external

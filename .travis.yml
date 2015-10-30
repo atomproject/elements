@@ -1,27 +1,24 @@
 language: ruby
 rvm:
 - 2.1
-
-# only trigger the build and push to gh-pages branch
-# when changes happen on master branch
 branches:
   only:
   - master
-
 env:
   global:
-  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true # speeds up installation of html-proofer
-
+  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+  - GH_REF: github.com/atomproject/elements.git
+  - secure: fWDNXPvJOADeZ/FO5kYhP2F1JKI83guZzlHKzL6kqD3y96dRUNgDJoddi1cVseHIAjJfl44J/3vlqIL/ypzxY3aFA2jpKaUSL4Dmfr1KhdCVDeDr7XYICP8s1mZT3xvkIDG2duPxM6eBEhVAtFH8kk9liokRH/O641HwQXdHrrsG2RlkJ3qhXly5oLYv6DyFXne3fHvth/1yaeyzUZavxiAmXTnKzLpaRNN0QHQare85b8igUKvQeO0vduFUDEozzp/nGUjKouO17zC99QDrVJ0ICZnoqBe/zV8gI0a+2jHu294pPOF3mgEgVePVY6h1e7Q+G5iDINyNHir9GCd+zxr1AjRH2cPZa0KYip7reiY3aL+QWbC3MJumeTK5CqcULz0rLxkGviXY7wglW02sqKGzRXvHg30tjiqOIVNcT5merD4RxQq8TQO3ZKNwr7pMIjMHMOSi6xZKwCQFiSpSULR7uT+E6GK0MmNSJnRorSP8iKh2anKbobwri7tFwJb+O2jWaLHJNsFvcZgdMmyZkRncwN6RglV14NVedY/MTbGZSAEvaS/wvMjLs6szfOLsvs6EbWhEBdakRLuyX4/VOdx3xTskxVHjxhmX/uBZnTQX1vmBZb7m711TSbNm8876RjrDufK0USad0eHFzxJUpZ+0evR/kkASIyxng7K2VvM=
 before_install:
-  - npm install bower
-  - export PATH=$PWD/node_modules/.bin:$PATH
-
+- npm install bower
+- export PATH=$PWD/node_modules/.bin:$PATH
 install:
-  - bower install
-  - gem install jekyll
-  - gem install html-proofer
-
+- bower install
+- gem install jekyll
+- gem install html-proofer
 before_script:
-  - chmod +x ./utils/build-script.sh
-
-script: ./utils/build-script.sh --prod
+- chmod +x ./utils/build-script.sh
+script: "./utils/build-script.sh --prod"
+after_success:
+- chmod +x ./utils/deploy.sh
+- ./utils/deploy.sh
