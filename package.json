@@ -1,0 +1,22 @@
+{
+  "name": "elements",
+  "version": "0.0.1",
+  "description": "A browser for atom elements",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/atomproject/elements.git"
+  },
+  "author": "Ajinkya Tejankar <tejankarajinkya@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/atomproject/elements/issues"
+  },
+  "homepage": "https://github.com/atomproject/elements#readme",
+  "devDependencies": {
+    "chalk": "^1.1.1"
+  }
+}

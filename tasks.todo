@@ -17,7 +17,7 @@
  ☐ Setup travis. @high
  ☐ Setup build process with gulp. @high
  ✔ Update the README.md file. @high @done (15-10-30 12:14)
- ☐ Rename metadata file to demo-snippet.html
+ ✔ Rename metadata file to demo-snippet.html @done (15-10-30 19:12)
  ☐ Create element scaffolder. @high
  ☐ Remove unnecessary cruft (gulp related things) from README.md file
  ☐ The readme file reads like a paragraph __BAD__
