@@ -1,30 +1,37 @@
-title: Jekyll is awesome for blogs
+title: Elements
 email: tejankarajinkya@gmail.com
-description: > # this means to ignore newlines until "baseurl:"
-  Test repo for experimenting with jekyll
-baseurl: "/elements" # the subpath of your site, e.g. /blog
-url: "http://yourdomain.com" # the base hostname & protocol for your site
+# `>` means that ignore newlines until `baseurl`
+description: >
+  The browser for elements in https://github.com/atomelements/
+# we don't want default permalink settings since
+# they are suited for blogs, this is not a blog
 permalink: none
-markdown: kramdown
+# instructs GitHub to not build this repo
+# when a commit is made to gh-pages
 include:
   - ".nojekyll"
+# exclude all directories and files that don't need to be processed
+# by jekyll
 exclude:
   - "bower_components"
   - "bower.json"
   - "node_modules"
   - "package.json"
+  - "utils"
   - "*.todo"
-  - "*.sh"
+  - "README.md"
+# lookup the http://jekyllrb.com/docs/configuration/#front-matter-defaults
+# for understanding following syntax
 defaults:
   -
     scope:
       path: ""
       type: "pages"
     values:
-      layout: "default"
+      layout: "default" # this layout maybe used later for vulcanization
   -
     scope:
       path: "elements"
       type: "pages"
     values:
-      layout: "element"
+      layout: "element" # all elements should use this layout
