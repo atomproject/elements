@@ -6,6 +6,7 @@ description: >
 # we don't want default permalink settings since
 # they are suited for blogs, this is not a blog
 permalink: none
+travis_base_url: https://travis-ci.org/atomelements
 # instructs GitHub to not build this repo
 # when a commit is made to gh-pages
 include:
