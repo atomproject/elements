@@ -1,13 +1,21 @@
- ☐ Auto generate the title for pages for elements
-
- ☐ Metadata file should be moved to the atom project
- ✔ Metadata file should specify its own dependencies @done (15-10-29 19:03)
-
- ☐ Find out why the paper tabs needs a declaration in head.html.
-
- ☐ Set up build process with gulp so that `bower_components` can be excluded
-
- ☐ Support for loading design doc
-
- ☐ Tabs aren't working properly
- ☐ You tube demo isn't working properly
+ ☐ Auto generate the title for pages for elements. @high
+ ✔ Metadata file should be moved to the atom project @done (15-10-30 11:11)
+ ☐ Remove metadata files from the component repos. @high
+ ☐ Find out why the paper tabs needs a declaration in head.html. 
+ ✔ Exclude the `bower_components` @done (15-10-30 11:15)
+ ☐ Support for loading design doc. @high
+ ✔ Tabs aren't working properly @done (15-10-30 11:16)
+ ☐ You tube demo isn't working properly. 
+ ☐ Remove welcome page. @high
+ ☐ Point explore elements to about page. @high
+ ☐ Make the about page blank. @high
+ ☐ Change the settings page text to "Theming support will be added soon". @high
+ ☐ Remove status and samples page. @high
+ ☐ Move settings menu to the bottom (below elements). @high
+ ☐ Elements should be expanded by default. @high
+ ☐ Fix atom logo link. @high
+ ☐ Setup travis. @high
+ ☐ Setup build process with gulp. @high
+ ☐ Update the README.md file. @high
+ ☐ Rename metadata file to demo-snippet.html
+ ☐ Create element scaffolder. @high
