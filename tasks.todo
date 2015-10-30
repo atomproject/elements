@@ -1,4 +1,4 @@
- ☐ Auto generate the title for pages for elements. @high
+ ✔ Auto generate the title for pages for elements. @high @done (15-10-30 16:25)
  ✔ Metadata file should be moved to the atom project @done (15-10-30 11:11)
  ☐ Remove metadata files from the component repos. @high
  ☐ Find out why the paper tabs needs a declaration in head.html. 
