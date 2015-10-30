@@ -1,13 +1,6 @@
 <t-menu>
-     <t-submenu label="About" >
-         <!-- use anchor tags!! -->
-        <t-item aria-selected onClick="redirect('{{ site.baseurl }}/about')" label="About"></t-item>
-        <t-item onClick="redirect('{{ site.baseurl }}/status')" label="Status"></t-item>
-        <t-item onClick="redirect('{{ site.baseurl }}/samples')" label="Samples"></t-item>
-     </t-submenu>
-    <!-- use anchor tags!! -->
-    <t-item onClick="redirect('{{ site.baseurl }}/settings')" label="Settings"></t-item>
-    <t-submenu label="Elements" >
+    <t-item onClick="redirect('{{ site.baseurl }}/about')" label="About"></t-item>
+    <t-submenu aria-selected label="Elements" >
         {% for category in site.data.categories %}
             {% assign component_pages = site.pages | where:"component_category",category.name %}
             {% if component_pages.size > 0 %}
@@ -27,6 +20,7 @@
             {% endif %}
         {% endfor %}
     </t-submenu>
+    <t-item onClick="redirect('{{ site.baseurl }}/settings')" label="Settings"></t-item>
 </t-menu>
 
 <script>

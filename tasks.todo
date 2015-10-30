@@ -6,16 +6,16 @@
  ☐ Support for loading design doc. @high
  ✔ Tabs aren't working properly @done (15-10-30 11:16)
  ☐ You tube demo isn't working properly. 
- ☐ Remove welcome page. @high
- ☐ Point explore elements to about page. @high
- ☐ Make the about page blank. @high
- ☐ Change the settings page text to "Theming support will be added soon". @high
- ☐ Remove status and samples page. @high
- ☐ Move settings menu to the bottom (below elements). @high
- ☐ Elements should be expanded by default. @high
- ☐ Fix atom logo link. @high
+ ✔ Remove welcome page. @high @done (15-10-30 12:17)
+ ✔ Point explore elements to about page. @high @done (15-10-30 12:17)
+ ✔ Make the about page blank. @high @done (15-10-30 12:18)
+ ☐ Review the status page text. @high
+ ✔ Remove status and samples page. @high @done (15-10-30 12:17)
+ ✔ Move settings menu to the bottom (below elements). @high @done (15-10-30 12:21)
+ ✔ Elements should be expanded by default. @high @done (15-10-30 12:43)
+ ✔ Fix atom logo link. @high @done (15-10-30 12:16)
  ☐ Setup travis. @high
  ☐ Setup build process with gulp. @high
- ☐ Update the README.md file. @high
+ ✔ Update the README.md file. @high @done (15-10-30 12:14)
  ☐ Rename metadata file to demo-snippet.html
  ☐ Create element scaffolder. @high
