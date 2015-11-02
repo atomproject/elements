@@ -14,7 +14,7 @@
  ✔ Move settings menu to the bottom (below elements). @high @done (15-10-30 12:21)
  ✔ Elements should be expanded by default. @high @done (15-10-30 12:43)
  ✔ Fix atom logo link. @high @done (15-10-30 12:16)
- ☐ Setup travis. @high
+ ✔ Setup travis. @high @done (15-11-04 10:40)
  ☐ Setup build process with gulp. @high
  ✔ Update the README.md file. @high @done (15-10-30 12:14)
  ✔ Rename metadata file to demo-snippet.html @done (15-10-30 19:12)
@@ -23,3 +23,8 @@
  ☐ The readme file reads like a paragraph __BAD__
  ✔ Change category display names @done (15-10-30 17:35)
  ✔ Show build status @done (15-10-30 16:25)
+ ☐ Apply changes made by Shaunak to atom
+ ☐ Handle multiple spaces in display name
+ ☐ Handle the case when category sepcified is not in categories.json file
+ ☐ Handle the case in atom when there is no data in categories.json file
+ 
