@@ -5,8 +5,6 @@ shopt -s globstar
 shopt -s nullglob
 
 copy_design_docs() {
-	rm elements/*/design-doc.md
-
 	for dir in elements/*
 	do
 		file_name="${dir##*/}"

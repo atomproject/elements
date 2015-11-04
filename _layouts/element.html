@@ -19,8 +19,11 @@ layout: default
             <div class="designTab">
                 <marked-element>
                     <div class="markdown-html"></div>
+<!-- indentation in the below liquid tag makes markdown
+    parser to treat it as code construct in markdown
+-->
                     <script type="text/markdown">
-                        {% include_relative design-doc.md %}
+{% include_relative design-doc.md %}
                     </script>
                 </marked-element>
             </div>
