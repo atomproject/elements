@@ -36,7 +36,7 @@ if (name.indexOf('-') === -1) {
 	process.exit(1);
 }
 
-slug = displayName.replace(/ /g, '-');
+slug = displayName.replace(/ +/g, '-');
 slug = slug.toLowerCase();
 
 dir = 'elements/' + slug;

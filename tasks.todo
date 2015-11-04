@@ -24,7 +24,7 @@
  ✔ Change category display names @done (15-10-30 17:35)
  ✔ Show build status @done (15-10-30 16:25)
  ☐ Apply changes made by Shaunak to atom
- ☐ Handle multiple spaces in display name
+ ✔ Handle multiple spaces in display name @done (15-11-04 10:42)
  ☐ Handle the case when category sepcified is not in categories.json file
  ☐ Handle the case in atom when there is no data in categories.json file
  
