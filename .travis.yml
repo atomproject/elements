@@ -8,7 +8,7 @@ env:
   global:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
   - GH_REF: github.com/atomproject/elements.git
-  - secure: fWDNXPvJOADeZ/FO5kYhP2F1JKI83guZzlHKzL6kqD3y96dRUNgDJoddi1cVseHIAjJfl44J/3vlqIL/ypzxY3aFA2jpKaUSL4Dmfr1KhdCVDeDr7XYICP8s1mZT3xvkIDG2duPxM6eBEhVAtFH8kk9liokRH/O641HwQXdHrrsG2RlkJ3qhXly5oLYv6DyFXne3fHvth/1yaeyzUZavxiAmXTnKzLpaRNN0QHQare85b8igUKvQeO0vduFUDEozzp/nGUjKouO17zC99QDrVJ0ICZnoqBe/zV8gI0a+2jHu294pPOF3mgEgVePVY6h1e7Q+G5iDINyNHir9GCd+zxr1AjRH2cPZa0KYip7reiY3aL+QWbC3MJumeTK5CqcULz0rLxkGviXY7wglW02sqKGzRXvHg30tjiqOIVNcT5merD4RxQq8TQO3ZKNwr7pMIjMHMOSi6xZKwCQFiSpSULR7uT+E6GK0MmNSJnRorSP8iKh2anKbobwri7tFwJb+O2jWaLHJNsFvcZgdMmyZkRncwN6RglV14NVedY/MTbGZSAEvaS/wvMjLs6szfOLsvs6EbWhEBdakRLuyX4/VOdx3xTskxVHjxhmX/uBZnTQX1vmBZb7m711TSbNm8876RjrDufK0USad0eHFzxJUpZ+0evR/kkASIyxng7K2VvM=
+  - secure: GSX7YbhAettjvs7jgfF+iaImGT1D7XxSy5WUyEbSi+hQtzu4xZgUFGpOjBDG+0R1CozZ4cubbeqbNJCnFj0xt3EwarIwU18c1H+Ra0aigY+NB6itfuHOYSE57TUQx7OiiKRwkEqMQ2WmzJ2USJ6XKSaDOt8JrXSK7J1VNn0AzYxQuIPHN0O/yIdLQQ0ky/LQHQ5anw4gfCVdRQkYq5kNdtoFnS0hoUKKcbTdnwGIxfnVDP/yzsIU53WjJSSQmq7e91Lf2qhfxDy7DPHIrgV1HhWQpTD4xWT5Ah0+eHkInTPPcVLcMzbKNhmM8HBZaKGGM/eXCtSbuKKfG7l9bFgnQ4mS/JE1Zw1ZYL0Ud5NocXKBUYP2yl7vuBekQYHRE2CmtKrDodq/NUEBKXWB1e5ppr4OfNm9KpUIcVYyi3ml0sJwCGbG04nNx9QTMajkyzCa1A0fXtO4wZ5/cIgW1jXMOHx7v7ga0QCdP1aJQq7e1WWLbkXYJ2Xe3DykQLo+rd+J2Q0XztdgR0K/z3tOcc1EogLvyhXz/LUNRoQ3ySM0WueJrsPweY3fpFiC2kYUYJmLjdBVdYDzQ1+/uqw9VV2/tlw2jUfYAQunbSMTv8Nr8MysCPMrmtRFZgB/ih177D8FPmZla1KpFSHZN36Oh5k0OmzDAPCmNgAQok3Lod/CKS8=
 before_install:
 - npm install bower
 - export PATH=$PWD/node_modules/.bin:$PATH
@@ -21,4 +21,4 @@ before_script:
 script: "./utils/build-script.sh --prod"
 after_success:
 - chmod +x ./utils/deploy.sh
-- ./utils/deploy.sh
+- "./utils/deploy.sh"
