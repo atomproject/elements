@@ -4,3 +4,7 @@ _site
 bower_components
 *.log
 node_modules
+# this will be removed later and the whole elements dir will
+# be ignored since it forms the output of an intermediate
+# build step
+design-doc.md
