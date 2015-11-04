@@ -189,10 +189,6 @@ display:block;
     background-color: #eee;
 }
 
-.about .designTab {
-    max-width: none;
-}
-
 .designTabWrapper {
     overflow: auto;
 }
