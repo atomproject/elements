@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/atomproject/elements#readme",
   "devDependencies": {
-    "chalk": "^1.1.1"
+    "chalk": "^1.1.1",
+    "continuation-local-storage": "^3.1.4",
+    "request-promise": "^1.0.2"
   }
 }
