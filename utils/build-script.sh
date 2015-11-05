@@ -14,10 +14,12 @@ copy_design_docs() {
 		component_name="${component_name%% }"
 		doc_path="bower_components/$component_name/design-doc.md"
 
-
 		if [[ -f "$doc_path" ]]; then
-			printf "%-50s --> %s" "$doc_path" "$dir/design-doc.md"
+			printf "%50s --> %s\n" "$doc_path" "$dir/design-doc.md"
 			cp "$doc_path" "$dir"
+		else
+			# keep the design doc blank
+			(echo "" ) > "$dir/design-doc.md"
 		fi
 	done
 

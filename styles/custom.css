@@ -134,10 +134,14 @@ margin:10px 0;
     overflow:hidden;
 }
 .designTab {
-    padding: 20px;
+	padding: 20px;
     max-width: 624px;
     margin: 0 auto;
     overflow: auto;
+}
+
+.designTab .markdown-html {
+	padding-left: 20px;
 }
 
 device-view {
@@ -191,6 +195,11 @@ display:block;
 
 .designTabWrapper {
     overflow: auto;
+}
+
+.designTab ul {
+  padding-left: inherit;
+  list-style: initial;
 }
 
 /***********************/
