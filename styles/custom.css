@@ -130,6 +130,11 @@ ul {
 margin:10px 0;
 }
 /*New scaffold css*/
+
+.right-panel {
+  height: 100%;
+}
+
 #mainPanel #mainContainer {
     overflow:hidden;
 }
