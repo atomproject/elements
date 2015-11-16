@@ -8,3 +8,4 @@ node_modules
 # be ignored since it forms the output of an intermediate
 # build step
 design-doc.md
+.notes
