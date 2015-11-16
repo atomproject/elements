@@ -5,6 +5,7 @@ layout: text-page
 ## Web Components
 
 Web Components are a set of standards that allow for the creation of custom HTML elements. With this, people can easily create elements which 
+
 * encapsulate functionality & style 
 * aid reusabiliy
 * provide semantic structure to their code
