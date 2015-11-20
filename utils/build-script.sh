@@ -3,6 +3,7 @@
 shopt -s extglob
 shopt -s globstar
 shopt -s nullglob
+set -e
 
 copy_design_docs() {
 	for dir in elements/*
