@@ -211,4 +211,9 @@ display:block;
 t-item[aria-selected] label {
    font-weight: bold;
 }
+
+.highlight {
+  margin: 0;
+  overflow-wrap: break-word;
+}
 /***********************/
