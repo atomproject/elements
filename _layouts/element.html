@@ -53,8 +53,9 @@ layout: default
                 </div>
                 <prism-element></prism-element>
                 <div class="code-content">
-                    <marked-element id="codeBehind">
-                    </marked-element>
+{% highlight html linenos %}
+{% include_relative demo-snippet.html %}
+{% endhighlight %}
                 </div>
             </t-demo-atom>
         </div>
