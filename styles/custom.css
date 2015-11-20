@@ -207,4 +207,8 @@ display:block;
   list-style: initial;
 }
 
+
+t-item[aria-selected] label {
+   font-weight: bold;
+}
 /***********************/
