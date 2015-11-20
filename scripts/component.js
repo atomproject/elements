@@ -5,10 +5,6 @@
 	    pages.selected = tabs.selected;
 	});
 
-	document.addEventListener('code-behind', function () {
-	    var code = Polymer.dom(document.querySelector('.demo-canvas')).innerHTML;
-	    document.querySelector('#codeBehind').markdown = '```' + code + '```';
-	});
 	// start code for device view
 	$('#tablet , #phone').on('click touchmove', function () {
 	    var target = document.querySelector('#deviceView');

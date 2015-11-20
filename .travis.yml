@@ -16,6 +16,7 @@ install:
 - bower install
 - gem install jekyll
 - sudo python -m pip install Pygments
+- gem install pygments.rb
 before_script:
 - chmod +x ./utils/build-script.sh
 script: "./utils/build-script.sh --prod"
