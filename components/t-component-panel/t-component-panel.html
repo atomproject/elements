@@ -1,0 +1,402 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html" />
+<link rel="import" href="../../bower_components/t-input/t-input.html" />
+<link rel="import" href="../../bower_components/t-button/t-button.html" />
+<link rel="import" href="../../bower_components/t-slider/t-slider.html" />
+<link rel="import" href="../../bower_components/t-dropdown/t-dropdown.html" />
+<link rel="import" href="../../bower_components/t-colorpicker/t-colorpicker.html" />
+<link rel="import" href="../../bower_components/t-radio-group/t-radio-group.html" />
+<link rel="import" href="../../bower_components/t-radio-button/t-radio-button.html" />
+<link rel="import" href="../../bower_components/t-icon-selector/t-icon-selector.html" />
+<link rel="import" href="../../bower_components/t-data-feeder/t-data-feeder.html" />
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html" />
+<link rel="import" href="../../bower_components/t-checkbox/t-checkbox.html" />
+<link rel="import" href="../../bower_components/paper-item/paper-item.html" />
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html" />
+<link rel="import" href="../../bower_components/iron-meta/iron-meta.html" />
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html" />
+<link rel="import" href="../../bower_components/t-shared-components/jquery.html">
+<script src="plugin/jquery.jsonview.js"></script>
+<script src="plugin/styleddropdown.js"></script>
+<!--
+    `<t-component-panel>` is a polymer component that generates a playground for interacting with components.
+
+
+    <div class="demo-canvas">
+        
+    </div>
+
+    <t-component-panel metadata-source="metadata url" property-source="property url" component="component name">
+        
+        <div class="component">
+            
+            'component template'
+        </div>
+    </t-component-panel>        
+-->
+<dom-module id="t-component-panel">
+    <link rel="import" type="css" href="component-panel.css">
+    <link rel="stylesheet" href="plugin/jquery.jsonview.css">
+    <template>
+        <div hidden>
+            <content id="component" select=".component"></content>
+        </div>
+        <div id="controller">
+            <iron-meta key="test" type="Object" value="{{targetComponent}}"></iron-meta>
+            <template is="dom-repeat" items="{{_sections}}" as="section">
+                <div class="section">
+                    <div class="section-header">{{section.name}}</div>
+                    <template is="dom-repeat" items="{{_getKeys(section)}}" as="key">
+                        <div class="layout justified">
+                            <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'boolean')}}">
+                                <t-checkbox checkbox-right data-value$="{{key}}" checked$="{{_getValue(_metadata, key)}}" on-change="_checkBoxChanged">{{_getValue(_metadata, key,'name')}}</t-checkbox>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'color')}}">
+                                <t-colorpicker label$="{{_getValue(_metadata, key,'name')}}" color$="{{_getValue(_metadata, key)}}" data-value$="{{key}}" on-color-selected="_colorChanged"></t-colorpicker>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'number')}}">
+                                <div class="center horizontal layout">
+                                    <t-input label$="{{_getValue(_metadata, key,'name')}}" data-value$="{{key}}" value="{{_getValue(_metadata, key)}}" on-keyup="_textChanged"></t-input>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'range')}}">
+                                <div class="center horizontal layout">
+                                    <p>{{_getValue(_metadata, key,'name')}}</p>
+                                    <div class="flex"></div>
+                                    <t-slider data-value$="{{key}}" pin editable dragging min$="{{_getValue(_metadata,key, 'min')}}" value$="{{_getValue(_metadata,key)}}" max$="{{_getValue(_metadata,key, 'max')}}" on-change="_sliderChanged">
+                                    </t-slider>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'options')}}">
+                                <div class="label horizontal layout center">
+                                    <p>{{_getValue(_metadata, key,'name')}}</p>
+                                    <div class="flex"></div>
+                                    <template is="dom-if" if="{{_isGreaterThanThree(_metadata,key)}}">
+                                        <t-dropdown data-value$="{{key}}" selected-item-label="{{_getValue(_metadata, key)}}" on-dropdown-value-changed="_dropdownSelectionChanged" required>
+                                            <template is="dom-repeat" items="{{_getValue(_metadata, key, 'values')}}" as="val">
+                                                <paper-item>{{val}}</paper-item>
+                                            </template>
+                                        </t-dropdown>
+                                    </template>
+                                    <template is="dom-if" if="{{_isLessThanThree(_metadata,key)}}">
+                                        <t-radio-group pill-button selected-item="{{_getValue(_metadata, key, 'index')}}" data-value$="{{key}}" on-t-radio-group-changed="_radioValueChanged">
+                                            <template is="dom-repeat" items="{{_getValue(_metadata, key, 'values')}}" as="val">
+                                                <t-radio-button name="{{val}}">{{val}}</t-radio-button>
+                                            </template>
+                                        </t-radio-group>
+                                    </template>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'string')}}">
+                                <t-input label$="{{_getValue(_metadata, key,'name')}}" data-value$="{{key}}" value="{{_getValue(_metadata, key)}}" on-keyup="_textChanged"></t-input>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'iconset')}}">
+                                <t-icon-selector data-value$="{{key}}" label$="{{_getValue(_metadata, key,'name')}}" value="{{_getValue(_metadata, key)}}" on-icon-changed="_textChanged"></t-icon-selector>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'list')}}">
+                                <t-data-feeder parameter="{{key}}" data="{{_getValue(_metadata, key)}}"></t-data-feeder>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'api')}}">
+                                <div class="layout horizontal">
+                                    <t-input id="apiInput" class="flex" label$="{{_getValue(_metadata, key,'name')}}" data-value$="{{key}}"></t-input>
+                                    <t-button only-icon ico="link" on-click="_getMetadata"></t-button>
+                                </div>
+                                <t-button class="link" on-click="_openModal" label="YOLO"></t-button>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'action')}}">
+                                <t-button class="primary" raised on-click="fireAction" label="{{_getValue(_metadata, key,'name')}}"></t-button>
+                            </template>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+        <div id="bindingModal" hidden>
+                <t-button class="close-modal" only-icon ico="close" on-click="_closeModal"></t-button>
+            <div class="horizontal layout">
+                <div id="jsonView">
+                </div>
+                <div id="propertyMenu" >
+                    <div class="list">
+                    <template is="dom-repeat" items="{{propertyNames}}">
+                        <div class="item">{{item}}</div>
+                    </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <iron-ajax id="call" url="{{propertySource}}" handleAs="json" on-response="_handleResponse" on-error="_handleError">
+        </iron-ajax>
+        <iron-ajax id="metadataCall" url="{{metadataSource}}" handle-as="text" content-type="text/html" on-response="_handleMetadataResponse" on-error="_handleError">
+        </iron-ajax>
+        <iron-ajax id="apiMetadata" handleAs="json" on-response="_handleApiResponse" on-error="_handleError"></iron-ajax>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-component-panel',
+
+    properties: {
+
+        targetComponent: {
+            type: Object,
+            value: function() {
+                return null;
+            },
+            notify:true,
+            observer: '_getPropertyNames'
+        },
+
+        propertyNames:{
+            type:Array
+        },
+
+        /**
+         * Number of pages present in case of Api based data table.
+         */
+        _metadata: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        /**
+         * Number of pages present in case of Api based data table.
+         */
+
+        _sections: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        /**
+         * keys in properties
+         */
+        keys: {
+            type: Array,
+            value: []
+        },
+
+        /**
+         * current component
+         */
+        component: {
+            type: String,
+            value: ''
+        },
+
+        /**
+         * Panel name
+         */
+        panelName: {
+            type: String,
+            value: ''
+        },
+
+        /**
+         * The metdata src
+         */
+        metadataSource: {
+            type: String,
+            value: ''
+        },
+
+        /**
+         * The property src
+         */
+        propertySource: {
+            type: String,
+            value: '',
+            notify: true
+        },
+
+
+        /**
+         * Target component is data component or not
+         */
+        isDataComponent: {
+            type: String,
+            value: '',
+            notify: true
+        },
+
+        jsonResponse: {
+            type: Object,
+            value: function() {
+                return null
+            }
+        }
+
+    },
+
+    attached: function() {
+        if (this.metadataSource != '')
+            this.$.metadataCall.generateRequest();
+        if (this.propertySource !== '')
+            this.$.call.generateRequest();
+    },
+
+    _isTypeMatching: function(metadata, key, type) {
+        if (metadata[key].type.toLowerCase() == type) {
+            if (type == 'list')
+                this.isDataComponent = true;
+            return true;
+        }
+        return false;
+    },
+
+    _isRange: function(metadata, key) {
+        return (metadata[key].min !== undefined && metadata[key].max !== undefined);
+    },
+
+    _getMin: function(metadata, key) {
+        return metadata[key].range[0];
+    },
+
+    _getValue: function(metadata, key, field) {
+        if (field == 'values')
+            return metadata[key].values;
+        if (field == 'name')
+            return metadata[key].name;
+        if (this.targetComponent != null && this.targetComponent[key] != undefined) {
+            return this.targetComponent[key];
+        }
+        if (field == undefined)
+            return metadata[key].value;
+        return metadata[key][field];
+    },
+
+    _isGreaterThanThree: function(metadata, key) {
+        return metadata[key].values.length > 3;
+    },
+
+    _isLessThanThree: function(metadata, key) {
+        return metadata[key].values.length <= 3;
+    },
+
+    _getKeys: function(section) {
+        var keys = Object.keys(section.fields);
+        return keys;
+    },
+
+    _handleResponse: function(e) {
+        var component = this;
+        component.isDataComponent = false;
+        if (e.detail.response != null) {
+            var metadata = {};
+            component.panelName = e.detail.response.name;
+            component._sections = e.detail.response.properties;
+            component._sections.forEach(function(section) {
+                var keys = Object.keys(section.fields);
+                keys.forEach(function(key) {
+                    metadata[key] = section.fields[key];
+                });
+            });
+            this._metadata = metadata;
+            setTimeout(function() {
+                if (component.isDataComponent)
+                    component.querySelector('t-data-feeder').target = component.targetComponent;
+            }, 0);
+        } else {
+            component.$.controller.textContent = "Error occured while retrieving properties.";
+        }
+    },
+
+    _handleMetadataResponse: function(e, response) {
+        var component = e.detail.response;
+        if (component != null)
+            document.querySelector('.demo-canvas').innerHTML = component;
+        this.targetComponent = document.querySelector(".demo-canvas " + this.component);
+    },
+
+    _handleApiResponse: function(e, response) {
+        this.jsonResponse = e.detail.response;
+    },
+
+    _handleError: function(e) {
+        this.$.controller.textContent = "No configuration found.";
+    },
+
+    _textChanged: function(e) {
+        var key = e.model._nodes[0].getAttribute('data-value');
+        this.targetComponent[key] = e.target.value;
+        this.fire('property-changed');
+    },
+
+    _checkBoxChanged: function(e) {
+        var key = e.target.getAttribute("data-value");
+        this.targetComponent[key] = e.target.checked;
+        this.fire('property-changed');
+    },
+
+    _radioValueChanged: function(e) {
+        if (e.target.selectedItem != null) {
+            var key = e.target.getAttribute("data-value");
+            this.targetComponent[key] = e.target.selectedItem;
+            this.fire('property-changed');
+        }
+    },
+
+    _sliderChanged: function(e) {
+        var key = e.target.getAttribute("data-value");
+        this.targetComponent[key] = e.target.value;
+        this.fire('property-changed');
+    },
+
+    _colorChanged: function(e) {
+        var key = e.target.getAttribute("data-value");
+        this.targetComponent[key] = e.target.value;
+        this.fire('property-changed');
+    },
+
+    _dropdownSelectionChanged: function(e) {
+        var key = e.target.getAttribute("data-value");
+        this.targetComponent[key] = e.target.selectedItemLabel;
+        this.fire('property-changed');
+    },
+
+    _concatenate: function(string1, string2) {
+        return string1.toLowerCase() + ' ' + string2;
+    },
+
+    _getMetadata: function() {
+        this.$.apiMetadata.url = this.$$('#apiInput').value;
+        this.$.apiMetadata.generateRequest();
+    },
+
+    setPanel: function() {
+        this.keys = [];
+        this._sections = [];
+        this.$.call.generateRequest();
+    },
+
+    _openModal: function() {
+        $(this.$.jsonView).JSONView(this.jsonResponse, {
+            collapsed: true,
+            nl2br: true,
+            recursive_collapser: true
+        
+        });
+        this.$.bindingModal.hidden = false;
+        $(this.$.bindingModal).styleddropdown(this.targetComponent);
+    },
+
+    _closeModal: function(){
+        this.$.bindingModal.hidden = true;
+    },
+
+    _getPropertyNames: function(){
+        if(this.targetComponent!= null)
+            this.propertyNames = Object.keys(this.targetComponent.properties);
+        else
+            this.propertyNames = [];
+    },
+
+    fireAction: function(event) {
+        this.fire('on-' + this.component + '-action');
+    }
+})
+</script>
