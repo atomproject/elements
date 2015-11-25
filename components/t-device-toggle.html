@@ -1,0 +1,25 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/t-button/t-button.html">
+
+<dom-module id="t-device-toggle">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+
+		<div class="layout horizontal property-panel-Header" >
+			<t-button id="laptop" ico="hardware:laptop" toggles active></t-button>
+			<t-button id="tablet" ico="hardware:tablet-mac" toggles></t-button>
+			<t-button id="phone" ico="hardware:smartphone" toggles></t-button>
+		</div>	
+	</template>
+	<script>
+		Polymer({
+			is: 't-device-toggle',
+
+			device: String
+		});
+	</script>
+</dom-module>

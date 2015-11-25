@@ -42,9 +42,6 @@
     <link rel="import" type="css" href="component-panel.css">
     <link rel="stylesheet" href="plugin/jquery.jsonview.css">
     <template>
-        <div hidden>
-            <content id="component" select=".component"></content>
-        </div>
         <div id="controller">
             <iron-meta key="test" type="Object" value="{{targetComponent}}"></iron-meta>
             <template is="dom-repeat" items="{{_sections}}" as="section">
@@ -150,23 +147,14 @@ Polymer({
             observer: '_getPropertyNames'
         },
 
-        propertyNames:{
-            type:Array
-        },
+        propertyNames: Array,
 
-        /**
-         * Number of pages present in case of Api based data table.
-         */
         _metadata: {
             type: Array,
             value: function() {
                 return [];
             }
         },
-
-        /**
-         * Number of pages present in case of Api based data table.
-         */
 
         _sections: {
             type: Array,
@@ -175,37 +163,14 @@ Polymer({
             }
         },
 
-        /**
-         * keys in properties
-         */
         keys: {
             type: Array,
             value: []
         },
 
-        /**
-         * current component
-         */
-        component: {
-            type: String,
-            value: ''
-        },
-
-        /**
-         * Panel name
-         */
-        panelName: {
-            type: String,
-            value: ''
-        },
-
-        /**
-         * The metdata src
-         */
-        metadataSource: {
-            type: String,
-            value: ''
-        },
+        component: String,
+        panelName: String,
+        metadataSource: String,
 
         /**
          * The property src
@@ -215,7 +180,6 @@ Polymer({
             value: '',
             notify: true
         },
-
 
         /**
          * Target component is data component or not

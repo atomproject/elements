@@ -32,31 +32,10 @@ layout: default
             <iframe id="idIframe" src="{{ bower_component_dir }}" width="100%"></iframe>
         </div>
         <div class="fit">
-            <t-demo-atom>
-                <div class="demo-content" style="width:100%">
-                    <div class="demo-canvas"></div>
-                    <device-view id="deviceView" src="{{ bower_component_dir }}/demo"></device-view>
-                </div>
-                <div class="right-panel layout vertical">
-                    <div class="layout horizontal property-panel-Header" >
-                        <t-button id="laptop" ico="hardware:laptop" toggles active></t-button>
-                        <t-button id="tablet" ico="hardware:tablet-mac" toggles></t-button>
-                        <t-button id="phone" ico="hardware:smartphone" toggles></t-button>
-                    </div>
-                    <div style="overflow:auto;">
-                        <t-component-panel
-                            metadata-source="{{ component_dir }}/demo-snippet.html"
-                            property-source="{{ bower_component_dir }}/property.json"
-                            component="{{ page.component_name }}">
-                        </t-component-panel>
-                    </div>
-                </div>
-                <prism-element></prism-element>
-                <div class="code-content">
-{% highlight html %}
-{% include_relative demo-snippet.html %}
-{% endhighlight %}
-                </div>
+            <t-demo-atom
+                demo-file="{{ bower_component_dir }}/demo/index.html"
+                properties-file="{{ bower_component_dir }}/property.json"
+                component-name="{{ page.component_name }}">
             </t-demo-atom>
         </div>
     </iron-pages>

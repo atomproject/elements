@@ -1,4 +1,7 @@
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/t-device-view/t-device-view.html">
+<!-- <link rel="import" href="t-component-code"> -->
+<link rel="import" href="t-device-toggle">
 
 <dom-module id="t-demo-atom">
 	<template>
@@ -9,28 +12,22 @@
         height: 100%;
       }
 
-      #filterDrawerPanel::content #main {
+      #filterDrawerPanel [main] {
         background-color: #fff;
       }
 
-      div#toggle-section ::content #code-section {
-        display: none;
-      }
-
-      div#toggle-section[active] ::content #code-section {
-        display: block;
-      }
-
-      div#toggle-section ::content div#divider {
-        margin-top: 30px;
-        height: 1px;
-        background-color: #eee;
-      }
-
-      #filter-panel {
+      #filterDrawerPanel [drawer] {
         border-left: 1px solid;
         border-bottom: 1px solid;
         border-color: var(--grey-two);
+      }
+
+      .right-panel {
+        height: 100%;
+      }
+
+      .body {
+        margin: 10px 0;
       }
     </style>
 
@@ -39,27 +36,32 @@
       main drawer-width="{{filterWidth}}" on-paper-responsive-change="_setWidth"
       drawer-toggle-attribute="filter-toggle">
 
-        <div id="main-panel" class="main layout vertical" selected main>
-            <div id="demo-header">
-              <t-button ico="filter-list" only-icon filter-toggle paper-drawer-toggle>
-              </t-button>
+        <div class="layout vertical" selected main>
+          <div class="header">
+            <t-button ico="filter-list" only-icon filter-toggle paper-drawer-toggle>
+            </t-button>
+          </div>
+          <div class="body" active$="{{activated}}" >
+            <div class="demo-section">
+              <device-view device="{{device}}">
+                <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
+              </device-view>
             </div>
-            <div active$="{{activated}}" id="toggle-section">
-              <div id="demo-section">
-                <content select=".demo-content"></content>
-              </div>
-              <div id="divider"></div>
-              <t-button id="codeToggle" toggles on-click="_fireCodeEvent"label="Show Code">
-              </t-button>
-              <div id="code-section">
-                <content select=".code-content"></content>
-              </div>
+            <!-- <t-component-code></t-component-code> -->
+          </div>
+        </div>
+        <div drawer>
+          <div class="right-panel layout vertical">
+            <t-device-toggle device="{{device}}"></t-device-toggle>
+            <div style="overflow:auto;">
+              <t-component-panel
+                target-component="{{targetComponent}}"
+                property-source="{{propertiesFile}}"
+                component="{{componentName}}">
+              </t-component-panel>
             </div>
+          </div>
         </div>
-        <div drawer id="filter-panel">
-          <content select=".right-panel"></content>
-        </div>
-
       </paper-drawer-panel>
   </template>
   <script>
@@ -69,7 +71,20 @@
 
       properties:{
         /*filter width for handling responsive*/
-        filterWidth:String,
+        filterWidth: String,
+        propertiesFile: String,
+        componentName: String,
+        demoFile: String,
+
+        targetComponent:{
+          type: Object,
+          notify: true
+        },
+
+        device: {
+          type: String,
+          value: 'laptop'
+        },
 
         /*activated the  toggle of code section*/
         activated:{
@@ -77,6 +92,20 @@
           value:false,
           reflectToAttribute:true
         }
+      },
+
+      attached: function() {
+        if (this.targetComponent) {
+          return;
+        }
+
+        window.addEventListener('load', function() {
+          var iframe = document.querySelector('#demo');
+          var iframeDoc = iframe.contentWindow.document;
+          var targetComponent = iframeDoc.querySelector(this.componentName);
+
+          this.set('targetComponent', targetComponent);
+        }.bind(this));
       },
 
       _fireCodeEvent: function(e){
