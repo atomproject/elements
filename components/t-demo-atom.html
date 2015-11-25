@@ -1,0 +1,98 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="t-demo-atom">
+	<template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+        height: 100%;
+      }
+
+      #filterDrawerPanel::content #main {
+        background-color: #fff;
+      }
+
+      div#toggle-section ::content #code-section {
+        display: none;
+      }
+
+      div#toggle-section[active] ::content #code-section {
+        display: block;
+      }
+
+      div#toggle-section ::content div#divider {
+        margin-top: 30px;
+        height: 1px;
+        background-color: #eee;
+      }
+
+      #filter-panel {
+        border-left: 1px solid;
+        border-bottom: 1px solid;
+        border-color: var(--grey-two);
+      }
+    </style>
+
+  	<paper-drawer-panel id="filterDrawerPanel" class="main-drawer-panel"
+      transition disable-swipe right-drawer responsive-width="1100px"
+      main drawer-width="{{filterWidth}}" on-paper-responsive-change="_setWidth"
+      drawer-toggle-attribute="filter-toggle">
+
+        <div id="main-panel" class="main layout vertical" selected main>
+            <div id="demo-header">
+              <t-button ico="filter-list" only-icon filter-toggle paper-drawer-toggle>
+              </t-button>
+            </div>
+            <div active$="{{activated}}" id="toggle-section">
+              <div id="demo-section">
+                <content select=".demo-content"></content>
+              </div>
+              <div id="divider"></div>
+              <t-button id="codeToggle" toggles on-click="_fireCodeEvent"label="Show Code">
+              </t-button>
+              <div id="code-section">
+                <content select=".code-content"></content>
+              </div>
+            </div>
+        </div>
+        <div drawer id="filter-panel">
+          <content select=".right-panel"></content>
+        </div>
+
+      </paper-drawer-panel>
+  </template>
+  <script>
+    Polymer({
+
+      is: 't-demo-atom',
+
+      properties:{
+        /*filter width for handling responsive*/
+        filterWidth:String,
+
+        /*activated the  toggle of code section*/
+        activated:{
+          type:Boolean,
+          value:false,
+          reflectToAttribute:true
+        }
+      },
+
+      _fireCodeEvent: function(e){
+        var btn = e.currentTarget;
+
+        this.fire('code-behind');
+        this.$.codeToggle.label = (btn.active ? 'Hide code' : 'Show code');
+        this.activated = (btn.active ? true : false);
+      },
+
+      //calculate the width and put value
+      _setWidth:function(){
+        var winWid =  window.innerWidth;
+
+        this.filterWidth = (winWid < 600 ? '75%' : '300px');
+      }
+    });
+  </script>
+</dom-module>
