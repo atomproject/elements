@@ -29,7 +29,7 @@
         
     </div>
 
-    <t-component-panel metadata-source="metadata url" property-source="property url" component="component name">
+    <t-component-panel property-source="property url" component="component name">
         
         <div class="component">
             
@@ -116,22 +116,20 @@
             </template>
         </div>
         <div id="bindingModal" hidden>
-                <t-button class="close-modal" only-icon ico="close" on-click="_closeModal"></t-button>
+            <t-button class="close-modal" only-icon ico="close" on-click="_closeModal"></t-button>
             <div class="horizontal layout">
                 <div id="jsonView">
                 </div>
                 <div id="propertyMenu" >
                     <div class="list">
-                    <template is="dom-repeat" items="{{propertyNames}}">
-                        <div class="item">{{item}}</div>
-                    </template>
+                        <template is="dom-repeat" items="{{propertyNames}}">
+                            <div class="item">{{item}}</div>
+                        </template>
                     </div>
                 </div>
             </div>
         </div>
         <iron-ajax id="call" url="{{propertySource}}" handleAs="json" on-response="_handleResponse" on-error="_handleError">
-        </iron-ajax>
-        <iron-ajax id="metadataCall" url="{{metadataSource}}" handle-as="text" content-type="text/html" on-response="_handleMetadataResponse" on-error="_handleError">
         </iron-ajax>
         <iron-ajax id="apiMetadata" handleAs="json" on-response="_handleApiResponse" on-error="_handleError"></iron-ajax>
     </template>
@@ -238,8 +236,6 @@ Polymer({
     },
 
     attached: function() {
-        if (this.metadataSource != '')
-            this.$.metadataCall.generateRequest();
         if (this.propertySource !== '')
             this.$.call.generateRequest();
     },
@@ -291,30 +287,27 @@ Polymer({
         var component = this;
         component.isDataComponent = false;
         if (e.detail.response != null) {
-            var metadata = {};
-            component.panelName = e.detail.response.name;
-            component._sections = e.detail.response.properties;
-            component._sections.forEach(function(section) {
-                var keys = Object.keys(section.fields);
-                keys.forEach(function(key) {
-                    metadata[key] = section.fields[key];
+            if (this.targetComponent) {
+                var metadata = {};
+                component.panelName = e.detail.response.name;
+                component._sections = e.detail.response.properties;
+                component._sections.forEach(function(section) {
+                    var keys = Object.keys(section.fields);
+                    keys.forEach(function(key) {
+                        metadata[key] = section.fields[key];
+                    });
                 });
-            });
-            this._metadata = metadata;
-            setTimeout(function() {
-                if (component.isDataComponent)
-                    component.querySelector('t-data-feeder').target = component.targetComponent;
-            }, 0);
+                this._metadata = metadata;
+                setTimeout(function() {
+                    if (component.isDataComponent)
+                        component.querySelector('t-data-feeder').target = component.targetComponent;
+                }, 0);
+            } else {
+                this.e = e;
+            }
         } else {
             component.$.controller.textContent = "Error occured while retrieving properties.";
         }
-    },
-
-    _handleMetadataResponse: function(e, response) {
-        var component = e.detail.response;
-        if (component != null)
-            document.querySelector('.demo-canvas').innerHTML = component;
-        this.targetComponent = document.querySelector(".demo-canvas " + this.component);
     },
 
     _handleApiResponse: function(e, response) {
@@ -394,10 +387,13 @@ Polymer({
     },
 
     _getPropertyNames: function(){
-        if(this.targetComponent!= null)
+        if(this.targetComponent!= null) {
             this.propertyNames = Object.keys(this.targetComponent.properties);
-        else
+            this._handleResponse(this.e);
+        }
+        else {
             this.propertyNames = [];
+        }
     },
 
     fireAction: function(event) {
