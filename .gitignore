@@ -4,6 +4,10 @@ _site
 bower_components
 *.log
 node_modules
+
+# following file is used to test individual components
+components/index.html
+
 # this will be removed later and the whole elements dir will
 # be ignored since it forms the output of an intermediate
 # build step

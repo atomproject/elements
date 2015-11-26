@@ -1,15 +1,48 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/t-button/t-button.html">
+<link rel="import" href="highlightjs-element/highlightjs-element.html">
+
 <dom-module id="t-component-code">
 	<template>
 		<style>
 			:host {
 				display: block;
+				font-size: 14px;
+				margin: 10px 0;
+			}
+
+			[hidden] {
+				display: none;
+			}
+
+			highlightjs-element {
+				margin-top: 25px;
+				padding: 5px;
+				border: 1px solid #bbb;
+				border-radius: 5px;
 			}
 		</style>
 		
+		<t-button toggles raised active="{{showCode}}" label="Toggle Code"></t-button>
+		<highlightjs-element text="{{elementCode}}" hidden="{{!showCode}}">
+		</highlightjs-element>
 	</template>
 	<script>
 		Polymer({
-			is: 't-component-code'
+			is: 't-component-code',
+
+			properties: {
+				showCode: {
+					type: Boolean,
+					value: false
+				},
+
+				elementCode: {
+					type: String,
+					notify: true,
+					value: ''
+				}
+			}
 		});
 	</script>
 </dom-module>

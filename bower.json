@@ -54,7 +54,8 @@
     "iron-icons": "PolymerElements/iron-icons",
     "marked-element": "PolymerElements/marked-element",
     "iron-pages": "PolymerElements/iron-pages",
-    "iron-component-page": "PolymerElements/iron-component-page#~1.0.8"
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.8",
+    "highlightjs": "*",
   },
   "resolutions": {
     "t-input": "master",

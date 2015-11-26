@@ -3,7 +3,7 @@
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../bower_components/t-button/t-button.html">
 <link rel="import" href="t-component-panel/t-component-panel.html">
-<!-- <link rel="import" href="t-component-code"> -->
+<link rel="import" href="t-component-code">
 <link rel="import" href="t-device-toggle">
 
 <dom-module id="t-demo-atom">
@@ -34,7 +34,7 @@
       }
 
       .body {
-        height: calc(100% - 45px);
+        max-height: calc(100% - 45px);
         margin: 10px 0;
         overflow: auto;
       }
@@ -58,7 +58,7 @@
             <device-view device="{{device}}" landscape="{{landscape}}">
               <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
             </device-view>
-            <!-- <t-component-code></t-component-code> -->
+            <t-component-code></t-component-code>
           </div>
         </div>
         <div drawer>
@@ -129,15 +129,7 @@
           this.set('targetComponent', targetComponent);
         }.bind(this));
       },
-
-      _fireCodeEvent: function(e){
-        var btn = e.currentTarget;
-
-        this.fire('code-behind');
-        this.$.codeToggle.label = (btn.active ? 'Hide code' : 'Show code');
-        this.activated = (btn.active ? true : false);
-      },
-
+      
       //calculate the width and put value
       _setWidth:function(){
         var winWid =  window.innerWidth;
