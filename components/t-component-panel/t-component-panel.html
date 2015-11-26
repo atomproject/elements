@@ -43,7 +43,6 @@
     <link rel="stylesheet" href="plugin/jquery.jsonview.css">
     <template>
         <div id="controller">
-            <iron-meta key="test" type="Object" value="{{targetComponent}}"></iron-meta>
             <template is="dom-repeat" items="{{_sections}}" as="section">
                 <div class="section">
                     <div class="section-header">{{section.name}}</div>
@@ -137,16 +136,6 @@ Polymer({
     is: 't-component-panel',
 
     properties: {
-
-        targetComponent: {
-            type: Object,
-            value: function() {
-                return null;
-            },
-            notify:true,
-            observer: '_getPropertyNames'
-        },
-
         propertyNames: Array,
 
         _metadata: {
@@ -247,30 +236,26 @@ Polymer({
         return keys;
     },
 
-    _handleResponse: function(e) {
-        var component = this;
-        component.isDataComponent = false;
-        if (e.detail.response != null) {
-            if (this.targetComponent) {
-                var metadata = {};
-                component.panelName = e.detail.response.name;
-                component._sections = e.detail.response.properties;
-                component._sections.forEach(function(section) {
-                    var keys = Object.keys(section.fields);
-                    keys.forEach(function(key) {
-                        metadata[key] = section.fields[key];
-                    });
+    _handleResponse: function(event) {
+        var metadata = {};
+
+        this.isDataComponent = false;
+
+        if (event.detail.response != null) {
+            this.panelName = event.detail.response.name;
+            this._sections = event.detail.response.properties;
+
+            this._sections.forEach(function(section) {
+                var keys = Object.keys(section.fields);
+
+                keys.forEach(function(key) {
+                    metadata[key] = section.fields[key];
                 });
-                this._metadata = metadata;
-                setTimeout(function() {
-                    if (component.isDataComponent)
-                        component.querySelector('t-data-feeder').target = component.targetComponent;
-                }, 0);
-            } else {
-                this.e = e;
-            }
+            });
+
+            this._metadata = metadata;
         } else {
-            component.$.controller.textContent = "Error occured while retrieving properties.";
+            this.$.controller.textContent = "Error occured while retrieving properties.";
         }
     },
 
@@ -285,39 +270,33 @@ Polymer({
     _textChanged: function(e) {
         var key = e.model._nodes[0].getAttribute('data-value');
         this.targetComponent[key] = e.target.value;
-        this.fire('property-changed');
     },
 
     _checkBoxChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         this.targetComponent[key] = e.target.checked;
-        this.fire('property-changed');
     },
 
     _radioValueChanged: function(e) {
         if (e.target.selectedItem != null) {
             var key = e.target.getAttribute("data-value");
             this.targetComponent[key] = e.target.selectedItem;
-            this.fire('property-changed');
         }
     },
 
     _sliderChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         this.targetComponent[key] = e.target.value;
-        this.fire('property-changed');
     },
 
     _colorChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         this.targetComponent[key] = e.target.value;
-        this.fire('property-changed');
     },
 
     _dropdownSelectionChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         this.targetComponent[key] = e.target.selectedItemLabel;
-        this.fire('property-changed');
     },
 
     _concatenate: function(string1, string2) {
@@ -335,6 +314,7 @@ Polymer({
         this.$.call.generateRequest();
     },
 
+    //TODO: verify working
     _openModal: function() {
         $(this.$.jsonView).JSONView(this.jsonResponse, {
             collapsed: true,
@@ -343,24 +323,18 @@ Polymer({
         
         });
         this.$.bindingModal.hidden = false;
+        //TODO: remove this code, since `targetComponent` is not a part
+        //of this componnet anymore
         $(this.$.bindingModal).styleddropdown(this.targetComponent);
     },
 
+    //TODO: verify working
     _closeModal: function(){
         this.$.bindingModal.hidden = true;
     },
 
-    _getPropertyNames: function(){
-        if(this.targetComponent!= null) {
-            this.propertyNames = Object.keys(this.targetComponent.properties);
-            this._handleResponse(this.e);
-        }
-        else {
-            this.propertyNames = [];
-        }
-    },
-
     fireAction: function(event) {
+        //TODO: find out who handles following event?
         this.fire('on-' + this.component + '-action');
     }
 })
