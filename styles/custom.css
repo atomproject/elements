@@ -176,15 +176,6 @@ ul {
   margin-bottom: -5px;
 }
 
-.property-panel-Header t-button {
-    color: #bbb;
-}
-
-.property-panel-Header t-button[active] {
-    transition: all 0.3s;
-    background-color: #eee;
-}
-
 .designTabWrapper {
     overflow: auto;
 }
@@ -196,10 +187,5 @@ ul {
 
 t-item[aria-selected] label {
    font-weight: bold;
-}
-
-.highlight {
-  margin: 0;
-  overflow-wrap: break-word;
 }
 /***********************/

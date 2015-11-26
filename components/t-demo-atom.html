@@ -1,5 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/t-device-view/t-device-view.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/t-button/t-button.html">
+<link rel="import" href="t-component-panel/t-component-panel.html">
 <!-- <link rel="import" href="t-component-code"> -->
 <link rel="import" href="t-device-toggle">
 
@@ -33,6 +36,11 @@
       .body {
         height: calc(100% - 45px);
         margin: 10px 0;
+        overflow: auto;
+      }
+
+      div[main] {
+        padding: 8px 16px;
       }
     </style>
 
@@ -47,7 +55,7 @@
             </t-button>
           </div>
           <div class="body" active$="{{activated}}" >
-            <device-view device="{{device}}">
+            <device-view device="{{device}}" landscape="{{landscape}}">
               <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
             </device-view>
             <!-- <t-component-code></t-component-code> -->
@@ -55,7 +63,8 @@
         </div>
         <div drawer>
           <div class="right-panel layout vertical">
-            <t-device-toggle device="{{device}}"></t-device-toggle>
+            <t-device-toggle device="{{device}}" landscape="{{landscape}}">
+            </t-device-toggle>
             <div style="overflow:auto;">
               <t-component-panel
                 target-component="{{targetComponent}}"
@@ -84,9 +93,16 @@
           notify: true
         },
 
+        landscape: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
         device: {
           type: String,
-          value: 'laptop'
+          value: 'laptop',
+          notify: true
         },
 
         /*activated the  toggle of code section*/
