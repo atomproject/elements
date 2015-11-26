@@ -13,11 +13,11 @@
     --paper-input-container-focus-color: var(--primary-text-color);
 }
 
-:host::content t-input label {
+:host t-input label {
     color: var(--primary-text-color)!important;
 }
 
-:host::content t-checkbox {
+:host t-checkbox {
     display: block;
 }
 
@@ -31,15 +31,15 @@
     border-bottom: 1px solid #eee;
 }
 
-#controller .section::content p,
-#controller .section::content h2,
-#controller .section::content h3,
-#controller .section::content h4 {
+#controller .section p,
+#controller .section h2,
+#controller .section h3,
+#controller .section h4 {
     padding: 0;
     margin: 0;
 }
 
-#controller .section::content > .layout {
+#controller .section > .layout {
     margin: 14px 0;
 }
 

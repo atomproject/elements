@@ -26,7 +26,12 @@
         height: 100%;
       }
 
+      .header {
+        height: 45px;
+      }
+
       .body {
+        height: calc(100% - 45px);
         margin: 10px 0;
       }
     </style>
@@ -42,11 +47,9 @@
             </t-button>
           </div>
           <div class="body" active$="{{activated}}" >
-            <div class="demo-section">
-              <device-view device="{{device}}">
-                <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
-              </device-view>
-            </div>
+            <device-view device="{{device}}">
+              <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
+            </device-view>
             <!-- <t-component-code></t-component-code> -->
           </div>
         </div>
@@ -99,6 +102,9 @@
           return;
         }
 
+        //I don't know why this works but getting the iframe's
+        //contentWindow using `this.$.demo.contentWindow` resulted
+        //in nothing, the `targetComponent` cannot be queried until
         window.addEventListener('load', function() {
           var iframe = document.querySelector('#demo');
           var iframeDoc = iframe.contentWindow.document;
