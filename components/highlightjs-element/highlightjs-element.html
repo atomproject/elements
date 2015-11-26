@@ -28,7 +28,8 @@
       },
 
       _textChanged: function() {
-        this.$.content.innerHTML = hljs.highlightAuto(this.text || '').value;
+        // we only want the xml highlighting as of now
+        this.$.content.innerHTML = hljs.highlight('xml', this.text || '').value;
       },
 
       ready: function() {
