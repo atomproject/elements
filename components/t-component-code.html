@@ -1,5 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/t-button/t-button.html">
 <link rel="import" href="highlightjs-element/highlightjs-element.html">
 
 <script type="text/javascript" src="../bower_components/js-beautify/js/lib/beautify-html.js"></script>
@@ -19,14 +18,19 @@
 
 			highlightjs-element {
 				margin-top: 25px;
-				padding: 5px;
-				border: 1px solid #bbb;
+				padding: 5px 0;
+				border: 1px solid;
+		        border-color: var(--grey-two);
 				border-radius: 5px;
+			}
+
+			h3 {
+				padding-left: 0.5em;
 			}
 		</style>
 		
-		<t-button toggles raised active="{{showCode}}" label="Toggle Code"></t-button>
-		<highlightjs-element text="{{elementCode}}" hidden="{{!showCode}}">
+		<h3>Component Code</h3>
+		<highlightjs-element text="{{elementCode}}">
 		</highlightjs-element>
 	</template>
 	<script>
@@ -34,11 +38,6 @@
 			is: 't-component-code',
 
 			properties: {
-				showCode: {
-					type: Boolean,
-					value: false
-				},
-
 				elementCode: {
 					type: String,
 					notify: true,
@@ -82,7 +81,6 @@
 
 					//attribute values can be of only two types
 					//Boolean or String
-
 					if (this.isBoolean(value)) {
 						if (value) {
 							//only output the key

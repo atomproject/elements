@@ -42,6 +42,20 @@
       div[main] {
         padding: 8px 16px;
       }
+
+      t-device-toggle {
+        border-bottom: 1px solid;
+        border-color: var(--grey-two);
+      }
+
+      t-component-code {
+        margin-top: 20px;
+      }
+
+      hr {
+        border: 1px solid;
+        border-color: var(--grey-one);
+      }
     </style>
 
   	<paper-drawer-panel id="filterDrawerPanel" class="main-drawer-panel"
@@ -58,6 +72,7 @@
             <device-view device="{{device}}" landscape="{{landscape}}">
               <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
             </device-view>
+            <hr>
             <t-component-code id="code" component-name="[[componentName]]"></t-component-code>
           </div>
         </div>
