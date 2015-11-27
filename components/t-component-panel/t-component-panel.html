@@ -269,34 +269,48 @@ Polymer({
 
     _textChanged: function(e) {
         var key = e.model._nodes[0].getAttribute('data-value');
-        this.targetComponent[key] = e.target.value;
+        var value = e.target.value;
+
+        this.fire('property-changed', {key: key, value: value});
     },
 
     _checkBoxChanged: function(e) {
         var key = e.target.getAttribute("data-value");
-        this.targetComponent[key] = e.target.checked;
+        var value = e.target.checked;
+
+        this.fire('property-changed', {key: key, value: value});
     },
 
     _radioValueChanged: function(e) {
+        var key, value;
+
         if (e.target.selectedItem != null) {
-            var key = e.target.getAttribute("data-value");
-            this.targetComponent[key] = e.target.selectedItem;
+            key = e.target.getAttribute("data-value");
+            value = e.target.selectedItem;
+
+            this.fire('property-changed', {key: key, value: value});
         }
     },
 
     _sliderChanged: function(e) {
         var key = e.target.getAttribute("data-value");
-        this.targetComponent[key] = e.target.value;
+        var value = e.target.value;
+
+        this.fire('property-changed', {key: key, value: value});
     },
 
     _colorChanged: function(e) {
         var key = e.target.getAttribute("data-value");
-        this.targetComponent[key] = e.target.value;
+        var value = e.target.value;
+
+        this.fire('property-changed', {key: key, value: value});
     },
 
     _dropdownSelectionChanged: function(e) {
         var key = e.target.getAttribute("data-value");
-        this.targetComponent[key] = e.target.selectedItemLabel;
+        var value = e.target.selectedItemLabel;
+
+        this.fire('property-changed', {key: key, value: value});
     },
 
     _concatenate: function(string1, string2) {

@@ -2,6 +2,8 @@
 <link rel="import" href="../bower_components/t-button/t-button.html">
 <link rel="import" href="highlightjs-element/highlightjs-element.html">
 
+<script type="text/javascript" src="../bower_components/js-beautify/js/lib/beautify-html.js"></script>
+
 <dom-module id="t-component-code">
 	<template>
 		<style>
@@ -40,8 +42,70 @@
 				elementCode: {
 					type: String,
 					notify: true,
-					value: ''
+					computed: 'updateCode(componentName, componentHtml, componentAttributes.*)'
+				},
+
+				componentName: {
+					type: String,
+					observer: 'nameChanged'
+				},
+
+				componentHtml: {
+					type: String
+				},
+
+				componentAttributes: {
+					type: Object
 				}
+			},
+
+			nameChanged: function(newName) {
+				this.componentAttributes = {};
+				this.componentHtml = '';
+			},
+
+			updateCode: function() {
+				var keys = Object.keys(this.componentAttributes || {});
+				var attributes, startTag, endTag, innerHTML, code;
+
+				if (!this.componentName) {
+					return;
+				}
+
+				endTag = '</' + this.componentName + '>';
+				innerHTML = this.componentHtml || '';
+				//iterate over all the attributes and create
+				//the attribute list for use in start tag
+				attributes = keys.map(function(key) {
+					var attr = Polymer.CaseMap.camelToDashCase(key);
+					var value = this.componentAttributes[key];
+
+					value = this.serialize(value);
+
+					return key + '="' + this.escapeHtml(value) + '"';
+				}.bind(this)).join(' ');
+				
+				attributes = attributes ? (' ' + attributes) : '';
+				startTag = '<' + this.componentName + attributes + '>';
+
+				code = startTag + innerHTML + endTag;
+
+				return window.html_beautify(code);
+			},
+
+			escapeHtml: function(string) {
+				var entityMap = {
+				    "&": "&amp;",
+				    "<": "&lt;",
+				    ">": "&gt;",
+				    '"': '&quot;',
+				    "'": '&#39;',
+				    "/": '&#x2F;'
+				};
+
+			    return String(string).replace(/[&<>"'\/]/g, function (s) {
+					return entityMap[s];
+			    });
 			}
 		});
 	</script>

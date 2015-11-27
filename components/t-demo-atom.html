@@ -58,7 +58,7 @@
             <device-view device="{{device}}" landscape="{{landscape}}">
               <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
             </device-view>
-            <t-component-code></t-component-code>
+            <t-component-code id="code" component-name="[[componentName]]"></t-component-code>
           </div>
         </div>
         <div drawer>
@@ -67,14 +67,15 @@
             </t-device-toggle>
             <div style="overflow:auto;">
               <t-component-panel
-                target-component="{{targetComponent}}"
+                on-property-changed="propertyChanged"
                 property-source="{{propertiesFile}}"
                 component="{{componentName}}">
               </t-component-panel>
             </div>
           </div>
         </div>
-      </paper-drawer-panel>
+
+    </paper-drawer-panel>
   </template>
   <script>
     Polymer({
@@ -87,11 +88,6 @@
         propertiesFile: String,
         componentName: String,
         demoFile: String,
-
-        targetComponent:{
-          type: Object,
-          notify: true
-        },
 
         landscape: {
           type: Boolean,
@@ -126,8 +122,22 @@
           var iframeDoc = iframe.contentWindow.document;
           var targetComponent = iframeDoc.querySelector(this.componentName);
 
-          this.set('targetComponent', targetComponent);
+          this.targetComponent = targetComponent;
         }.bind(this));
+      },
+
+      propertyChanged: function(event) {
+        var key, value;
+
+        if (!event.detail) {
+          return;
+        }
+
+        key = event.detail.key;
+        value = event.detail.value;
+
+        this.targetComponent[key] = value;
+        this.$.code.set('componentAttributes.' + key, value);
       },
       
       //calculate the width and put value
