@@ -56,7 +56,11 @@
     "iron-pages": "PolymerElements/iron-pages",
     "iron-component-page": "PolymerElements/iron-component-page#~1.0.8",
     "highlightjs": "*",
-    "js-beautify": "beautify-web/js-beautify#~1.5.10"
+    "js-beautify": "beautify-web/js-beautify#~1.5.10",
+    "paper-drawer-panel": "polymerelements/paper-drawer-panel#~1.0.5",
+    "t-icon-selector": "atomelements/t-icon-selector#~0.0.0",
+    "paper-dialog": "polymerelements/paper-dialog#~1.0.3",
+    "paper-dialog-scrollable": "polymerelements/paper-dialog-scrollable#~1.1.0"
   },
   "resolutions": {
     "t-input": "master",
@@ -73,6 +77,9 @@
     "t-loader": "master",
     "t-dropdown": "master",
     "paper-icon-button": "1.0.3",
-    "paper-button": "1.0.3"
+    "paper-button": "^1.0.0",
+    "paper-drawer-panel": "~1.0.5",
+    "paper-dialog": "~1.0.3",
+    "paper-dialog-scrollable": "1.0.1"
   }
 }
