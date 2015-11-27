@@ -238,6 +238,7 @@ Polymer({
 
     _handleResponse: function(event) {
         var metadata = {};
+        var errorMessage = "Error occured while retrieving properties.";
 
         this.isDataComponent = false;
 
@@ -245,17 +246,36 @@ Polymer({
             this.panelName = event.detail.response.name;
             this._sections = event.detail.response.properties;
 
+            //each property panel consists of multiple sections
             this._sections.forEach(function(section) {
-                var keys = Object.keys(section.fields);
+                //sections contains an object `fields` which
+                //is a map of property names and it's metadata
+                var fieldKeys = Object.keys(section.fields);
 
-                keys.forEach(function(key) {
-                    metadata[key] = section.fields[key];
-                });
-            });
+                //each value in fieldKeys is the name of
+                //the property to be displayed
+                fieldKeys.forEach(function(propertyKey) {
+                    //property is the metadata associated with
+                    //the current property
+                    var property = section.fields[propertyKey];
+                    var value = property.value;
+
+                    metadata[propertyKey] = property;
+                    //value is the default value of the property
+                    if (value === 0 || value) {
+                        //inform others only if the value is `0` or `true`
+                        //or any other truthy value, we don't need to
+                        //update anything if the value is like `""` or `false`
+                        this.fire('property-changed', { 
+                            key: propertyKey, value: property.value
+                        });
+                    }
+                }.bind(this));
+            }.bind(this));
 
             this._metadata = metadata;
         } else {
-            this.$.controller.textContent = "Error occured while retrieving properties.";
+            this.$.controller.textContent = errorMessage;
         }
     },
 

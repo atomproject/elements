@@ -109,20 +109,53 @@
         }
       },
 
+      _queue: undefined,
+      _demoComponent: undefined,
+
+      ready: function() {
+        this._queue = {};
+      },
+
       attached: function() {
-        if (this.targetComponent) {
+        if (this._demoComponent) {
           return;
         }
 
         //I don't know why this works but getting the iframe's
         //contentWindow using `this.$.demo.contentWindow` resulted
-        //in nothing, the `targetComponent` cannot be queried until
+        //in nothing, the `_demoComponent` cannot be queried until
         window.addEventListener('load', function() {
           var iframe = document.querySelector('#demo');
           var iframeDoc = iframe.contentWindow.document;
           var targetComponent = iframeDoc.querySelector(this.componentName);
 
-          this.targetComponent = targetComponent;
+          this._demoComponent = targetComponent;
+
+          this.updateCode();
+        }.bind(this));
+      },
+
+      updateCode: function() {
+        var properties = this._demoComponent.properties;
+        var propertyKeys = Object.keys(properties);
+
+        propertyKeys.forEach(function(propertyKey) {
+          var value = this._queue[propertyKey];
+
+          //the values in queue have higher priority
+          //than the values provided directly on the markup
+          if (value === undefined || value === null) {
+            value = this._demoComponent[propertyKey];
+          } else {
+            //delete the property from queue
+            delete this._queue[propertyKey];
+          }
+
+          //check if the value should reflect
+          if (value === 0 || value) {
+            //update the targets
+            this.updateTargets(propertyKey, value);
+          }
         }.bind(this));
       },
 
@@ -136,10 +169,19 @@
         key = event.detail.key;
         value = event.detail.value;
 
-        this.targetComponent[key] = value;
-        this.$.code.set('componentAttributes.' + key, value);
+        if (!this._demoComponent) {
+          //if the target is not available yet then queue up
+          //the values for later application
+          this._queue[key] = value;
+        } else {
+          this.updateTargets(key, value);
+        }
       },
       
+      updateTargets: function(key, value) {
+        this._demoComponent[key] = value;
+        this.$.code.set('componentAttributes.' + key, value);
+      },
       //calculate the width and put value
       _setWidth:function(){
         var winWid =  window.innerWidth;
