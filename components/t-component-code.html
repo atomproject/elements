@@ -80,17 +80,41 @@
 					var attr = Polymer.CaseMap.camelToDashCase(key);
 					var value = this.componentAttributes[key];
 
+					//attribute values can be of only two types
+					//Boolean or String
+
+					if (this.isBoolean(value)) {
+						if (value) {
+							//only output the key
+							return key;
+						} else {
+							return;
+						}
+					}
+
+					//so the value is not Boolean then it is of type String
 					value = this.serialize(value);
 
+					//output the attribute and value pair of
 					return key + '="' + this.escapeHtml(value) + '"';
-				}.bind(this)).join(' ');
-				
+				}.bind(this)).filter(function(item) {
+					//remove the falsy items from the list
+					return Boolean(item);
+				}).join(' ');
+
 				attributes = attributes ? (' ' + attributes) : '';
 				startTag = '<' + this.componentName + attributes + '>';
 
 				code = startTag + innerHTML + endTag;
 
 				return window.html_beautify(code);
+			},
+
+			isBoolean: function(value) {
+				var toString = Object.prototype.toString;
+
+				//better than `typeof`
+				return toString.call(value) === '[object Boolean]';
 			},
 
 			escapeHtml: function(string) {
