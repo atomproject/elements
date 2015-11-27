@@ -58,6 +58,10 @@
 				}
 			},
 
+			beautifyOpts: {
+				wrap_line_length: 80,
+			},
+
 			nameChanged: function(newName) {
 				this.componentAttributes = {};
 				this.componentHtml = '';
@@ -105,7 +109,7 @@
 
 				code = startTag + innerHTML + endTag;
 
-				return window.html_beautify(code);
+				return window.html_beautify(code, this.beautifyOpts);
 			},
 
 			isBoolean: function(value) {
