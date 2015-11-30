@@ -189,4 +189,7 @@ t-item[aria-selected] label {
    font-weight: bold;
 }
 
+pre {
+  margin: 3px 0;
+}
 /***********************/

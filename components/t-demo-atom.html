@@ -53,7 +53,8 @@
       }
 
       hr {
-        border: 1px solid;
+        border: none;
+        border-bottom: 1px solid;
         border-color: var(--grey-one);
       }
     </style>
@@ -223,7 +224,7 @@
         //update the html attributes in code
         this.$.code.set('componentAttributes.' + key, value);
       },
-      
+
       //calculate the width and put value
       _setWidth:function(){
         var winWid =  window.innerWidth;
