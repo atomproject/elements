@@ -82,8 +82,8 @@
             <t-device-toggle device="{{device}}" landscape="{{landscape}}">
             </t-device-toggle>
             <div style="overflow:auto;">
-              <t-component-panel
-                on-property-changed="propertyChanged"
+              <t-component-panel id="componentPanel"
+                panel-properties="{{panelProperties}}"
                 property-source="{{propertiesFile}}"
                 component="{{componentName}}">
               </t-component-panel>
@@ -104,6 +104,7 @@
         propertiesFile: String,
         componentName: String,
         demoFile: String,
+        panelProperties: Object,
 
         landscape: {
           type: Boolean,
@@ -125,10 +126,6 @@
         }
       },
 
-      //initialized in the ready callback
-      _queue: undefined,
-      //initialized when the element can be found in the iframe
-      //
       _demoComponent: undefined,
 
       //listen to the load event of iframe
@@ -136,9 +133,13 @@
         'demo.load': 'setDemoComponent'
       },
 
-      ready: function() {
-        this._queue = {};
+      //update the demo component and html code when
+      //property values are updated by the user
+      observers: [
+        'propertyChanged(panelProperties.*)'
+      ],
 
+      ready: function() {
         //if the load event of iframe triggers earlier than the
         //ready callback then `this.componentName` won't be available
         //so we trigger the `setDemoComponent` callback here
@@ -152,6 +153,8 @@
       setDemoComponent: function(event) {
         var iframeDoc, targetComponent;
 
+        //the name of the component to find is not available.
+        //current method is also called in the `ready` hook
         if (!this.componentName) {
           return;
         }
@@ -161,29 +164,28 @@
 
         if (targetComponent) {
           this._demoComponent = targetComponent;
-          this.updateCode();
+          this.applyPanelProperties();
         }
       },
 
-      //call this method when component to be demoed is available in DOM
-      //get default property values of the element and show them as attributes
-      //in the HTML code as attributes
-      updateCode: function() {
+      //Call this method when component to be demoed is available in DOM.
+      //Get default property values of the element and show them as attributes
+      //in the HTML code
+      applyPanelProperties: function() {
         //get the custom properties of the element
         var properties = this._demoComponent.properties;
         var propertyKeys = Object.keys(properties);
 
         propertyKeys.forEach(function(propertyKey) {
-          //get the current (default) value of the property
-          var value = this._queue[propertyKey];
+          var panelProperties = this.panelProperties;
 
-          //the values in queue have higher priority
-          //than the values provided directly on the markup
-          if (value === undefined || value === null) {
-            value = this._demoComponent[propertyKey];
+          //see if an initial value is provided in the properties panel
+          if (propertyKey in panelProperties) {
+            value = panelProperties[propertyKey];
           } else {
-            //delete the property from queue
-            delete this._queue[propertyKey];
+            //if there is no initial value provided by the properties panel
+            //then set the value of the property its default value
+            value = this._demoComponent[propertyKey];
           }
 
           //check if the value should reflect
@@ -198,21 +200,18 @@
       //the event is fired by the `t-component-panel`, this callback
       //queues the up the changes to apply if the component to be demoed
       //isn't available.
-      propertyChanged: function(event) {
+      propertyChanged: function(change) {
         var key, value;
 
-        if (!event.detail) {
+        if (!this._demoComponent) {
           return;
         }
 
-        key = event.detail.key;
-        value = event.detail.value;
+        //get the key of the property
+        key = change.path.split('.')[1];
+        value = change.value;
 
-        if (!this._demoComponent) {
-          //if the target is not available yet then queue up
-          //the values for later application
-          this._queue[key] = value;
-        } else {
+        if (key) {
           this.updateTargets(key, value);
         }
       },

@@ -184,8 +184,15 @@ Polymer({
             value: function() {
                 return null
             }
-        }
+        },
 
+        panelProperties: {
+            type: Object,
+            notify: true,
+            value: function() {
+                return {};
+            }
+        }
     },
 
     attached: function() {
@@ -261,15 +268,9 @@ Polymer({
                     var value = property.value;
 
                     metadata[propertyKey] = property;
-                    //value is the default value of the property
-                    if (value === 0 || value) {
-                        //inform others only if the value is `0` or `true`
-                        //or any other truthy value, we don't need to
-                        //update anything if the value is like `""` or `false`
-                        this.fire('property-changed', { 
-                            key: propertyKey, value: property.value
-                        });
-                    }
+
+                    //value is the initial value of the property
+                    this.set('panelProperties.' + propertyKey, property.value);
                 }.bind(this));
             }.bind(this));
 
@@ -291,14 +292,14 @@ Polymer({
         var key = e.model._nodes[0].getAttribute('data-value');
         var value = e.target.value;
 
-        this.fire('property-changed', {key: key, value: value});
+        this.set('panelProperties.' + key, value);
     },
 
     _checkBoxChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         var value = e.target.checked;
 
-        this.fire('property-changed', {key: key, value: value});
+        this.set('panelProperties.' + key, value);
     },
 
     _radioValueChanged: function(e) {
@@ -308,7 +309,7 @@ Polymer({
             key = e.target.getAttribute("data-value");
             value = e.target.selectedItem;
 
-            this.fire('property-changed', {key: key, value: value});
+            this.set('panelProperties.' + key, value);
         }
     },
 
@@ -316,21 +317,21 @@ Polymer({
         var key = e.target.getAttribute("data-value");
         var value = e.target.value;
 
-        this.fire('property-changed', {key: key, value: value});
+        this.set('panelProperties.' + key, value);
     },
 
     _colorChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         var value = e.target.value;
 
-        this.fire('property-changed', {key: key, value: value});
+        this.set('panelProperties.' + key, value);
     },
 
     _dropdownSelectionChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         var value = e.target.selectedItemLabel;
 
-        this.fire('property-changed', {key: key, value: value});
+        this.set('panelProperties.' + key, value);
     },
 
     _concatenate: function(string1, string2) {
