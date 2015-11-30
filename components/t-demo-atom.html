@@ -178,18 +178,30 @@
 
         propertyKeys.forEach(function(propertyKey) {
           var panelProperties = this.panelProperties;
+          var value, defaultValue, currentValue;
+
+          defaultValue = this._demoComponent.properties[propertyKey].value;
+
+          //if the defaultValue is not a primitive value
+          if (typeof defaultValue === 'function') {
+            //calling with `this` may not be necessary
+            defaultValue = defaultValue.call(this);
+          }
+
+          currentValue = this._demoComponent[propertyKey];
 
           //see if an initial value is provided in the properties panel
           if (propertyKey in panelProperties) {
             value = panelProperties[propertyKey];
-          } else {
-            //if there is no initial value provided by the properties panel
-            //then set the value of the property its default value
-            value = this._demoComponent[propertyKey];
+          } else if (defaultValue !== currentValue) {
+            //since initial value is not provided see if the current value
+            //differs from the default value, if it does
+            //then update the code and component
+            value = currentValue;
           }
 
           //check if the value should reflect
-          if (value === 0 || value) {
+          if (value !== undefined) {
             //update the targets
             this.updateTargets(propertyKey, value);
           }
