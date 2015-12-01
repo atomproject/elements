@@ -178,14 +178,26 @@
 
         propertyKeys.forEach(function(propertyKey) {
           var panelProperties = this.panelProperties;
-          var value, defaultValue, currentValue;
+          //get the attributes of the property, this is kind of _reflection_
+          var propertyAttributes = this._demoComponent.properties[propertyKey];
+          var value, defaultValue, currentValue, isComputed, isReadOnly;
+          var isTypeConsistent, type;
 
-          defaultValue = this._demoComponent.properties[propertyKey].value;
+          defaultValue = propertyAttributes.value;
+          isComputed = propertyAttributes.computed;
+          isReadOnly = propertyAttributes.readOnly;
+          type = propertyAttributes.type;
+
+          //if the property is a computed or read only property then
+          //don't touch it
+          if (isComputed || isReadOnly) {
+            return;
+          }
 
           //if the defaultValue is not a primitive value
           if (typeof defaultValue === 'function') {
             //calling with `this` may not be necessary
-            defaultValue = defaultValue.call(this);
+            defaultValue = defaultValue.call();
           }
 
           currentValue = this._demoComponent[propertyKey];
@@ -193,7 +205,9 @@
           //see if an initial value is provided in the properties panel
           if (propertyKey in panelProperties) {
             value = panelProperties[propertyKey];
-          } else if (defaultValue !== currentValue) {
+          } else if (currentValue !== undefined &&
+            defaultValue !== currentValue &&
+            currentValue.constructor.name === type.name) {
             //since initial value is not provided see if the current value
             //differs from the default value, if it does
             //then update the code and component
@@ -231,7 +245,7 @@
       //update the changes to properties
       updateTargets: function(key, value) {
         //update the demo component itself
-        this._demoComponent[key] = value;
+        this._demoComponent.set(key, value);
         //update the html attributes in code
         this.$.code.set('componentAttributes.' + key, value);
       },
