@@ -14,6 +14,7 @@ copy_design_docs() {
 		component_name="${component_name## }"
 		component_name="${component_name%% }"
 		doc_path="bower_components/$component_name/design-doc.md"
+		demo_file_path="bower_components/$component_name/demo/index.html"
 
 		if [[ -f "$doc_path" ]]; then
 			printf "%50s --> %s\n" "$doc_path" "$dir/design-doc.md"
@@ -21,6 +22,14 @@ copy_design_docs() {
 		else
 			# keep the design doc blank
 			(echo "" ) > "$dir/design-doc.md"
+		fi
+
+
+		if [[ -f "$demo_file_path" ]]; then
+			node utils/extract-inner-html.js "$component_name" "$demo_file_path" "$dir/inner.html"
+		else
+			# do something glaring here, this is too subtle
+			printf "%50s --> %s\n" "$demo_file_path" "No demo found"
 		fi
 	done
 

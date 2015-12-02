@@ -74,7 +74,7 @@
               <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
             </device-view>
             <hr>
-            <t-component-code id="code" component-name="[[componentName]]"></t-component-code>
+            <t-component-code id="code" component-name="[[componentName]]" component-html="[[componentHtml]]"></t-component-code>
           </div>
         </div>
         <div drawer>
@@ -92,6 +92,8 @@
         </div>
 
     </paper-drawer-panel>
+
+    <content></content>
   </template>
   <script>
     Polymer({
@@ -103,6 +105,7 @@
         filterWidth: String,
         propertiesFile: String,
         componentName: String,
+        componentHtml: String,
         demoFile: String,
         panelProperties: Object,
 
@@ -140,11 +143,17 @@
       ],
 
       ready: function() {
+        var template = Polymer.dom(this).querySelector('template');
+
         //if the load event of iframe triggers earlier than the
         //ready callback then `this.componentName` won't be available
         //so we trigger the `setDemoComponent` callback here
         if (!this._demoComponent) {
           this.setDemoComponent();
+        }
+
+        if (template) {
+          this.componentHtml = template.innerHTML;
         }
       },
 

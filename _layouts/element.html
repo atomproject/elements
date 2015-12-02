@@ -36,6 +36,9 @@ layout: default
                 demo-file="{{ bower_component_dir }}/demo/index.html"
                 properties-file="{{ bower_component_dir }}/property.json"
                 component-name="{{ page.component_name }}">
+                <template>
+                    {% include_relative inner.html %}
+                </template>
             </t-demo-atom>
         </div>
     </iron-pages>
