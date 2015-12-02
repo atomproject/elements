@@ -164,14 +164,53 @@
 
         if (targetComponent) {
           this._demoComponent = targetComponent;
-          this.applyPanelProperties();
+          this.applyProperties();
         }
+      },
+
+      canBeChanged: function(propertyAttributes) {
+        var defaultValue, isComputed, isReadOnly;
+
+        isComputed = propertyAttributes.computed;
+        isReadOnly = propertyAttributes.readOnly;
+
+        //if the property is a computed or read only property then
+        //don't touch it
+        if (isComputed || isReadOnly) {
+          return false;
+        }
+
+        return true;
+      },
+
+      getDefaultValue: function(propertyAttributes) {
+        var defaultValue = propertyAttributes.value;
+
+        //if the defaultValue is not a primitive value
+        if (typeof defaultValue === 'function') {
+          //we're not calling with `this` since nowhere do docs (polymer)
+          //mention that the initializer function __must__ have access
+          //to the current element
+          return defaultValue.call();
+        }
+
+        return defaultValue;
+      },
+
+      applyCurrentValue: function(defaultValue, currentValue,
+        propertyAttributes) {
+        //both the default and current values should be different but
+        //they must be of same type. The `stringify` function is needed
+        //to handle the eqaulity checks for complex types like objects.
+        return currentValue !== undefined &&
+          JSON.stringify(defaultValue) !== JSON.stringify(currentValue) &&
+          currentValue.constructor.name === propertyAttributes.type.name;
       },
 
       //Call this method when component to be demoed is available in DOM.
       //Get default property values of the element and show them as attributes
       //in the HTML code
-      applyPanelProperties: function() {
+      applyProperties: function() {
         //get the custom properties of the element
         var properties = this._demoComponent.properties;
         var propertyKeys = Object.keys(properties);
@@ -180,41 +219,20 @@
           var panelProperties = this.panelProperties;
           //get the attributes of the property, this is kind of _reflection_
           var propertyAttributes = this._demoComponent.properties[propertyKey];
-          var value, defaultValue, currentValue, isComputed, isReadOnly;
-          var applyCurrentValue, type;
+          var value, defaultValue, currentValue, applyCurrentValue;
 
-          defaultValue = propertyAttributes.value;
-          isComputed = propertyAttributes.computed;
-          isReadOnly = propertyAttributes.readOnly;
-          type = propertyAttributes.type;
-
-          //if the property is a computed or read only property then
-          //don't touch it
-          if (isComputed || isReadOnly) {
+          if (!this.canBeChanged(propertyAttributes)) {
             return;
           }
 
-          //if the defaultValue is not a primitive value
-          if (typeof defaultValue === 'function') {
-            //we're not calling with `this` since nowhere do docs (polymer)
-            //mention that the initializer function __must__ have access
-            //to the current element
-            defaultValue = defaultValue.call();
-          }
-
+          defaultValue = this.getDefaultValue(propertyAttributes);
           currentValue = this._demoComponent[propertyKey];
-
-          //both the default and current values should be different but
-          //they must be of same type. The `stringify` function is needed
-          //to handle the eqaulity checks for complex types like objects.
-          applyCurrentValue = currentValue !== undefined &&
-            JSON.stringify(defaultValue) !== JSON.stringify(currentValue) &&
-            currentValue.constructor.name === type.name;
 
           //see if an initial value is provided in the properties panel
           if (propertyKey in panelProperties) {
             value = panelProperties[propertyKey];
-          } else if (applyCurrentValue) {
+          } else if (this.applyCurrentValue(defaultValue, currentValue,
+              propertyAttributes)) {
             //since initial value is not provided see if the current value
             //differs from the default value, if it does
             //then update the code and component
