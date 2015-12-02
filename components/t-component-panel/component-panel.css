@@ -133,3 +133,13 @@
 #propertyMenu > .list .item:last-child {
     border: none;
 }
+
+label.data-feeder {
+    margin-top: 10px;
+    color: #777777;
+    font-size: 16px;
+}
+
+t-data-feeder {
+    --placeholder-color: rgba(100, 100, 100, 0.5);
+}

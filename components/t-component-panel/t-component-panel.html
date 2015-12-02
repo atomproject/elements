@@ -94,7 +94,12 @@
                                 <t-icon-selector data-value$="{{key}}" label$="{{_getValue(_metadata, key,'name')}}" value="{{_getValue(_metadata, key)}}" on-icon-changed="_textChanged"></t-icon-selector>
                             </template>
                             <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'list')}}">
-                                <t-data-feeder parameter="{{key}}" data="{{_getValue(_metadata, key)}}"></t-data-feeder>
+                                <label class="data-feeder">Add Items</label>
+                                <t-data-feeder
+                                   data-key="{{key}}"
+                                   on-data-changed="dataChanged"
+                                   data='{{_getValue(_metadata, key)}}'>
+                                </t-data-feeder>
                             </template>
                             <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'api')}}">
                                 <div class="layout horizontal">
@@ -332,6 +337,15 @@ Polymer({
         var value = e.target.selectedItemLabel;
 
         this.set('panelProperties.' + key, value);
+    },
+
+    dataChanged: function(change) {
+        var key = change.target.dataKey;
+        var arr = this.get('panelProperties.' + key);
+        var value = change.detail.value;
+        var path = change.detail.path;
+
+        this.set('panelProperties.' + path, value);
     },
 
     _concatenate: function(string1, string2) {

@@ -261,17 +261,29 @@
       //queues the up the changes to apply if the component to be demoed
       //isn't available.
       propertyChanged: function(change) {
-        var key, value;
+        var key, parts, value, path;
 
         if (!this._demoComponent) {
           return;
         }
 
-        //get the key of the property
-        key = change.path.split('.')[1];
+        parts = change.path.split('.');
+        key = parts[1];
         value = change.value;
 
-        if (key) {
+        if (parts.length > 2) {
+          path = parts.slice(1).join('.');
+          //this is the magical part, this is shared memory used to optimum
+          //any non-primitive value like an array or an object will be
+          //shared between the property panel and the demo component. I mean
+          //it memory wise, so the objects have already changed at this point
+          //all we have to do is notify the demo component of the changes.
+          this._demoComponent.notifyPath(path, value);
+
+          value = this.get('panelProperties.' + key);
+          value = JSON.stringify(value);
+          this.$.code.set('componentAttributes.' + key, value);
+        } else if (parts.length > 1) {
           this.updateTargets(key, value);
         }
       },
