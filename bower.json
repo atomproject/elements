@@ -82,6 +82,8 @@
     "paper-drawer-panel": "~1.0.5",
     "paper-dialog": "~1.0.3",
     "paper-dialog-scrollable": "1.0.1",
-    "t-autosuggest": "master"
+    "t-autosuggest": "master",
+    "iron-icon": "~1.0.7",
+    "iron-icons": "~1.0.5"
   }
 }
