@@ -60,6 +60,10 @@
         border-bottom: 1px solid;
         border-color: var(--grey-one);
       }
+
+      #demo {
+        width: 100%;
+      }
     </style>
 
   	<paper-drawer-panel id="filterDrawerPanel" class="main-drawer-panel"
@@ -77,7 +81,11 @@
               <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
             </device-view>
             <hr>
-            <t-component-code id="code" component-name="[[componentName]]" component-html="[[componentHtml]]"></t-component-code>
+            <t-component-code id="code"
+              org-name="[[orgName]]"
+              component-name="[[componentName]]"
+              component-html="[[componentHtml]]">
+            </t-component-code>
           </div>
         </div>
         <div drawer>
@@ -111,6 +119,7 @@
         componentHtml: String,
         demoFile: String,
         panelProperties: Object,
+        orgName: String,
 
         landscape: {
           type: Boolean,

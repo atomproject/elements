@@ -6,7 +6,10 @@ description: >
 # we don't want default permalink settings since
 # they are suited for blogs, this is not a blog
 permalink: none
+# following two settings have no place in this config file
+# they must be configured at some place else
 travis_base_url: https://travis-ci.org/atomelements
+org_name: atomelements
 highlighter: pygments
 markdown: kramdown
 # instructs GitHub to not build this repo

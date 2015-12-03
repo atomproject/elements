@@ -35,7 +35,8 @@ layout: default
             <t-demo-atom
                 demo-file="{{ bower_component_dir }}/demo/index.html"
                 properties-file="{{ bower_component_dir }}/property.json"
-                component-name="{{ page.component_name }}">
+                component-name="{{ page.component_name }}"
+                org-name="{{ site.org_name }}">
                 <template>
                     {% include_relative inner.html %}
                 </template>

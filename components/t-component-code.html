@@ -17,22 +17,79 @@
 			}
 
 			highlightjs-element {
-				margin-top: 25px;
 				padding: 5px 0;
 				border: 1px solid;
 		        border-color: var(--grey-two);
 				border-radius: 5px;
 			}
 
-			h3 {
+			:host > * {
 				padding-left: 0.5em;
+			}
+
+			.step-1, .step-2 {
+				padding-left: 1em;
+			}
+
+			.substep {
+				padding-left: 1em;
+			}
+
+			h3 {
+				font-weight: 600;
+				padding-top: 25px;
+			}
+
+			h4, h5 {
 				font-weight: normal;
+			}
+
+			h5 {
+				font-size: inherit;
 			}
 		</style>
 		
-		<h3>Component Code</h3>
+		<h3>Element code</h3>
 		<highlightjs-element text="{{elementCode}}">
 		</highlightjs-element>
+
+		<h3>To use this element on a web page</h3>
+
+		<h4>Step 1: Get the dependencies</h4>
+		<div class="step-1">
+			<p>
+				You need two files for using this element, the polyfill library
+				<code>webcomponentsjs</code> and <code><span>{{componentName}}</span>.html</code> file.<br>
+				You can either use a package manager like <b>bower</b> to install the files and then
+				use them or a <b>CDN</b> to include the files directly on your web page.
+			</p>
+
+			<h4>Option 1: CDN (Recommended for quick and simple usage)</h4>
+			<highlightjs-element text="{{cdnImports(componentName, orgName)}}">
+			</highlightjs-element>
+
+			<h4>Option 2: Bower (Recommended for production usage)</h4>
+
+			<div class="substep">
+				<h5>Install the libraries</h5>
+				<highlightjs-element lang="bash"
+					text="{{bowerInstalls(componentName, orgName)}}">
+				</highlightjs-element>
+
+				<h5>Include the files</h5>
+				<highlightjs-element text="{{bowerImports(componentName, orgName)}}">
+				</highlightjs-element>
+			</div>
+		</div>
+
+		<h4>Step 2: Add the element code</h4>
+		<div class="step-2">
+			<p>
+				Once you've got the requisite depenedencies your web page, all you need
+				to do is <b>copy</b> the code in <b>Element Code</b> section and paste it in
+				your web page.
+			</p>
+		</div>
 	</template>
 	<script>
 		Polymer({
@@ -56,11 +113,60 @@
 
 				componentAttributes: {
 					type: Object
+				},
+
+				orgName: {
+					type: String
 				}
 			},
 
 			beautifyOpts: {
 				wrap_line_length: 80,
+			},
+
+			bowerInstalls: function(name, orgName) {
+				var installs = 'bower install --save ';
+
+				installs += 'webcomponents/webcomponentsjs ';
+				installs += orgName + '/' + name + ' ';
+
+				return installs;
+			},
+
+			cdnImports: function(name, orgName) {
+				var baseDomain = 'https://atomproject.github.io/elements/bower_components';
+				var polyfillSrc = 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.18/webcomponents-lite.min.js';
+				//TODO: the component repo name can be different, handle it.
+				var componentRepoName = name;
+				var componentSrc = '/' + componentRepoName + '/' + name + '.html';
+
+				componentSrc = baseDomain + componentSrc;
+
+				return this.serializeImports(polyfillSrc, componentSrc);
+			},
+
+			bowerImports: function(name) {
+				var baseDomain = '{{ path to bower_components dir }}';
+				var polyfillSrc = '/webcomponentsjs/webcomponents-lite.js';
+				//TODO: the component repo name can be different, handle it.
+				var componentRepoName = name;
+				var componentSrc = '/' + componentRepoName + '/' + name + '.html';
+
+				polyfillSrc = baseDomain + polyfillSrc;
+				componentSrc = baseDomain + componentSrc;
+
+				return this.serializeImports(polyfillSrc, componentSrc);
+			},
+
+			serializeImports: function(polyfillSrc, componentSrc) {
+				var imports = [];
+
+				//we can't have either script start tag or script end tag inside
+				//the string literal because polymer html parser dies
+				imports.push('<' + 'script type="text/javascript" src="' + polyfillSrc + '"></' + 'script' + '>');
+				imports.push('<link rel="import" href="' + componentSrc + '">')
+
+				return imports.join('\n');
 			},
 
 			nameChanged: function(newName) {
@@ -69,8 +175,8 @@
 			},
 
 			updateCode: function() {
-				var keys = Object.keys(this.componentAttributes || {});
-				var attributes, startTag, endTag, innerHTML, code;
+				var attributes = Object.keys(this.componentAttributes || {});
+				var startTag, endTag, innerHTML, code;
 
 				if (!this.componentName) {
 					return;
@@ -80,30 +186,7 @@
 				innerHTML = this.componentHtml || '';
 				//iterate over all the attributes and create
 				//the attribute list for use in start tag
-				attributes = keys.map(function(key) {
-					var attr = Polymer.CaseMap.camelToDashCase(key);
-					var value = this.componentAttributes[key];
-
-					//attribute values can be of only two types
-					//Boolean or String
-					if (this.isBoolean(value)) {
-						if (value) {
-							//only output the key
-							return key;
-						} else {
-							return;
-						}
-					}
-
-					//so the value is not Boolean then it is of type String
-					value = this.serialize(value);
-
-					//output the attribute and value pair of
-					return key + '="' + this.escapeHtml(value) + '"';
-				}.bind(this)).filter(function(item) {
-					//remove the falsy items from the list
-					return Boolean(item);
-				}).join(' ');
+				attributes = this.serializeAttributes(attributes);
 
 				attributes = attributes ? (' ' + attributes) : '';
 				startTag = '<' + this.componentName + attributes + '>';
@@ -111,6 +194,34 @@
 				code = startTag + innerHTML + endTag;
 
 				return window.html_beautify(code, this.beautifyOpts);
+			},
+
+			serializeAttributes: function(attributes) {
+				return attributes.map(function(attr) {
+					var attrVal = this.componentAttributes[attr];
+
+					attr = Polymer.CaseMap.camelToDashCase(attr);
+
+					//attribute values can be of only two types
+					//Boolean or String
+					if (this.isBoolean(attrVal)) {
+						if (attrVal) {
+							//only output the attribute
+							return attr;
+						} else {
+							return;
+						}
+					}
+
+					//so the value is not Boolean then it is of type String
+					attrVal = this.serialize(attrVal);
+
+					//output the attribute and value pair
+					return attr + '="' + this.escapeHtml(attrVal) + '"';
+				}.bind(this)).filter(function(item) {
+					//remove the falsy items from the list
+					return Boolean(item);
+				}).join(' ');
 			},
 
 			isBoolean: function(value) {

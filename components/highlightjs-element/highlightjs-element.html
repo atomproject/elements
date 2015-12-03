@@ -9,12 +9,16 @@
     <style>:host { display: block; }</style>
     <!-- we need the `xml` class for better highlighting,
     it is not provided by the element by Polymer -->
-    <pre><code id="content" class="xml hljs"></code></pre>
+    <pre><code id="content" class$="{{highlightClasses(lang)}}"></code></pre>
   </template>
   <script>
     Polymer({
       is: 'highlightjs-element',
       properties: {
+        lang: {
+          type: String,
+          value: 'xml'
+        },
         /**
          * The code text to syntax highlight. If missing, a `<template>` should
          * be used in the light dom that provides the markup to highlight. See the
@@ -29,7 +33,11 @@
 
       _textChanged: function() {
         // we only want the xml highlighting as of now
-        this.$.content.innerHTML = hljs.highlight('xml', this.text || '').value;
+        this.$.content.innerHTML = hljs.highlight(this.lang, this.text || '').value;
+      },
+
+      highlightClasses: function(lang) {
+        return lang + ' hljs';
       },
 
       ready: function() {
