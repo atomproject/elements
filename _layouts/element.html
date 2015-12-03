@@ -44,4 +44,13 @@ layout: default
     </iron-pages>
 </div>
 
-<script type="text/javascript" src="{{ site.baseurl }}/scripts/component.js"></script>
+<script type="text/javascript">
+    (function() {
+        var pages = document.querySelector('iron-pages');
+        var tabs = document.querySelector('paper-tabs');
+        
+        tabs.addEventListener('iron-select', function () {
+            pages.selected = tabs.selected;
+        });
+    })(); 
+</script>
