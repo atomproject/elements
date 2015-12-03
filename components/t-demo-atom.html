@@ -1,3 +1,5 @@
+<script type="text/javascript" src="../scripts/lodash.custom.js"></script>
+
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/t-device-view/t-device-view.html">
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
@@ -212,8 +214,10 @@
         //they must be of same type. The `stringify` function is needed
         //to handle the eqaulity checks for complex types like objects.
         return currentValue !== undefined &&
-          JSON.stringify(defaultValue) !== JSON.stringify(currentValue) &&
-          currentValue.constructor.name === propertyAttributes.type.name;
+          currentValue !== null &&
+          !isNaN(currentValue) &&
+          currentValue.constructor === propertyAttributes.type &&
+          _.isEqual(defaultValue, currentValue);
       },
 
       //Call this method when component to be demoed is available in DOM.
