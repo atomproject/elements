@@ -1,3 +1,4 @@
+<script type="text/javascript" src="../bower_components/iframe-resizer/js/iframeResizer.js"></script>
 <script type="text/javascript" src="../scripts/lodash.custom.js"></script>
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
@@ -41,7 +42,7 @@
         overflow: auto;
       }
 
-      div[main] {
+      .header, .body {
         padding: 8px 16px;
       }
 
@@ -173,10 +174,33 @@
         iframeDoc = this.$.demo.contentWindow.document;
         targetComponent = iframeDoc.querySelector(this.componentName);
 
+        this.initIframe(this.$.demo);
+
         if (targetComponent) {
           this._demoComponent = targetComponent;
           this.applyProperties();
         }
+      },
+
+      initIframe: function(iframe) {
+        var script, doc, head;
+
+        iFrameResize({
+          checkOrigin: true,
+          heightCalculationMethod: 'bodyScroll'
+        }, iframe);
+
+        doc = iframe.contentWindow.document;
+
+        script = doc.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.defer = true;
+        //we need a better way of serving this file
+        script.src = 'https://rawgit.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js'
+
+        head = doc.querySelector('head');
+        head.appendChild(script);
       },
 
       canBeChanged: function(propertyAttributes) {

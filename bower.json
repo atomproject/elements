@@ -61,7 +61,8 @@
     "t-icon-selector": "atomelements/t-icon-selector#~0.0.0",
     "paper-dialog": "polymerelements/paper-dialog#~1.0.3",
     "paper-dialog-scrollable": "polymerelements/paper-dialog-scrollable#~1.1.0",
-    "t-autosuggest": "atomelements/t-autosuggest#master"
+    "t-autosuggest": "atomelements/t-autosuggest#master",
+    "iframe-resizer": "~3.5.1"
   },
   "resolutions": {
     "t-input": "master",
