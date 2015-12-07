@@ -62,7 +62,9 @@
     "paper-dialog": "polymerelements/paper-dialog#~1.0.3",
     "paper-dialog-scrollable": "polymerelements/paper-dialog-scrollable#~1.1.0",
     "t-autosuggest": "atomelements/t-autosuggest#master",
-    "iframe-resizer": "~3.5.1"
+    "iframe-resizer": "~3.5.1",
+    "particles.js": "~2.0.0",
+    "webcomponentsjs": "~0.7.19"
   },
   "resolutions": {
     "t-input": "master",
