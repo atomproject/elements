@@ -41,6 +41,8 @@ copy_design_docs
 if [ "$1" == "--prod" ]
 then
 	jekyll build --config _config.yml,_config.prod.yml
+	node_modules/vulcanize/bin/vulcanize --inline-script --strip-comments components/elements.html | \
+	node_modules/crisper/bin/crisper --script-in-head=false --html _site/components/elements.html --js _site/scripts/build.js
 else
 	jekyll build
 fi

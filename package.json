@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/atomproject/elements#readme",
   "devDependencies": {
-    "chalk": "^1.1.1"
+    "chalk": "^1.1.1",
+    "crisper": "^2.0.1",
+    "vulcanize": "^1.14.0"
   },
   "dependencies": {
     "cheerio": "^0.19.0"
