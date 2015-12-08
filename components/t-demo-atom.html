@@ -138,10 +138,10 @@
           type:Boolean,
           value:false,
           reflectToAttribute:true
-        }
-      },
+        },
 
-      _demoComponent: undefined,
+        _demoComponent: Object
+      },
 
       //listen to the load event of iframe
       listeners: {
@@ -228,7 +228,7 @@
         return true;
       },
 
-      getDefaultValue: function(propertyAttributes) {
+      getDefaultValue: function(propertyAttributes, component) {
         var defaultValue = propertyAttributes.value;
 
         //if the defaultValue is not a primitive value
@@ -236,7 +236,7 @@
           //we're not calling with `this` since nowhere do docs (polymer)
           //mention that the initializer function __must__ have access
           //to the current element
-          return defaultValue.call();
+          return defaultValue.call(component);
         }
 
         return defaultValue;
@@ -272,7 +272,8 @@
             return;
           }
 
-          defaultValue = this.getDefaultValue(propertyAttributes);
+          defaultValue = this.getDefaultValue(propertyAttributes,
+            this._demoComponent);
           currentValue = this._demoComponent[propertyKey];
 
           //see if an initial value is provided in the properties panel

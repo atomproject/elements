@@ -1,42 +1,24 @@
-<link rel="import" href="../../bower_components/polymer/polymer.html" />
+<link rel="import" href="../../bower_components/polymer/polymer.html">
 
-<link rel="import" href="../../bower_components/t-input/t-input.html" />
-<link rel="import" href="../../bower_components/t-button/t-button.html" />
-<link rel="import" href="../../bower_components/t-slider/t-slider.html" />
-<link rel="import" href="../../bower_components/t-dropdown/t-dropdown.html" />
-<link rel="import" href="../../bower_components/t-colorpicker/t-colorpicker.html" />
-<link rel="import" href="../../bower_components/t-radio-group/t-radio-group.html" />
-<link rel="import" href="../../bower_components/t-radio-button/t-radio-button.html" />
-<link rel="import" href="../../bower_components/t-icon-selector/t-icon-selector.html" />
-<link rel="import" href="../../bower_components/t-data-feeder/t-data-feeder.html" />
+<link rel="import" href="../../bower_components/t-input/t-input.html">
+<link rel="import" href="../../bower_components/t-button/t-button.html">
+<link rel="import" href="../../bower_components/t-slider/t-slider.html">
+<link rel="import" href="../../bower_components/t-dropdown/t-dropdown.html">
+<link rel="import" href="../../bower_components/t-colorpicker/t-colorpicker.html">
+<link rel="import" href="../../bower_components/t-radio-group/t-radio-group.html">
+<link rel="import" href="../../bower_components/t-radio-button/t-radio-button.html">
+<link rel="import" href="../../bower_components/t-icon-selector/t-icon-selector.html">
+<link rel="import" href="../../bower_components/t-data-feeder/t-data-feeder.html">
 <link rel="import" href="../../bower_components/t-shared-components/jquery.html">
 
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html" />
-<link rel="import" href="../../bower_components/t-checkbox/t-checkbox.html" />
-<link rel="import" href="../../bower_components/paper-item/paper-item.html" />
-<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html" />
-<link rel="import" href="../../bower_components/iron-meta/iron-meta.html" />
-<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html" />
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/t-checkbox/t-checkbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 
 <script src="plugin/jquery.jsonview.js"></script>
 <script src="plugin/styleddropdown.js"></script>
-
-<!--
-    `<t-component-panel>` is a polymer component that generates a playground for interacting with components.
-
-
-    <div class="demo-canvas">
-        
-    </div>
-
-    <t-component-panel property-source="property url" component="component name">
-        
-        <div class="component">
-            
-            'component template'
-        </div>
-    </t-component-panel>        
--->
 
 <dom-module id="t-component-panel">
     <link rel="import" type="css" href="component-panel.css">
@@ -162,7 +144,6 @@ Polymer({
             value: []
         },
 
-        component: String,
         panelName: String,
         metadataSource: String,
 
@@ -170,15 +151,6 @@ Polymer({
          * The property src
          */
         propertySource: {
-            type: String,
-            value: '',
-            notify: true
-        },
-
-        /**
-         * Target component is data component or not
-         */
-        isDataComponent: {
             type: String,
             value: '',
             notify: true
@@ -207,10 +179,9 @@ Polymer({
 
     _isTypeMatching: function(metadata, key, type) {
         if (metadata[key].type.toLowerCase() == type) {
-            if (type == 'list')
-                this.isDataComponent = true;
             return true;
         }
+
         return false;
     },
 
@@ -357,12 +328,6 @@ Polymer({
         this.$.apiMetadata.generateRequest();
     },
 
-    setPanel: function() {
-        this.keys = [];
-        this._sections = [];
-        this.$.call.generateRequest();
-    },
-
     //TODO: verify working
     _openModal: function() {
         $(this.$.jsonView).JSONView(this.jsonResponse, {
@@ -380,11 +345,6 @@ Polymer({
     //TODO: verify working
     _closeModal: function(){
         this.$.bindingModal.hidden = true;
-    },
-
-    fireAction: function(event) {
-        //TODO: find out who handles following event?
-        this.fire('on-' + this.component + '-action');
     }
 })
 </script>
