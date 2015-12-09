@@ -1,3 +1,4 @@
+<script src="../../scripts/lodash.custom.js"></script>
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../../bower_components/t-input/t-input.html">
@@ -246,8 +247,8 @@ Polymer({
                     metadata[propertyKey] = property;
 
                     //value is the initial value of the property
-                    this.fire('property-changed', {
-                        key: propertyKey, value: property.value
+                    this.fire('path-changed', {
+                        path: propertyKey, value: property.value
                     });
                 }.bind(this));
             }.bind(this));
@@ -270,14 +271,14 @@ Polymer({
         var key = e.model._nodes[0].getAttribute('data-value');
         var value = e.target.value;
 
-        this.fire('property-changed', {key: key, value: value});
+        this.fire('path-changed', {path: key, value: value});
     },
 
     _checkBoxChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         var value = e.target.checked;
 
-        this.fire('property-changed', {key: key, value: value});
+        this.fire('path-changed', {path: key, value: value});
     },
 
     _radioValueChanged: function(e) {
@@ -287,7 +288,7 @@ Polymer({
             key = e.target.getAttribute("data-value");
             value = e.target.selectedItem;
 
-            this.fire('property-changed', {key: key, value: value});
+            this.fire('path-changed', {path: key, value: value});
         }
     },
 
@@ -295,25 +296,37 @@ Polymer({
         var key = e.target.getAttribute("data-value");
         var value = e.target.value;
 
-        this.fire('property-changed', {key: key, value: value});
+        this.fire('path-changed', {path: key, value: value});
     },
 
     _colorChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         var value = e.target.value;
 
-        this.fire('property-changed', {key: key, value: value});
+        this.fire('path-changed', {path: key, value: value});
     },
 
     _dropdownSelectionChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         var value = e.target.selectedItemLabel;
 
-        this.fire('property-changed', {key: key, value: value});
+        this.fire('path-changed', {path: key, value: value});
     },
 
     dataChanged: function(change) {
+        var key = change.target.dataKey;
+        var path = change.detail.path;
+        var value = change.detail.value;
 
+        if (!value) {
+            return;
+        }
+
+        if (!path) {
+             path = key;
+        }
+
+        this.fire('path-changed', {path: path, value: value});
     },
 
     _getMetadata: function() {
