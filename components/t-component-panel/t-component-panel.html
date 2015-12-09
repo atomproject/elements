@@ -54,10 +54,11 @@
                                     <p>{{_getValue(_metadata, key,'name')}}</p>
                                     <div class="flex"></div>
                                     <template is="dom-if" if="{{_isGreaterThanThree(_metadata,key)}}">
-                                        <t-dropdown data-value$="{{key}}" selected-item-label="{{_getValue(_metadata, key)}}" on-dropdown-value-changed="_dropdownSelectionChanged" required>
-                                            <template is="dom-repeat" items="{{_getValue(_metadata, key, 'values')}}" as="val">
-                                                <paper-item>{{val}}</paper-item>
-                                            </template>
+                                        <t-dropdown data-value$="{{key}}"
+                                            selected-item-label="{{_getValue(_metadata, key)}}"
+                                            on-dropdown-value-changed="_dropdownSelectionChanged"
+                                            data="{{_getValue(_metadata, key, 'values')}}"
+                                            required>
                                         </t-dropdown>
                                     </template>
                                     <template is="dom-if" if="{{_isLessThanThree(_metadata,key)}}">
@@ -161,14 +162,6 @@ Polymer({
             value: function() {
                 return null
             }
-        },
-
-        panelProperties: {
-            type: Object,
-            notify: true,
-            value: function() {
-                return {};
-            }
         }
     },
 
@@ -194,16 +187,23 @@ Polymer({
     },
 
     _getValue: function(metadata, key, field) {
-        if (field == 'values')
-            return metadata[key].values;
-        if (field == 'name')
-            return metadata[key].name;
-        if (this.targetComponent != null && this.targetComponent[key] != undefined) {
-            return this.targetComponent[key];
+        var value;
+
+        switch(field) {
+            case 'values':
+                value = metadata[key].values;
+                break;
+            case 'name':
+                value = metadata[key].name;
+                break;
+            case undefined:
+                value = metadata[key].value;
+                break;
+            default:
+                value = metadata[key][field];
         }
-        if (field == undefined)
-            return metadata[key].value;
-        return metadata[key][field];
+
+        return value;
     },
 
     _isGreaterThanThree: function(metadata, key) {
@@ -246,7 +246,9 @@ Polymer({
                     metadata[propertyKey] = property;
 
                     //value is the initial value of the property
-                    this.set('panelProperties.' + propertyKey, property.value);
+                    this.fire('property-changed', {
+                        key: propertyKey, value: property.value
+                    });
                 }.bind(this));
             }.bind(this));
 
@@ -268,14 +270,14 @@ Polymer({
         var key = e.model._nodes[0].getAttribute('data-value');
         var value = e.target.value;
 
-        this.set('panelProperties.' + key, value);
+        this.fire('property-changed', {key: key, value: value});
     },
 
     _checkBoxChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         var value = e.target.checked;
 
-        this.set('panelProperties.' + key, value);
+        this.fire('property-changed', {key: key, value: value});
     },
 
     _radioValueChanged: function(e) {
@@ -285,7 +287,7 @@ Polymer({
             key = e.target.getAttribute("data-value");
             value = e.target.selectedItem;
 
-            this.set('panelProperties.' + key, value);
+            this.fire('property-changed', {key: key, value: value});
         }
     },
 
@@ -293,34 +295,25 @@ Polymer({
         var key = e.target.getAttribute("data-value");
         var value = e.target.value;
 
-        this.set('panelProperties.' + key, value);
+        this.fire('property-changed', {key: key, value: value});
     },
 
     _colorChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         var value = e.target.value;
 
-        this.set('panelProperties.' + key, value);
+        this.fire('property-changed', {key: key, value: value});
     },
 
     _dropdownSelectionChanged: function(e) {
         var key = e.target.getAttribute("data-value");
         var value = e.target.selectedItemLabel;
 
-        this.set('panelProperties.' + key, value);
+        this.fire('property-changed', {key: key, value: value});
     },
 
     dataChanged: function(change) {
-        var key = change.target.dataKey;
-        var arr = this.get('panelProperties.' + key);
-        var value = change.detail.value;
-        var path = change.detail.path;
 
-        this.set('panelProperties.' + path, value);
-    },
-
-    _concatenate: function(string1, string2) {
-        return string1.toLowerCase() + ' ' + string2;
     },
 
     _getMetadata: function() {

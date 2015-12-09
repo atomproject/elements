@@ -94,7 +94,7 @@
             </t-device-toggle>
             <div style="overflow:auto;">
               <t-component-panel id="componentPanel"
-                panel-properties="{{panelProperties}}"
+                on-property-changed="{{propertyChanged}}"
                 property-source="{{propertiesFile}}"
                 component="{{componentName}}">
               </t-component-panel>
@@ -118,7 +118,6 @@
         componentName: String,
         componentHtml: String,
         demoFile: String,
-        panelProperties: Object,
         orgName: String,
 
         landscape: {
@@ -147,12 +146,6 @@
       listeners: {
         'demo.load': 'setDemoComponent'
       },
-
-      //update the demo component and html code when
-      //property values are updated by the user
-      observers: [
-        'propertyChanged(panelProperties.*)'
-      ],
 
       ready: function() {
         var template = Polymer.dom(this).querySelector('template');
@@ -245,13 +238,13 @@
       applyCurrentValue: function(defaultValue, currentValue,
         propertyAttributes) {
         //both the default and current values should be different but
-        //they must be of same type. The `stringify` function is needed
+        //they must be of same type. The `_.isEqual` function is needed
         //to handle the eqaulity checks for complex types like objects.
         return currentValue !== undefined &&
           currentValue !== null &&
           !isNaN(currentValue) &&
           currentValue.constructor === propertyAttributes.type &&
-          _.isEqual(defaultValue, currentValue);
+          !_.isEqual(defaultValue, currentValue);
       },
 
       //Call this method when component to be demoed is available in DOM.
@@ -263,7 +256,10 @@
         var propertyKeys = Object.keys(properties);
 
         propertyKeys.forEach(function(propertyKey) {
-          var panelProperties = this.panelProperties;
+          //TODO: since we aren't using `panelProperties` in the panel component
+          //shouldn't we get the properties from some other property on the
+          //panel component?
+          var panelProperties = this.$.componentPanel.panelProperties || {};
           //get the attributes of the property, this is kind of _reflection_
           var propertyAttributes = this._demoComponent.properties[propertyKey];
           var value, defaultValue, currentValue, applyCurrentValue;
@@ -279,18 +275,19 @@
           //see if an initial value is provided in the properties panel
           if (propertyKey in panelProperties) {
             value = panelProperties[propertyKey];
+            //clone the property if it is object
+            if (_.isObject(value)) {
+              value = JSON.parse(JSON.stringify(value));
+            }
+
+            this.updateTargets(propertyKey, value);
           } else if (this.applyCurrentValue(defaultValue, currentValue,
               propertyAttributes)) {
             //since initial value is not provided see if the current value
-            //differs from the default value, if it does
-            //then update the code and component
+            //differs from the default value, if it does then update the
+            //update the values in html code of the component
             value = currentValue;
-          }
-
-          //check if the value should reflect
-          if (value !== undefined) {
-            //update the targets
-            this.updateTargets(propertyKey, value);
+            this.$.code.set('componentAttributes.' + propertyKey, value);
           }
         }.bind(this));
       },
@@ -299,32 +296,17 @@
       //the event is fired by the `t-component-panel`, this callback
       //queues the up the changes to apply if the component to be demoed
       //isn't available.
-      propertyChanged: function(change) {
-        var key, parts, value, path;
+      propertyChanged: function(event) {
+        var key, value;
+
+        key = change.detail.key;
+        value = change.detail.value;
 
         if (!this._demoComponent) {
           return;
         }
 
-        parts = change.path.split('.');
-        key = parts[1];
-        value = change.value;
-
-        if (parts.length > 2) {
-          path = parts.slice(1).join('.');
-          //this is the magical part, this is shared memory used to optimum
-          //any non-primitive value like an array or an object will be
-          //shared between the property panel and the demo component. I mean
-          //it memory wise, so the objects have already changed at this point
-          //all we have to do is notify the demo component of the changes.
-          this._demoComponent.notifyPath(path, value);
-
-          value = this.get('panelProperties.' + key);
-          value = JSON.stringify(value);
-          this.$.code.set('componentAttributes.' + key, value);
-        } else if (parts.length > 1) {
-          this.updateTargets(key, value);
-        }
+        this.updateTargets(key, value);
       },
       
       //update the changes to properties
