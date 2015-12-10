@@ -59,7 +59,8 @@
 		<div class="step-1">
 			<p>
 				You need two files for using this element, the polyfill library
-				<code>webcomponentsjs</code> and <code><span>{{componentName}}</span>.html</code> file.<br>
+				<code>webcomponentsjs</code> and <code><span>{{componentName}}</span>.html</code> file,
+				the third file <code>theme.html</code> contains styles so that your component looks good.<br>
 				You can either use a package manager like <b>bower</b> to install the files and then
 				use them or a <b>CDN</b> to include the files directly on your web page.
 			</p>
@@ -128,8 +129,9 @@
 			bowerInstalls: function(name, orgName) {
 				var installs = 'bower install --save ';
 
-				installs += 'webcomponents/webcomponentsjs ';
+				installs += 'webcomponentsjs ';
 				installs += orgName + '/' + name + ' ';
+				installs += orgName + '/t-shared-components ';
 
 				return installs;
 			},
@@ -140,10 +142,12 @@
 				//TODO: the component repo name can be different, handle it.
 				var componentRepoName = name;
 				var componentSrc = '/' + componentRepoName + '/' + name + '.html';
+				var themeSrc = '/t-shared-components/theme.html';
 
 				componentSrc = baseDomain + componentSrc;
+				themeSrc = baseDomain + themeSrc;
 
-				return this.serializeImports(polyfillSrc, componentSrc);
+				return this.serializeImports(polyfillSrc, componentSrc, themeSrc);
 			},
 
 			bowerImports: function(name) {
@@ -152,20 +156,23 @@
 				//TODO: the component repo name can be different, handle it.
 				var componentRepoName = name;
 				var componentSrc = '/' + componentRepoName + '/' + name + '.html';
+				var themeSrc = '/t-shared-components/theme.html';
 
 				polyfillSrc = baseDomain + polyfillSrc;
 				componentSrc = baseDomain + componentSrc;
+				themeSrc = baseDomain + themeSrc;
 
-				return this.serializeImports(polyfillSrc, componentSrc);
+				return this.serializeImports(polyfillSrc, componentSrc, themeSrc);
 			},
 
-			serializeImports: function(polyfillSrc, componentSrc) {
+			serializeImports: function(polyfillSrc, componentSrc, themeSrc) {
 				var imports = [];
 
 				//we can't have either script start tag or script end tag inside
 				//the string literal because polymer html parser dies
 				imports.push('<' + 'script type="text/javascript" src="' + polyfillSrc + '"></' + 'script' + '>');
 				imports.push('<link rel="import" href="' + componentSrc + '">')
+				imports.push('<link rel="import" href="' + themeSrc + '">')
 
 				return imports.join('\n');
 			},
@@ -200,6 +207,8 @@
 			serializeAttributes: function(attributes) {
 				return attributes.map(function(attr) {
 					var attrVal = this.componentAttributes[attr];
+					var quoteChar = '"';
+					var serializedAttr = [];
 
 					attr = Polymer.CaseMap.camelToDashCase(attr);
 
@@ -217,8 +226,18 @@
 					//so the value is not Boolean then it is of type String
 					attrVal = this.serialize(attrVal);
 
+					if (attrVal.indexOf('"') !== -1) {
+						quoteChar = "'";
+					}
+
 					//output the attribute and value pair
-					return attr + '="' + this.escapeHtml(attrVal) + '"';
+					serializedAttr.push(attr);
+					serializedAttr.push('=');
+					serializedAttr.push(quoteChar);
+					serializedAttr.push(attrVal);
+					serializedAttr.push(quoteChar);
+
+					return serializedAttr.join('');
 				}.bind(this)).filter(function(item) {
 					//remove the falsy items from the list
 					return Boolean(item);
@@ -230,21 +249,6 @@
 
 				//better than `typeof`
 				return toString.call(value) === '[object Boolean]';
-			},
-
-			escapeHtml: function(string) {
-				var entityMap = {
-				    "&": "&amp;",
-				    "<": "&lt;",
-				    ">": "&gt;",
-				    '"': '&quot;',
-				    "'": '&#39;',
-				    "/": '&#x2F;'
-				};
-
-			    return String(string).replace(/[&<>"'\/]/g, function (s) {
-					return entityMap[s];
-			    });
 			}
 		});
 	</script>
