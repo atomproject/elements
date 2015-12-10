@@ -204,6 +204,13 @@ Polymer({
                 value = metadata[key][field];
         }
 
+        //this is due to the way t-data-feeder exposes its api
+        if (metadata[key].type.toLowerCase() === 'list') {
+            value = value.map(function(item) {
+                return {value: item};
+            });
+        }
+
         return value;
     },
 
@@ -316,6 +323,10 @@ Polymer({
     dataChanged: function(change) {
         var path = change.target.dataKey;
         var value = change.target.data;
+
+        value = value.map(function(item) {
+            return item.value;
+        });
 
         this.fire('path-changed', {path: path, value: value});
     },
