@@ -286,61 +286,24 @@
       //this callback is triggered on the `path-chaned` event
       //the event is fired by the `t-component-panel` when some property changes
       updatePath: function(event) {
-        var path, value, parts, isSplices, last, base, model, splices;
-
-        path = event.detail.path;
-        value = event.detail.value;
+        var path = event.detail.path;
+        var value = event.detail.value;
 
         if (!this._demoComponent || !path ||
           value === undefined || value === null) {
           return;
         }
 
-        parts = path.split('.');
-        //get the property whose value has changed
-        last = parts[parts.length - 1];
-        //path to the base object who has the above property
-        base = parts.slice(0, -1);
-        base = base.join('.');
-        //get the base object, this object may be undefined if the property
-        //that changed was on the element itself
-        model = this._demoComponent.get(base);
-        isSplices = _.isArray(model) && last === 'splices';
-
-        //we don't need to update the length if the model is an array
-        if (_.isArray(model) && last === 'length') {
-          return;
-        }
-
-        //the changed property is on the element itself
-        if (parts.length === 1) {
-          this.updateTargets(path, value);
-          return;
-        }
-
-        //since the underlying objects are shared by everybody (component
-        //panel, component code and the component itself) we only need to
-        //to notify the data changes in case of changes like `splices` or `path`
-
-        //the change is of type `splices`
-        if (isSplices) {
-          splices = value.indexSplices;
-
-          //only notify the changes
-          this._demoComponent.notifySplices(base, splices);
-          this.$.code.notifySplices('componentAttributes.' + base, splices);
-        } else {
-          //the changes are of type `path`
-          //only notify the changes
-          this._demoComponent.notifyPath(path, value);
-          this.$.code.notifyPath('componentAttributes.' + path, value);
-        }
+        this.updateTargets(path, value);
       },
       
       //update the changes to properties
       updateTargets: function(key, value) {
+        value = _.cloneDeep(value);
         //update the demo component itself
         this._demoComponent.set(key, value);
+
+        value = _.cloneDeep(value);
         //update the html attributes in code
         this.$.code.set('componentAttributes.' + key, value);
       },

@@ -314,17 +314,8 @@ Polymer({
     },
 
     dataChanged: function(change) {
-        var key = change.target.dataKey;
-        var path = change.detail.path;
-        var value = change.detail.value;
-
-        if (!value) {
-            return;
-        }
-
-        if (!path) {
-             path = key;
-        }
+        var path = change.target.dataKey;
+        var value = change.target.data;
 
         this.fire('path-changed', {path: path, value: value});
     },

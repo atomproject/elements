@@ -1,7 +1,7 @@
 /**
  * @license
  * lodash 3.10.1 (Custom Build) <https://lodash.com/>
- * Build: `lodash include="isEqual"`
+ * Build: `lodash include="isEqual,cloneDeep" -o lodash.custom.js`
  * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
  * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
  * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -41,6 +41,9 @@
       uint16Tag = '[object Uint16Array]',
       uint32Tag = '[object Uint32Array]';
 
+  /** Used to match `RegExp` flags from their coerced string values. */
+  var reFlags = /\w*$/;
+
   /** Used to detect host constructors (Safari > 5). */
   var reIsHostCtor = /^\[object .+?Constructor\]$/;
 
@@ -67,6 +70,21 @@
   typedArrayTags[numberTag] = typedArrayTags[objectTag] =
   typedArrayTags[regexpTag] = typedArrayTags[setTag] =
   typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+
+  /** Used to identify `toStringTag` values supported by `_.clone`. */
+  var cloneableTags = {};
+  cloneableTags[argsTag] = cloneableTags[arrayTag] =
+  cloneableTags[arrayBufferTag] = cloneableTags[boolTag] =
+  cloneableTags[dateTag] = cloneableTags[float32Tag] =
+  cloneableTags[float64Tag] = cloneableTags[int8Tag] =
+  cloneableTags[int16Tag] = cloneableTags[int32Tag] =
+  cloneableTags[numberTag] = cloneableTags[objectTag] =
+  cloneableTags[regexpTag] = cloneableTags[stringTag] =
+  cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] =
+  cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+  cloneableTags[errorTag] = cloneableTags[funcTag] =
+  cloneableTags[mapTag] = cloneableTags[setTag] =
+  cloneableTags[weakMapTag] = false;
 
   /** Used to determine if values are of the language type `Object`. */
   var objectTypes = {
@@ -160,8 +178,10 @@
   );
 
   /** Native method references. */
-  var propertyIsEnumerable = objectProto.propertyIsEnumerable,
-      splice = arrayProto.splice;
+  var ArrayBuffer = root.ArrayBuffer,
+      propertyIsEnumerable = objectProto.propertyIsEnumerable,
+      splice = arrayProto.splice,
+      Uint8Array = root.Uint8Array;
 
   /* Native method references for those with the same name as other `lodash` methods. */
   var nativeIsArray = getNative(Array, 'isArray'),
@@ -172,6 +192,18 @@
    * of an array-like value.
    */
   var MAX_SAFE_INTEGER = 9007199254740991;
+
+  /** Used to lookup a type array constructors by `toStringTag`. */
+  var ctorByTag = {};
+  ctorByTag[float32Tag] = root.Float32Array;
+  ctorByTag[float64Tag] = root.Float64Array;
+  ctorByTag[int8Tag] = root.Int8Array;
+  ctorByTag[int16Tag] = root.Int16Array;
+  ctorByTag[int32Tag] = root.Int32Array;
+  ctorByTag[uint8Tag] = Uint8Array;
+  ctorByTag[uint8ClampedTag] = root.Uint8ClampedArray;
+  ctorByTag[uint16Tag] = root.Uint16Array;
+  ctorByTag[uint32Tag] = root.Uint32Array;
 
   /** Used to avoid iterating over non-enumerable properties in IE < 9. */
   var nonEnumProps = {};
@@ -372,6 +404,25 @@
   /*------------------------------------------------------------------------*/
 
   /**
+   * Copies the values of `source` to `array`.
+   *
+   * @private
+   * @param {Array} source The array to copy values from.
+   * @param {Array} [array=[]] The array to copy values to.
+   * @returns {Array} Returns `array`.
+   */
+  function arrayCopy(source, array) {
+    var index = -1,
+        length = source.length;
+
+    array || (array = Array(length));
+    while (++index < length) {
+      array[index] = source[index];
+    }
+    return array;
+  }
+
+  /**
    * A specialized version of `_.forEach` for arrays without support for callback
    * shorthands and `this` binding.
    *
@@ -412,6 +463,140 @@
       }
     }
     return false;
+  }
+
+  /**
+   * The base implementation of `_.assign` without support for argument juggling,
+   * multiple sources, and `customizer` functions.
+   *
+   * @private
+   * @param {Object} object The destination object.
+   * @param {Object} source The source object.
+   * @returns {Object} Returns `object`.
+   */
+  function baseAssign(object, source) {
+    return source == null
+      ? object
+      : baseCopy(source, keys(source), object);
+  }
+
+  /**
+   * Copies properties of `source` to `object`.
+   *
+   * @private
+   * @param {Object} source The object to copy properties from.
+   * @param {Array} props The property names to copy.
+   * @param {Object} [object={}] The object to copy properties to.
+   * @returns {Object} Returns `object`.
+   */
+  function baseCopy(source, props, object) {
+    object || (object = {});
+
+    var index = -1,
+        length = props.length;
+
+    while (++index < length) {
+      var key = props[index];
+      object[key] = source[key];
+    }
+    return object;
+  }
+
+  /**
+   * The base implementation of `_.clone` without support for argument juggling
+   * and `this` binding `customizer` functions.
+   *
+   * @private
+   * @param {*} value The value to clone.
+   * @param {boolean} [isDeep] Specify a deep clone.
+   * @param {Function} [customizer] The function to customize cloning values.
+   * @param {string} [key] The key of `value`.
+   * @param {Object} [object] The object `value` belongs to.
+   * @param {Array} [stackA=[]] Tracks traversed source objects.
+   * @param {Array} [stackB=[]] Associates clones with source counterparts.
+   * @returns {*} Returns the cloned value.
+   */
+  function baseClone(value, isDeep, customizer, key, object, stackA, stackB) {
+    var result;
+    if (customizer) {
+      result = object ? customizer(value, key, object) : customizer(value);
+    }
+    if (result !== undefined) {
+      return result;
+    }
+    if (!isObject(value)) {
+      return value;
+    }
+    var isArr = isArray(value);
+    if (isArr) {
+      result = initCloneArray(value);
+      if (!isDeep) {
+        return arrayCopy(value, result);
+      }
+    } else {
+      var tag = objToString.call(value),
+          isFunc = tag == funcTag;
+
+      if (tag == objectTag || tag == argsTag || (isFunc && !object)) {
+        if (isHostObject(value)) {
+          return object ? value : {};
+        }
+        result = initCloneObject(isFunc ? {} : value);
+        if (!isDeep) {
+          return baseAssign(result, value);
+        }
+      } else {
+        return cloneableTags[tag]
+          ? initCloneByTag(value, tag, isDeep)
+          : (object ? value : {});
+      }
+    }
+    // Check for circular references and return its corresponding clone.
+    stackA || (stackA = []);
+    stackB || (stackB = []);
+
+    var length = stackA.length;
+    while (length--) {
+      if (stackA[length] == value) {
+        return stackB[length];
+      }
+    }
+    // Add the source value to the stack of traversed objects and associate it with its clone.
+    stackA.push(value);
+    stackB.push(result);
+
+    // Recursively populate clone (susceptible to call stack limits).
+    (isArr ? arrayEach : baseForOwn)(value, function(subValue, key) {
+      result[key] = baseClone(subValue, isDeep, customizer, key, value, stackA, stackB);
+    });
+    return result;
+  }
+
+  /**
+   * The base implementation of `baseForIn` and `baseForOwn` which iterates
+   * over `object` properties returned by `keysFunc` invoking `iteratee` for
+   * each property. Iteratee functions may exit iteration early by explicitly
+   * returning `false`.
+   *
+   * @private
+   * @param {Object} object The object to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @param {Function} keysFunc The function to get the keys of `object`.
+   * @returns {Object} Returns `object`.
+   */
+  var baseFor = createBaseFor();
+
+  /**
+   * The base implementation of `_.forOwn` without support for callback
+   * shorthands and `this` binding.
+   *
+   * @private
+   * @param {Object} object The object to iterate over.
+   * @param {Function} iteratee The function invoked per iteration.
+   * @returns {Object} Returns `object`.
+   */
+  function baseForOwn(object, iteratee) {
+    return baseFor(object, iteratee, keys);
   }
 
   /**
@@ -561,6 +746,45 @@
     }
     return function() {
       return func.apply(thisArg, arguments);
+    };
+  }
+
+  /**
+   * Creates a clone of the given array buffer.
+   *
+   * @private
+   * @param {ArrayBuffer} buffer The array buffer to clone.
+   * @returns {ArrayBuffer} Returns the cloned array buffer.
+   */
+  function bufferClone(buffer) {
+    var result = new ArrayBuffer(buffer.byteLength),
+        view = new Uint8Array(result);
+
+    view.set(new Uint8Array(buffer));
+    return result;
+  }
+
+  /**
+   * Creates a base function for `_.forIn` or `_.forInRight`.
+   *
+   * @private
+   * @param {boolean} [fromRight] Specify iterating from right to left.
+   * @returns {Function} Returns the new base function.
+   */
+  function createBaseFor(fromRight) {
+    return function(object, iteratee, keysFunc) {
+      var iterable = toObject(object),
+          props = keysFunc(object),
+          length = props.length,
+          index = fromRight ? length : -1;
+
+      while ((fromRight ? index-- : ++index < length)) {
+        var key = props[index];
+        if (iteratee(iterable[key], key, iterable) === false) {
+          break;
+        }
+      }
+      return object;
     };
   }
 
@@ -735,6 +959,83 @@
   }
 
   /**
+   * Initializes an array clone.
+   *
+   * @private
+   * @param {Array} array The array to clone.
+   * @returns {Array} Returns the initialized clone.
+   */
+  function initCloneArray(array) {
+    var length = array.length,
+        result = new array.constructor(length);
+
+    // Add array properties assigned by `RegExp#exec`.
+    if (length && typeof array[0] == 'string' && hasOwnProperty.call(array, 'index')) {
+      result.index = array.index;
+      result.input = array.input;
+    }
+    return result;
+  }
+
+  /**
+   * Initializes an object clone.
+   *
+   * @private
+   * @param {Object} object The object to clone.
+   * @returns {Object} Returns the initialized clone.
+   */
+  function initCloneObject(object) {
+    var Ctor = object.constructor;
+    if (!(typeof Ctor == 'function' && Ctor instanceof Ctor)) {
+      Ctor = Object;
+    }
+    return new Ctor;
+  }
+
+  /**
+   * Initializes an object clone based on its `toStringTag`.
+   *
+   * **Note:** This function only supports cloning values with tags of
+   * `Boolean`, `Date`, `Error`, `Number`, `RegExp`, or `String`.
+   *
+   * @private
+   * @param {Object} object The object to clone.
+   * @param {string} tag The `toStringTag` of the object to clone.
+   * @param {boolean} [isDeep] Specify a deep clone.
+   * @returns {Object} Returns the initialized clone.
+   */
+  function initCloneByTag(object, tag, isDeep) {
+    var Ctor = object.constructor;
+    switch (tag) {
+      case arrayBufferTag:
+        return bufferClone(object);
+
+      case boolTag:
+      case dateTag:
+        return new Ctor(+object);
+
+      case float32Tag: case float64Tag:
+      case int8Tag: case int16Tag: case int32Tag:
+      case uint8Tag: case uint8ClampedTag: case uint16Tag: case uint32Tag:
+        // Safari 5 mobile incorrectly has `Object` as the constructor of typed arrays.
+        if (Ctor instanceof Ctor) {
+          Ctor = ctorByTag[tag];
+        }
+        var buffer = object.buffer;
+        return new Ctor(isDeep ? bufferClone(buffer) : buffer, object.byteOffset, object.length);
+
+      case numberTag:
+      case stringTag:
+        return new Ctor(object);
+
+      case regexpTag:
+        var result = new Ctor(object.source, reFlags.exec(object));
+        result.lastIndex = object.lastIndex;
+    }
+    return result;
+  }
+
+  /**
    * Checks if `value` is array-like.
    *
    * @private
@@ -822,6 +1123,57 @@
   }
 
   /*------------------------------------------------------------------------*/
+
+  /**
+   * Creates a deep clone of `value`. If `customizer` is provided it's invoked
+   * to produce the cloned values. If `customizer` returns `undefined` cloning
+   * is handled by the method instead. The `customizer` is bound to `thisArg`
+   * and invoked with up to three argument; (value [, index|key, object]).
+   *
+   * **Note:** This method is loosely based on the
+   * [structured clone algorithm](http://www.w3.org/TR/html5/infrastructure.html#internal-structured-cloning-algorithm).
+   * The enumerable properties of `arguments` objects and objects created by
+   * constructors other than `Object` are cloned to plain `Object` objects. An
+   * empty object is returned for uncloneable values such as functions, DOM nodes,
+   * Maps, Sets, and WeakMaps.
+   *
+   * @static
+   * @memberOf _
+   * @category Lang
+   * @param {*} value The value to deep clone.
+   * @param {Function} [customizer] The function to customize cloning values.
+   * @param {*} [thisArg] The `this` binding of `customizer`.
+   * @returns {*} Returns the deep cloned value.
+   * @example
+   *
+   * var users = [
+   *   { 'user': 'barney' },
+   *   { 'user': 'fred' }
+   * ];
+   *
+   * var deep = _.cloneDeep(users);
+   * deep[0] === users[0];
+   * // => false
+   *
+   * // using a customizer callback
+   * var el = _.cloneDeep(document.body, function(value) {
+   *   if (_.isElement(value)) {
+   *     return value.cloneNode(true);
+   *   }
+   * });
+   *
+   * el === document.body
+   * // => false
+   * el.nodeName
+   * // => BODY
+   * el.childNodes.length;
+   * // => 20
+   */
+  function cloneDeep(value, customizer, thisArg) {
+    return typeof customizer == 'function'
+      ? baseClone(value, true, bindCallback(customizer, thisArg, 3))
+      : baseClone(value, true);
+  }
 
   /**
    * Checks if `value` is classified as an `arguments` object.
@@ -1177,6 +1529,7 @@
   /*------------------------------------------------------------------------*/
 
   // Add functions that return unwrapped values when chaining.
+  lodash.cloneDeep = cloneDeep;
   lodash.identity = identity;
   lodash.isArguments = isArguments;
   lodash.isArray = isArray;
