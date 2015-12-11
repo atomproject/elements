@@ -64,7 +64,8 @@
     "t-autosuggest": "atomelements/t-autosuggest#master",
     "iframe-resizer": "~3.5.1",
     "particles.js": "~2.0.0",
-    "webcomponentsjs": "~0.7.19"
+    "webcomponentsjs": "~0.7.19",
+    "t-notify": "atomelements/t-notify#master"
   },
   "resolutions": {
     "t-input": "master",
@@ -87,6 +88,7 @@
     "paper-dialog-scrollable": "1.0.1",
     "t-autosuggest": "master",
     "iron-icon": "~1.0.7",
-    "iron-icons": "~1.0.5"
+    "iron-icons": "~1.0.5",
+    "t-notify": "master"
   }
 }
