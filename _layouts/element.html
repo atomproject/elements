@@ -37,9 +37,7 @@ layout: default
                 properties-file="{{ bower_component_dir }}/property.json"
                 component-name="{{ page.component_name }}"
                 org-name="{{ site.org_name }}">
-                <template>
-                    {% include_relative inner.html %}
-                </template>
+                <template>{% include_relative inner.html %}</template>
             </t-demo-atom>
         </div>
     </iron-pages>
