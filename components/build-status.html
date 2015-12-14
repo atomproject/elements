@@ -59,6 +59,10 @@
 					type: Boolean,
 					notify: true,
 					value: null
+				},
+
+				elementIdsFilePath: {
+					type: String
 				}
 			},
 
@@ -74,6 +78,10 @@
 			},
 
 			ready: function() {
+				if (!this.elementIdsFilePath) {
+					return;
+				}
+
 				//TODO: How can we optimize this?
 				this.getJson('../element-ids.json')
 					.then(function(elementIds) {

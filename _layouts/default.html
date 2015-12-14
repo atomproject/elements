@@ -60,7 +60,7 @@
                 <t-item onClick="redirect('{{ site.baseurl }}/settings')" label="Settings"></t-item>
             </t-menu>
 
-            <build-status></build-status>
+            <build-status element-ids-file-path="{{ site.baseurl }}/element-ids.json"></build-status>
         </nav-content>
 
         {{ content }}

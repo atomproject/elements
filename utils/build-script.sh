@@ -46,7 +46,6 @@ if [ "$1" == "--prod" ]
 then
 	node utils/get-element-ids.js
 	jekyll build --config _config.yml,_config.prod.yml
-	cp element-ids.json _site/
 	node_modules/vulcanize/bin/vulcanize --inline-script --strip-comments components/elements.html | \
 	node_modules/crisper/bin/crisper --script-in-head=false --html _site/components/elements.html --js _site/scripts/build.js
 else
@@ -58,4 +57,5 @@ else
 fi
 
 cp -r bower_components _site
+cp -r node_modules _site
 # htmlproof ./_site --disable-external
