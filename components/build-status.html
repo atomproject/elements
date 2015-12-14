@@ -83,7 +83,7 @@
 				}
 
 				//TODO: How can we optimize this?
-				this.getJson('../element-ids.json')
+				this.getJson(this.elementIdsFilePath)
 					.then(function(elementIds) {
 						this.elementIds = elementIds;
 					}.bind(this));
