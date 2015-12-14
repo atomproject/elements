@@ -5,9 +5,10 @@ var baseApiEndPoint = 'https://api.travis-ci.org/repos';
 var categories = fs.readFileSync('_data/categories.json', 'utf-8');
 var idFilePath = 'element-ids.json'
 var elementUrls = [];
-var originalLength, Promise;
+var originalLength;
 
 require('es6-promise').polyfill();
+fetch.Promise = Promise;
 
 function getJson(url) {
 	return fetch(url).then(function(resp) {
