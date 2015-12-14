@@ -39,7 +39,7 @@
     "t-section-header": "atomelements/t-section-header#master",
     "t-colorpicker": "atomelements/t-colorpicker#master",
     "t-slider": "atomelements/t-slider#master",
-    "t-error-block": "atomelements/t-error-block#master",
+    "t-error-block": "atomelements/t-error-block#~0.0.0",
     "t-menu": "atomelements/t-menu#master",
     "t-loader": "atomelements/t-loader#master",
     "t-image": "atomelements/t-image#master",
@@ -65,7 +65,8 @@
     "iframe-resizer": "~3.5.1",
     "particles.js": "~2.0.0",
     "webcomponentsjs": "~0.7.19",
-    "t-notify": "atomelements/t-notify#master"
+    "t-notify": "atomelements/t-notify#master",
+    "iron-ajax": "polymerelements/iron-ajax#~1.1.1"
   },
   "resolutions": {
     "t-input": "master",
@@ -89,6 +90,8 @@
     "t-autosuggest": "master",
     "iron-icon": "~1.0.7",
     "iron-icons": "~1.0.5",
-    "t-notify": "master"
+    "t-notify": "master",
+    "iron-ajax": "1.0.0",
+    "t-error-block": "master"
   }
 }

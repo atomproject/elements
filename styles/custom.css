@@ -192,4 +192,10 @@ t-item[aria-selected] label {
 pre {
   margin: 3px 0;
 }
+
+build-status {
+  padding: 0 16px;
+  position: absolute;
+  bottom: 0;
+}
 /***********************/

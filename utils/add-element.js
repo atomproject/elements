@@ -57,4 +57,4 @@ console.log(newFile);
 fs.mkdirSync(dir);
 fs.writeFileSync(filePath, newFile);
 
-console.log('Please add the ' + chalk.blue(dir + '/demo-snippet.html'));
+console.log(chalk.blue('Please add https://github.com/atomelements/' + name + ' to categories.json file'));

@@ -8,6 +8,10 @@ set -e
 copy_design_docs() {
 	for dir in elements/*
 	do
+		if ! [[ -d "$dir" ]]; then
+			continue
+		fi
+
 		file_name="${dir##*/}"
 		component_name=$(grep 'component_name:' "$dir/$file_name.html")
 		component_name="${component_name##*:}"
@@ -40,10 +44,15 @@ copy_design_docs
 
 if [ "$1" == "--prod" ]
 then
+	node utils/get-element-ids.js
 	jekyll build --config _config.yml,_config.prod.yml
 	node_modules/vulcanize/bin/vulcanize --inline-script --strip-comments components/elements.html | \
 	node_modules/crisper/bin/crisper --script-in-head=false --html _site/components/elements.html --js _site/scripts/build.js
 else
+	if ! [[ -f "element-ids.json" ]]; then
+		node utils/get-element-ids.js
+	fi
+
 	jekyll build
 fi
 

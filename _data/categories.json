@@ -1,13 +1,40 @@
 [{
     "name": "data",
-    "displayName": "Data"
+    "displayName": "Data",
+    "elements": [
+        "https://github.com/atomelements/t-table"
+    ]
 }, {
     "name": "form",
-    "displayName": "Form Basic"
+    "displayName": "Form Basic",
+    "elements": [
+        "https://github.com/atomelements/t-autosuggest",
+        "https://github.com/atomelements/t-button",
+        "https://github.com/atomelements/t-calendar",
+        "https://github.com/atomelements/t-checkbox-group",
+        "https://github.com/atomelements/t-colorpicker",
+        "https://github.com/atomelements/t-dropdown",
+        "https://github.com/atomelements/t-input",
+        "https://github.com/atomelements/t-radio-group",
+        "https://github.com/atomelements/t-section-header",
+        "https://github.com/atomelements/t-slider",
+        "https://github.com/atomelements/t-stepper"
+    ]
 }, {
     "name": "form-composite",
-    "displayName": "Form Composite"
+    "displayName": "Form Composite",
+    "elements": []
 }, {
     "name": "page",
-    "displayName": "Page"
+    "displayName": "Page",
+    "elements": [
+        "https://github.com/atomelements/t-error-block",
+        "https://github.com/atomelements/t-google-map",
+        "https://github.com/atomelements/t-image",
+        "https://github.com/atomelements/t-loader",
+        "https://github.com/atomelements/t-notify",
+        "https://github.com/atomelements/t-progress",
+        "https://github.com/atomelements/t-tabs",
+        "https://github.com/atomelements/t-google-youtube"
+    ]
 }]
