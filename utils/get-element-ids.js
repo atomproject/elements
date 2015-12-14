@@ -1,12 +1,13 @@
 var fs = require('fs');
 var fetch = require('node-fetch');
-var Promise = require('es6-promise').Promise;
 var urlRegex = /^https:.*?github.*?\/(\w+)\/(\w+)/;
 var baseApiEndPoint = 'https://api.travis-ci.org/repos';
 var categories = fs.readFileSync('_data/categories.json', 'utf-8');
 var idFilePath = 'element-ids.json'
 var elementUrls = [];
-var originalLength;
+var originalLength, Promise;
+
+require('es6-promise').polyfill();
 
 function getJson(url) {
 	return fetch(url).then(function(resp) {
