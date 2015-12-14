@@ -226,8 +226,13 @@
 					//so the value is not Boolean then it is of type String
 					attrVal = this.serialize(attrVal);
 
+					//properly escape the attribute value
 					if (attrVal.indexOf('"') !== -1) {
-						quoteChar = "'";
+						if (attrVal.indexOf("'") !== -1) {
+							attrVal = attrVal.replace(/"/g, '&quot;');
+						} else {
+							quoteChar = "'";
+						}
 					}
 
 					//output the attribute and value pair
