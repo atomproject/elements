@@ -44,7 +44,7 @@ canvas {
 
 .signin-box .heading {
     margin-bottom: 50px;
-    color: white; 
+    color: white;
 }
 /*End style for login page*/
 
@@ -96,7 +96,7 @@ t-button.btn-white  {
   margin:0 25px;
 }
 
-.signin-box t-button.btn-white.btn-white, 
+.signin-box t-button.btn-white.btn-white,
 .signin-box t-button.btn-white.btn-white paper-button {
   display:block;
 }
@@ -195,7 +195,5 @@ pre {
 
 build-status {
   padding: 0 16px;
-  position: absolute;
-  bottom: 0;
 }
 /***********************/
