@@ -18,7 +18,9 @@
         "https://github.com/atomelements/t-radio-group",
         "https://github.com/atomelements/t-section-header",
         "https://github.com/atomelements/t-slider",
-        "https://github.com/atomelements/t-stepper"
+        "https://github.com/atomelements/t-stepper",
+        "https://github.com/atomelements/t-range",
+        "https://github.com/atomelements/t-icon-selector"
     ]
 }, {
     "name": "form-composite",
