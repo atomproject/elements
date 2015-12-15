@@ -93,8 +93,20 @@
 				var baseApiEndPoint = 'https://api.travis-ci.org/repos';
 				var elementIds = this.elementIds;
 				var that = this;
+				var undefinedIds;
 
 				if (!elementIds || elementIds.length < 1) {
+					return;
+				}
+
+				undefinedIds = elementIds.filter(function(id) {
+					return !Boolean(id);
+				});
+
+				if (Boolean(undefinedIds.length)) {
+					console.log("Some components don't have travis setup.");
+					console.log("No status will be shown");
+
 					return;
 				}
 

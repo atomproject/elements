@@ -32,32 +32,38 @@ originalLength = elementUrls.length;
 
 //check if all the elements are present on github
 elementUrls = elementUrls.map(function(el) {
-	return el.replace(urlRegex, function(match, owner, name) {
+	var entityApi = el.replace(urlRegex, function(match, owner, name) {
 		return baseApiEndPoint + '/' + owner + '/' + name;
 	});
-}).filter(function(el) {
-	return el !== undefined;
+
+	if (entityApi === el) {
+		return undefined;
+	}
+
+	return entityApi;
 });
 
-//if all the elements aren't on github then don't show status
-if (elementUrls.length !== originalLength) {
-	fs.writeFileSync(idFilePath, '[]');
-}
-
 Promise.all(elementUrls.map(function(entityApi) {
-	return getJson(entityApi);
+	if (entityApi) {
+		return getJson(entityApi);
+	}
+
+	return Promise.resolve({});
 })).then(function(results) {
 	results = results.map(function(result) {
 		return result.id;
 	});
 
 	return results;
+}).catch(function() {
+	//we only need the length of the array
+	return elementUrls.map(function() {
+		return undefined;
+	});
 }).then(function(elementIds) {
 	elementIds = JSON.stringify(elementIds);
 
 	fs.writeFileSync(idFilePath, elementIds);
-}).catch(function() {
-	fs.writeFileSync(idFilePath, '[]');
 }).then(function() {
 	console.log('Done creating element ids');
 });
