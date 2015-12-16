@@ -58,7 +58,7 @@
     "highlightjs": "*",
     "js-beautify": "beautify-web/js-beautify#~1.5.10",
     "paper-drawer-panel": "polymerelements/paper-drawer-panel#~1.0.5",
-    "t-icon-selector": "atomelements/t-icon-selector#~0.0.0",
+    "t-icon-selector": "atomelements/t-icon-selector#master",
     "paper-dialog": "polymerelements/paper-dialog#~1.0.3",
     "paper-dialog-scrollable": "polymerelements/paper-dialog-scrollable#~1.1.0",
     "t-autosuggest": "atomelements/t-autosuggest#master",
@@ -66,7 +66,8 @@
     "particles.js": "~2.0.0",
     "webcomponentsjs": "~0.7.19",
     "t-notify": "atomelements/t-notify#master",
-    "fetch": "~0.10.1"
+    "fetch": "~0.10.1",
+    "t-range": "atomelements/t-range#master"
   },
   "resolutions": {
     "t-input": "master",
@@ -89,7 +90,7 @@
     "paper-dialog-scrollable": "1.0.1",
     "t-autosuggest": "master",
     "iron-icon": "~1.0.7",
-    "iron-icons": "~1.0.5",
+    "iron-icons": "^1.0.0",
     "t-notify": "master",
     "t-error-block": "master"
   }
