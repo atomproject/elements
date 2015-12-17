@@ -22,9 +22,11 @@
             <div class="horizontal layout center">
                 {% if page.component_name %}
                     <span id="selectedComponent">{{ page.component_display_name }}</span>
-                    <a class="buildStatus" href="{{ site.travis_base_url }}/{{ page.component_name }}">
-                        <img src="{{ site.travis_base_url }}/{{ page.component_name }}.svg?branch=master" alt="Build Status">
-                    </a>
+                    {% unless page.hide_build_image %}
+                        <a class="buildStatus" href="{{ site.travis_base_url }}/{{ page.component_name }}">
+                            <img src="{{ site.travis_base_url }}/{{ page.component_name }}.svg?branch=master" alt="Build Status">
+                        </a>
+                    {% endunless %}
                 {% else %}
                     <span id="selectedComponent">{{ page.title }}</span>
                 {% endif %}
@@ -54,6 +56,18 @@
                                     </t-item>
                                 {% endfor %}
                             </t-submenu>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for component in site.pages %}
+                        {% if component.component_name != null and component.component_category == null %}
+                            <t-item
+                                class="component-link"
+                                label="{{ component.component_display_name }}"
+                                data-component="{{ component.component_name }}"
+                                onclick="redirect('{{ site.baseurl }}/{{ component.component_display_name | slugify  }}')"
+                                {% if page.component_name == component.component_name %} aria-selected {% endif %}>
+                            </t-item>
                         {% endif %}
                     {% endfor %}
                 </t-submenu>

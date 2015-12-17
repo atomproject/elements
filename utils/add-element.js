@@ -18,7 +18,7 @@ function printHelp() {
 
 // console.log(process.argv)
 
-if (process.argv.length < 5 || process.argv[2] === '--help') {
+if (process.argv.length < 4 || process.argv[2] === '--help') {
 	printHelp();
 
 	process.exit(1);

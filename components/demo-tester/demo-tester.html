@@ -1,0 +1,64 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="demo-tester">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: var(--primary-font-family);
+      }
+
+      code {
+        color: #df5000;
+      }
+    </style>
+
+    <div class="section">
+      <h4>Input</h4>
+      <p>Value: <code>{{input}}</code></p>
+    </div>
+
+    <div class="section">
+      <h4>Icon</h4>
+      <p>Value: <code>{{icon}}</code></p>
+    </div>
+
+    <div class="section">
+      <h4>Boolean</h4>
+      <p>Value: <code>{{boolean}}</code></p>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'demo-tester',
+
+      properties: {
+        input: {
+          type: String
+        },
+
+        icon: {
+          type: String
+        },
+
+        boolean: {
+          type: Boolean
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>

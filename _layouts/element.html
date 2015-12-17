@@ -2,10 +2,6 @@
 layout: default
 ---
 
-{% capture bower_component_dir %}{{ site.baseurl }}/bower_components/{{ page.component_name }}{% endcapture %}
-
-{% capture component_dir %}{{ site.baseurl }}/elements/{{ page.component_display_name | slugify }}{% endcapture %}
-
 <div id="elementContent" class="content layout vertical fit content-component">
     <div id="tabBar" class="layout horizontal center-justified">
         <paper-tabs noink selected="2">
@@ -32,13 +28,7 @@ layout: default
             <iframe id="idIframe" src="{{ bower_component_dir }}" width="100%"></iframe>
         </div>
         <div class="fit">
-            <t-demo-atom
-                demo-file="{{ bower_component_dir }}/demo/index.html"
-                properties-file="{{ bower_component_dir }}/property.json"
-                component-name="{{ page.component_name }}"
-                org-name="{{ site.org_name }}">
-                <template>{% include_relative inner.html %}</template>
-            </t-demo-atom>
+            {{ content }}
         </div>
     </iron-pages>
 </div>

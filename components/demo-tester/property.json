@@ -1,0 +1,23 @@
+{
+    "name": "Button",
+    "properties": [{
+        "name": "Properties",
+        "fields": {
+            "input": {
+                "name": "String Value",
+                "type": "string",
+                "value": "label"
+            },
+            "icon": {
+                "name": "Icon Value",
+                "type": "iconset",
+                "value": "icons:close"
+            },
+            "boolean": {
+                "name": "Boolean Value",
+                "type": "Boolean",
+                "value": false
+            }
+        }
+    }]
+}

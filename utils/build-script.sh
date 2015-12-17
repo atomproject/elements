@@ -34,6 +34,7 @@ copy_design_docs() {
 		else
 			# do something glaring here, this is too subtle
 			printf "%50s --> %s\n" "$demo_file_path" "No demo found"
+			echo "" > "$dir/inner.html"
 		fi
 	done
 
