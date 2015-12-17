@@ -67,7 +67,9 @@
     "webcomponentsjs": "~0.7.19",
     "t-notify": "atomelements/t-notify#master",
     "fetch": "~0.10.1",
-    "t-range": "atomelements/t-range#master"
+    "t-range": "atomelements/t-range#master",
+    "t-list": "atomelements/t-list#master",
+    "t-result-item": "travelnxtelements/t-result-item#master"
   },
   "resolutions": {
     "t-input": "master",
@@ -84,14 +86,15 @@
     "t-loader": "master",
     "t-dropdown": "master",
     "paper-icon-button": "1.0.3",
-    "paper-button": "^1.0.0",
+    "paper-button": "1.0.3",
     "paper-drawer-panel": "~1.0.5",
     "paper-dialog": "~1.0.3",
     "paper-dialog-scrollable": "1.0.1",
     "t-autosuggest": "master",
-    "iron-icon": "~1.0.7",
+    "iron-icon": "1.0.4",
     "iron-icons": "^1.0.0",
     "t-notify": "master",
-    "t-error-block": "master"
+    "t-error-block": "master",
+    "t-range": "master"
   }
 }
