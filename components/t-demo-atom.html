@@ -272,7 +272,9 @@
           if (propertyKey in panelProperties) {
             value = panelProperties[propertyKey].value;
 
-            this.updateTargets(propertyKey, value);
+            if (value !== undefined) {
+              this.updateTargets(propertyKey, value);
+            }
           } else if (this.applyCurrentValue(defaultValue, currentValue,
               propertyAttributes)) {
             //since initial value is not provided and the current value

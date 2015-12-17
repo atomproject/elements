@@ -253,10 +253,12 @@ Polymer({
 
                     metadata[propertyKey] = property;
 
-                    //value is the initial value of the property
-                    this.fire('path-changed', {
-                        path: propertyKey, value: property.value
-                    });
+                    if (value !== undefined) {
+                        //value is the initial value of the property
+                        this.fire('path-changed', {
+                            path: propertyKey, value: property.value
+                        });
+                    }
                 }.bind(this));
             }.bind(this));
 
