@@ -225,6 +225,7 @@
 
 					//so the value is not Boolean then it is of type String
 					attrVal = this.serialize(attrVal);
+					attrVal = attrVal.toString();
 
 					//properly escape the attribute value
 					if (attrVal.indexOf('"') !== -1) {

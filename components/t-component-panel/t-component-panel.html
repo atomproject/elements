@@ -82,7 +82,7 @@
                                 <t-icon-selector data-value$="{{key}}" label$="{{_getValue(_metadata, key,'name')}}" value="{{_getValue(_metadata, key)}}" on-icon-changed="_textChanged"></t-icon-selector>
                             </template>
                             <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'list')}}">
-                                <label class="data-feeder">Add Items</label>
+                                <label class="data-feeder">{{_getValue(_metadata, key, 'name')}}</label>
                                 <t-data-feeder
                                    data-key="{{key}}"
                                    on-data-changed="dataChanged"
@@ -203,16 +203,17 @@ Polymer({
                 break;
             case undefined:
                 value = metadata[key].value;
+
+                //this is due to the way t-data-feeder exposes its api
+                if (metadata[key].type.toLowerCase() === 'list') {
+                    value = value.map(function(item) {
+                        return {value: item};
+                    });
+                }
+
                 break;
             default:
                 value = metadata[key][field];
-        }
-
-        //this is due to the way t-data-feeder exposes its api
-        if (metadata[key].type.toLowerCase() === 'list') {
-            value = value.map(function(item) {
-                return {value: item};
-            });
         }
 
         return value;
