@@ -95,6 +95,7 @@
     "iron-icons": "^1.0.0",
     "t-notify": "master",
     "t-error-block": "master",
-    "t-range": "master"
+    "t-range": "master",
+    "paper-behaviors": "1.0.3"
   }
 }
