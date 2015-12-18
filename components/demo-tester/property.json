@@ -3,6 +3,30 @@
     "properties": [{
         "name": "Properties",
         "fields": {
+            "boolean": {
+                "name": "Boolean Value",
+                "type": "Boolean",
+                "value": false
+            },
+            "pillOptions": {
+                "name": "Pill Button Options",
+                "type": "options",
+                "values": ["first","second","third"],
+                "value":"third"
+            },
+            "range": {
+                "name": "Range Value",
+                "type": "range",
+                "min": 10,
+                "max": 100,
+                "value": 30
+            },
+            "dropdownOptions": {
+                "name":"Dropdown",
+                "type": "options",
+                "values": ["first option", "second option", "third option", " fourth option"],
+                "value": "second option"
+            },
             "input": {
                 "name": "String Value",
                 "type": "string",
@@ -13,10 +37,10 @@
                 "type": "iconset",
                 "value": "icons:close"
             },
-            "boolean": {
-                "name": "Boolean Value",
-                "type": "Boolean",
-                "value": false
+            "list": {
+                "name": "List Values",
+                "type": "list",
+                "value": ["first item"]
             }
         }
     }]

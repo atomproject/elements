@@ -51,25 +51,29 @@
                                 </div>
                             </template>
                             <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'options')}}">
-                                <div class="label horizontal layout center">
-                                    <p>{{_getValue(_metadata, key,'name')}}</p>
-                                    <div class="flex"></div>
-                                    <template is="dom-if" if="{{_isGreaterThanThree(_metadata,key)}}">
+                                <template is="dom-if" if="{{_isGreaterThanThree(_metadata,key)}}">
+                                    <div class="label">
+                                        <label class="data-feeder">{{_getValue(_metadata, key, 'name')}}</label>
+                                        <div class="flex"></div>
                                         <t-dropdown data-value$="{{key}}"
                                             selected-item-label="{{_getValue(_metadata, key)}}"
                                             on-dropdown-value-changed="_dropdownSelectionChanged"
-                                            data="{{_getValue(_metadata, key, 'values')}}"
-                                            required>
+                                            data="{{_getValue(_metadata, key, 'values')}}">
                                         </t-dropdown>
-                                    </template>
-                                    <template is="dom-if" if="{{_isLessThanThree(_metadata,key)}}">
+                                    </div>
+                                </template>
+
+                                <template is="dom-if" if="{{_isLessThanThree(_metadata,key)}}">
+                                    <div class="label horizontal layout center">
+                                        <p>{{_getValue(_metadata, key,'name')}}</p>
+                                        <div class="flex"></div>
                                         <t-radio-group pill-button selected-item="{{_getValue(_metadata, key, 'index')}}" data-value$="{{key}}" on-t-radio-group-changed="_radioValueChanged">
                                             <template is="dom-repeat" items="{{_getValue(_metadata, key, 'values')}}" as="val">
                                                 <t-radio-button name="{{val}}">{{val}}</t-radio-button>
                                             </template>
                                         </t-radio-group>
-                                    </template>
-                                </div>
+                                    </div>
+                                </template>
                             </template>
                             <template is="dom-if" if="{{_isTypeMatching(_metadata,key,'string')}}">
                                 <t-input label$="{{_getValue(_metadata, key,'name')}}" data-value$="{{key}}" value="{{_getValue(_metadata, key)}}" on-keyup="_textChanged"></t-input>

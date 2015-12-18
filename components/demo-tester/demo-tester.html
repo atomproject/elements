@@ -15,27 +15,53 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <style>
       :host {
         display: block;
-        font-family: var(--primary-font-family);
+        font-family: var(--primary-font-family, 'Open Sans');
       }
 
       code {
         color: #df5000;
       }
+
+      h4, h3, h2 {
+        font-weight: 600;
+        color: var(--header-text-color, #333);
+      }
     </style>
 
     <div class="section">
-      <h4>Input</h4>
+      <h4>Boolean Value</h4>
+      <p>Value: <code>{{boolean}}</code></p>
+    </div>
+
+    <div class="section">
+      <h4>Pill Options</h4>
+      <p>Value: <code>{{pillOptions}}</code></p>
+    </div>
+
+    <div class="section">
+      <h4>Range Value</h4>
+      <p>Value: <code>{{range}}</code></p>
+    </div>
+
+    <div class="section">
+      <h4>Dropdown Options</h4>
+      <p>Value: <code>{{dropdownOptions}}</code></p>
+    </div>
+
+    <div class="section">
+      <h4>String Value</h4>
       <p>Value: <code>{{input}}</code></p>
     </div>
 
     <div class="section">
-      <h4>Icon</h4>
+      <h4>Icon Value</h4>
       <p>Value: <code>{{icon}}</code></p>
     </div>
 
+
     <div class="section">
-      <h4>Boolean</h4>
-      <p>Value: <code>{{boolean}}</code></p>
+      <h4>List Values</h4>
+      <p>Value: <code>{{serialize(list)}}</code></p>
     </div>
   </template>
   <script>
@@ -56,6 +82,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         boolean: {
           type: Boolean
+        },
+
+        list: {
+          type: Array
+        },
+
+        pillOptions: {
+          type: String
+        },
+
+        dropdownOptions: {
+          type: String
+        },
+
+        range: {
+          type: Number
         }
       }
     });
