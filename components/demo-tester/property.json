@@ -35,7 +35,7 @@
             "icon": {
                 "name": "Icon Value",
                 "type": "iconset",
-                "value": "icons:close"
+                "value": "icons:stars"
             },
             "list": {
                 "name": "List Values",
