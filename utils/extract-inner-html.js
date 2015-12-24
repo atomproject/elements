@@ -26,7 +26,7 @@ name = process.argv[2];
 
 $ = cheerio.load(text);
 
-innerHTML = $(name).html();
+innerHTML = $(name).html() || '';
 
 //remove empty lines??
 //handle unix line endings
