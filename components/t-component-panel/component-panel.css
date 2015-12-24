@@ -149,11 +149,13 @@ t-dropdown {
 }
 
 t-checkbox {
-    --checkbox-checked-color: var(--primary-text-color);
+    --checkbox-check-sign-color: var(--primary-text-color);
+    --checkbox-checked-color: var(--gray-two);
 }
 
+/* Checked state colors. */
 t-radio-group {
-    --pill-border-color: var(--text-primary-color);
+    --pill-border-color: var(--grey-two);
     --pill-radio-text-unselected-color: var(--primary-text-color);
     --form-label-color: var(--primary-text-color);
 }
