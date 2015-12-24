@@ -150,17 +150,15 @@ t-dropdown {
 
 t-checkbox {
     --checkbox-checked-color: var(--primary-text-color);
-    --checkbox-checked-ink-color: var(--primary-text-color);
 }
 
 t-radio-group {
     --pill-border-color: var(--text-primary-color);
-    --pill-radio-text-selected-color: var(--text-primary-color);
     --pill-radio-text-unselected-color: var(--primary-text-color);
     --form-label-color: var(--primary-text-color);
 }
 
 t-radio-button {
-    --radio-button-checked-color: var(--primary-text-color);
+    --radio-button-checked-color: var(--grey-two);
     --radio-button-unchecked-color: var(--primary-text-color);
 }
