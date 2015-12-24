@@ -12,7 +12,8 @@
                 "name": "Pill Button Options",
                 "type": "options",
                 "values": ["first","second","third"],
-                "value":"third"
+                "value":"third",
+                "index": 2
             },
             "range": {
                 "name": "Range Value",

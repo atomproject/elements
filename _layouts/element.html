@@ -2,6 +2,8 @@
 layout: default
 ---
 
+{% capture bower_component_dir %}{{ site.baseurl }}/bower_components/{{ page.component_name }}{% endcapture %}
+
 <div id="elementContent" class="content layout vertical fit content-component">
     <div id="tabBar" class="layout horizontal center-justified">
         <paper-tabs noink selected="2">
