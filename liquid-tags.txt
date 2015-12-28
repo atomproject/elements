@@ -1,0 +1,29 @@
+{% assign component_pages = site.pages | where:"component_category",category.name %}
+{% capture bower_component_dir %}{{ site.baseurl }}/bower_components/{{ page.component_name }}{% endcapture %}
+{% capture component_dir %}{{ site.baseurl }}/elements/{{ page.component_display_name | slugify }}{% endcapture %}
+{% for category in site.data.categories %}
+{% for component in component_pages %}
+{% for component in site.pages %}
+{% if component.component_name != null and component.component_category == null %}
+{% if component_pages.size > 0 %}
+{% if page.component_category == category.name %} aria-selected {% endif %}
+{% if page.component_category == category.name and page.component_name == component.component_name %} aria-selected {% endif %}
+{% if page.component_name %}
+{% if page.component_name == component.component_name %} aria-selected {% endif %}
+{% include head.html %}
+{% include_relative design-doc.md %}
+{% include_relative inner.html %}
+{% unless page.hide_build_image %}
+{{ bower_component_dir }}
+{{ category.displayName }}
+{{ category.name }}
+{{ component.component_display_name }}
+{{ component.component_name }}
+{{ content }}
+{{ page.component_display_name }}
+{{ page.component_name }}
+{{ page.title }}
+{{ site.baseurl }}
+{{ site.baseurl }}/{{ component.component_display_name | slugify  }}
+{{ site.org_name }}
+{{ site.travis_base_url }}/{{ page.component_name }}
