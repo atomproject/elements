@@ -2,8 +2,6 @@
 layout: default
 ---
 
-{% capture bower_component_dir %}{{ site.baseurl }}/bower_components/{{ page.component_name }}{% endcapture %}
-
 <div id="elementContent" class="content layout vertical fit content-component">
     <div id="tabBar" class="layout horizontal center-justified">
         <paper-tabs noink selected="2">
@@ -17,20 +15,23 @@ layout: default
             <div class="designTab">
                 <marked-element>
                     <div class="markdown-html"></div>
-<!-- indentation in the below liquid tag makes markdown
-    parser to treat it as code construct in markdown
--->
                     <script type="text/markdown">
-{% include_relative design-doc.md %}
+						{{ page.designDoc }}
                     </script>
                 </marked-element>
             </div>
         </div>
         <div class="fit">
-            <iframe id="idIframe" src="{{ bower_component_dir }}" width="100%"></iframe>
+            <iframe id="idIframe" src="{{ page.documentationFileUrl }}" width="100%"></iframe>
         </div>
         <div class="fit">
-            {{ content }}
+            <t-demo-atom
+                demo-file="{{ page.demoFileUrl }}"
+                properties-file="{{ page.propertiesFileUrl }}"
+                component-name="{{ page.name }}"
+                org-name="{{ page.location.githubUser }}">
+                <template>{{ page.innerHtml }}</template>
+            </t-demo-atom>
         </div>
     </iron-pages>
 </div>

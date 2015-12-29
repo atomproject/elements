@@ -1,4 +1,0 @@
-# this option only needs to be set when building
-# for pushing to gh-pages since the site will be
-# at http://atomproject.github.io/elements/
-baseurl: "/elements"
