@@ -23,6 +23,19 @@ do
 	ifncp "$item"
 done
 
+node site_generator/install-element.js | while read -r line; do
+	dir="${line%%:*}"
+	dep="${line##*:}"
+
+	dir="_site/$dir"
+
+	if ! [[ -d "$dir/bower_components" ]]; then
+		pushd "$dir"
+		bower install "$dep"
+		popd
+	fi
+done
+
 if [[ "$1" == "--prod" ]]
 then
 	node_modules/vulcanize/bin/vulcanize --inline-script --strip-comments components/elements.html | \

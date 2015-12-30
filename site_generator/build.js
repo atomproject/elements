@@ -40,16 +40,16 @@ engine.fileSystem = new Liquid.LocalFileSystem;
 engine.fileSystem.root = config.includesDir;
 
 function Context(el) {
-  var baseDir, u;
+  var baseDir, u, dn;
   var loc, travisBaseUrl = config.travisBaseUrl;
 
   this.name = el.name;
   this.category = el.category;
   this.icon = el.icon;
-  this.displayName = el.displayName;
+  this.displayName = dn = el.displayName;
   this.location = loc = locationParser(el.location);
 
-  baseDir = loc.localPath || `bower_components/${el.name}`;
+  baseDir = loc.localPath || `_site/${dn}/bower_components/${el.name}`;
 
   this.documentationFileUrl = `${baseDir}/`;
   this.demoFileUrl = `${baseDir}/demo/index.html`;
@@ -136,8 +136,9 @@ config.elements.forEach(elContext => {
   renderLayout(queue, fullContext)
     .then(page => {
       var p = elContext.pageName;
-      p = path.join(config.outDir, `${p}.html`);
 
+      mkdirp.sync(path.join('_site', p));
+      p = path.join('_site', p ,'index.html');
       fs.writeFileSync(p, page);
     })
 });
