@@ -132,6 +132,10 @@
         "icon": "Video",
         "displayName": "Youtube Video",
         "location": "https://github.com/atomelements/t-google-youtube"
+    }, {
+        "name": "demo-tester",
+        "displayName": "Demo Tester",
+        "location": "components/demo-tester"
     }],
     "categories": [{
         "name": "data",

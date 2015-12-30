@@ -57,15 +57,15 @@
                     {% endfor %}
 
                     {% for component in site.elements %}
-                        {% if component.name != null and component.category == null %}
+                        {% unless component.category %}
                             <t-item
                                 class="component-link"
-                                label="{{ component.component_display_name }}"
+                                label="{{ component.displayName }}"
                                 data-component="{{ component.name }}"
-                                onclick="redirect('{{ site.baseurl }}/{{ component.component_display_name | slugify  }}')"
+                                onclick="redirect('{{ component.pageUrl }}')"
                                 {% if page.name == component.name %} aria-selected {% endif %}>
                             </t-item>
-                        {% endif %}
+                        {% endunless %}
                     {% endfor %}
                 </t-submenu>
                 <t-item onClick="redirect('{{ site.baseurl }}/settings')" label="Settings"></t-item>
