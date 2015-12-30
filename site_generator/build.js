@@ -5,6 +5,9 @@ var Liquid = require('liquid-node');
 var slug = require('slug');
 var cheerio = require('cheerio');
 var mkdirp = require('mkdirp');
+var marked = require('marked');
+var promisify = require('promisify-node');
+var glob = promisify(require('glob'));
 var locationParser = require('./parse-location');
 
 var engine = new Liquid.Engine();
@@ -15,7 +18,8 @@ var defaultConfig = {
   outDir: '_site',
   baseurl: '',
   showDemoTester: true,
-  travisBaseUrl: "https://travis-ci.org"
+  travisBaseUrl: "https://travis-ci.org",
+  markdownExtensions: ['.md']
 };
 var config = fs.readFileSync('metadata.json', 'utf-8');
 
@@ -83,7 +87,7 @@ function extractInnerHtml(name, fpath) {
 };
 
 function resolveLayout(filePath, queue) {
-  var file = fs.readFileSync(filePath, 'utf-8');
+  var file = fs.readFileSync(path.resolve(filePath), 'utf-8');
   var layout;
 
   file = fm(file);
@@ -92,8 +96,6 @@ function resolveLayout(filePath, queue) {
 
   if (file.attributes && (layout = file.attributes.layout)) {
     filePath = `layouts/${layout}.html`;
-    filePath = path.resolve(filePath);
-
     resolveLayout(filePath, queue);
   }
 
@@ -135,3 +137,35 @@ config.elements.forEach(elContext => {
       fs.writeFileSync(p, page);
     })
 });
+
+glob(`${config.pagesDir}/**`)
+  .then(files => {
+    files.forEach(filePath => {
+      var context = {site: config, page: {}};
+      var pathObj = path.parse(filePath);
+      var queue;
+
+      if (!fs.statSync(filePath).isFile()) {
+        return;
+      }
+
+      queue = resolveLayout(filePath);
+
+      if (config.markdownExtensions.indexOf(pathObj.ext) !== -1) {
+        queue[0].body = marked(queue[0].body || '');
+      }
+
+      renderLayout(queue, context)
+        .then(page => {
+          var pagesDir = path.resolve(config.pagesDir);
+          var outDir = path.resolve(config.outDir);
+          var pathObj = path.parse(filePath);
+
+          outDir = path.resolve(pathObj.dir).replace(pagesDir, outDir);
+          mkdirp(outDir);
+          fs.writeFileSync(path.join(outDir, `${pathObj.name}.html`), page);
+        })
+        .catch(err => console.log(err.stack));
+    });
+  })
+  .catch(err => console.log(err.stack));
