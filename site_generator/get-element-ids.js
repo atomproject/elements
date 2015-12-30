@@ -3,7 +3,7 @@ var fetch = require('node-fetch');
 var urlRegex = /^https:.*?github.*?\/(\w+)\/(\w+)/;
 var baseApiEndPoint = 'https://api.travis-ci.org/repos';
 var categories = fs.readFileSync('metadata.json', 'utf-8');
-var idFilePath = 'element-ids.json'
+var idFilePath = '_site/element-ids.json'
 var elementUrls;
 var originalLength;
 

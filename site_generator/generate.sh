@@ -9,14 +9,15 @@ ifncp() {
 	fi
 }
 
-dirs=(assets bower_components components node_modules scripts styles element-ids.json)
+dirs=(assets bower_components components node_modules scripts styles)
 
-if ! [[ -f "element-ids.json" ]]; then
-	node site_generator/get-element-ids.json
-fi
 
 node site_generator/build.js "$1"
-	
+
+if ! [[ -f "_site/element-ids.json" ]]; then
+	node site_generator/get-element-ids.js
+fi
+
 for item in "${dirs[@]}"
 do
 	ifncp "$item"
