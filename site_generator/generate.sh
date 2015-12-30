@@ -7,7 +7,11 @@ ifncp() {
 	fi
 }
 
-dirs=(assets bower_components components node_modules scripts styles)
+dirs=(assets bower_components components node_modules scripts styles element-ids.json)
+
+if ! [[ -f "element-ids.json" ]]; then
+	node site_generator/get-element-ids.json
+fi
 
 node site_generator/build.js
 	
