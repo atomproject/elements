@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+
+    {% include head.html %}
+
+</head>
+<body class="layout horizontal center center-justified">
+
+    <div class="overlay"></div>
+
+    <t-scaffold id="scaff" scaffold-type="atom">
+        <nav-toolbar>
+            <div class="product-logo" >
+                <a href="{{ site.baseurl }}/">
+                    <img src="{{ site.baseurl }}/assets/logos/atom-grey.png" id="prod_brand" />
+                </a>
+            </div>
+        </nav-toolbar>
+
+        <header-toolbar style="width:100%">
+            <div class="horizontal layout center">
+                {% if page.name %}
+                    <span id="selectedComponent">{{ page.displayName }}</span>
+                    {% if page.linkToTravis %}
+                        <a class="buildStatus" href="{{ page.linkToTravis }}">
+                            <img src="{{ page.buildStatusUrl }}" alt="Build Status">
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <span id="selectedComponent">{{ page.title }}</span>
+                {% endif %}
+                <span class="flex"></span>
+                <span class="badge-alpha-testing">Alpha</span>
+            </div>
+        </header-toolbar>
+
+        <nav-content>
+            <t-menu>
+                <t-item onClick="redirect('{{ site.baseurl }}/about')" label="About"></t-item>
+                <t-submenu aria-selected class="iron-selected" label="Elements" >
+                    {% for category in site.categories %}
+                        <t-submenu
+                            label="{{ category.displayName }}"
+                            {% if page.category == category.name %} aria-selected {% endif %}>
+                            {% for component in category.elements %}
+                                <t-item
+                                    class="component-link"
+                                    label="{{ component.displayName }}"
+                                    data-component="{{ component.name }}"
+                                    onclick="redirect('{{ component.pageUrl }}')"
+                                    data-category="{{ category.name }}"
+                                    {% if page.category == category.name and page.name == component.name %} aria-selected {% endif %}>
+                                </t-item>
+                            {% endfor %}
+                        </t-submenu>
+                    {% endfor %}
+
+                    {% for component in site.elements %}
+                        {% unless component.category %}
+                            <t-item
+                                class="component-link"
+                                label="{{ component.displayName }}"
+                                data-component="{{ component.name }}"
+                                onclick="redirect('{{ component.pageUrl }}')"
+                                {% if page.name == component.name %} aria-selected {% endif %}>
+                            </t-item>
+                        {% endunless %}
+                    {% endfor %}
+                </t-submenu>
+                <t-item onClick="redirect('{{ site.baseurl }}/settings')" label="Settings"></t-item>
+            </t-menu>
+        </nav-content>
+
+        <build-status element-ids-file-path="{{ site.baseurl }}/element-ids.json"></build-status>
+
+        {{ content }}
+    </t-scaffold>
+
+    <script>
+        window.addEventListener('WebComponentsReady', function (e) {
+            var overlay = document.querySelector('.overlay');
+
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        });
+
+        //this is __BAD__, first of all it shouldn't be global function
+        //second if this function doesn't do much apart from simple plain
+        //redirection then it should be handled using anchor tags
+        function redirect(url) {
+            window.location = url;
+        }
+    </script>
+</body>
+</html>

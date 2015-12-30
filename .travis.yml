@@ -1,12 +1,11 @@
-language: ruby
-rvm:
-- 2.1
+language: node_js
+node_js:
+- 4.1
 branches:
   only:
   - master
 env:
   global:
-  - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
   - GH_REF: github.com/atomproject/elements.git
   - secure: GSX7YbhAettjvs7jgfF+iaImGT1D7XxSy5WUyEbSi+hQtzu4xZgUFGpOjBDG+0R1CozZ4cubbeqbNJCnFj0xt3EwarIwU18c1H+Ra0aigY+NB6itfuHOYSE57TUQx7OiiKRwkEqMQ2WmzJ2USJ6XKSaDOt8JrXSK7J1VNn0AzYxQuIPHN0O/yIdLQQ0ky/LQHQ5anw4gfCVdRQkYq5kNdtoFnS0hoUKKcbTdnwGIxfnVDP/yzsIU53WjJSSQmq7e91Lf2qhfxDy7DPHIrgV1HhWQpTD4xWT5Ah0+eHkInTPPcVLcMzbKNhmM8HBZaKGGM/eXCtSbuKKfG7l9bFgnQ4mS/JE1Zw1ZYL0Ud5NocXKBUYP2yl7vuBekQYHRE2CmtKrDodq/NUEBKXWB1e5ppr4OfNm9KpUIcVYyi3ml0sJwCGbG04nNx9QTMajkyzCa1A0fXtO4wZ5/cIgW1jXMOHx7v7ga0QCdP1aJQq7e1WWLbkXYJ2Xe3DykQLo+rd+J2Q0XztdgR0K/z3tOcc1EogLvyhXz/LUNRoQ3ySM0WueJrsPweY3fpFiC2kYUYJmLjdBVdYDzQ1+/uqw9VV2/tlw2jUfYAQunbSMTv8Nr8MysCPMrmtRFZgB/ih177D8FPmZla1KpFSHZN36Oh5k0OmzDAPCmNgAQok3Lod/CKS8=
 before_install:
@@ -15,10 +14,9 @@ before_install:
 install:
 - npm install
 - bower install
-- gem install jekyll
 before_script:
-- chmod +x ./utils/build-script.sh
-script: "./utils/build-script.sh --prod"
+- chmod +x ./site_generator/generate.sh
+script: "./site_generator/generate.sh --prod"
 after_success:
-- chmod +x ./utils/deploy.sh
-- "./utils/deploy.sh"
+- chmod +x ./site_generator/deploy.sh
+- "./site_generator/deploy.sh"
