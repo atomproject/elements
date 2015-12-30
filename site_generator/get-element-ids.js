@@ -7,9 +7,6 @@ var idFilePath = 'element-ids.json'
 var elementUrls;
 var originalLength;
 
-require('es6-promise').polyfill();
-fetch.Promise = Promise;
-
 function getJson(url) {
 	return fetch(url).then(function(resp) {
 		//TODO: will other response status codes do for our task?
