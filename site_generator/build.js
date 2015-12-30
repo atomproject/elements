@@ -23,6 +23,10 @@ var defaultConfig = {
 };
 var config = fs.readFileSync('metadata.json', 'utf-8');
 
+if (process.argv[2] === '--prod') {
+  defaultConfig.baseurl = '/elements';
+}
+
 config = JSON.parse(config);
 config = Object.assign({}, defaultConfig, config);
 config.elements = config.elements.map(el => new Context(el));
