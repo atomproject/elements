@@ -27,6 +27,7 @@
     "promisify-node": "^0.3.0",
     "slug": "^0.9.1",
     "url": "^0.11.0",
+    "es6-promise": "^3.0.2",
     "crisper": "^2.0.1",
     "vulcanize": "^1.14.0"
   }
