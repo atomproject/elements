@@ -1,0 +1,835 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html" />
+<link rel="import" href="../iron-input/iron-input.html" />
+<link rel="import" href="../iron-ajax/iron-ajax.html" />
+<link rel="import" href="../iron-media-query/iron-media-query.html" />
+<link rel="import" href="../iron-collapse/iron-collapse.html" />
+<link rel="import" href="../paper-spinner/paper-spinner.html" />
+<link rel="import" href="../t-button/t-button.html" />
+<link rel="import" href="../t-pagination/t-pagination.html" />
+<link rel="import" href="../iron-icon/iron-icon.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<!--
+	`<t-table>` is a polymer component that generates responsive and functional table from Json/ Javascript object data. 
+
+
+		`<t-table hoverable banded-rows sortable searchable search-on="fruit">`
+			
+			<t-column hide-on="tablet" data-value="fruit" display-value="Name" ></t-column>
+			<t-column hide-on="phone"  data-value="alice" display-value="Role"></t-column>
+			<t-column ignore-sort="true" data-value="bill" display-value="Last" ></t-column>
+			<t-column data-value="casey" display-value="Status" ></t-column>
+			
+			<t-body>
+				[
+				{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+				{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+				{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+				{ "fruit":"pear",	"alice": 4,	"bill": 2,	"casey": 8 },
+				{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+				{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+				{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+				{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+				{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+				{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+				{ "fruit":"pear",	"alice": 4,	"bill": 2,	"casey": 8 },
+				{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+				{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+				{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 }
+				]
+			</t-body>
+
+		</t-table>		
+-->
+<dom-module id="t-table">
+    <link rel="import" type="css" href="t-table.css" />
+    <template>
+        <div self-center hidden$="{{!searchable}}" class="clearfix">
+            <div id="fld_searchbox" class="horizontal layout center end-justified" hidden$="{{!searchable}}">
+                <t-button class="center center-justified min" on-click="_toggleSearch" only-icon ico="search" tabindex="0"></t-button>
+                <input value="{{_searchValue::input}}" on-keydown="searchTable" on-blur="_closeSearch" class="searchBox center center-justified" type="search" id="searchInput" autocomplete="off" />
+            </div>
+        </div>
+        <div class="overlap" hidden$="{{!_isProcessing}}" class="horizontal layout center center-justified">
+            <paper-spinner id="spinner" active="{{_loading}}"></paper-spinner>
+            <div style="text-align:center;color:red" hidden$="{{_loading}}">
+                <iron-icon icon="error"></iron-icon>
+                <div translate="table.error">{{_errorMessage}}</div>
+                <div style="color:blue;cursor:pointer">
+                    <a on-click="_hideOverlay" translate="table.goBackText">Go back</a>
+                </div>
+            </div>
+        </div>
+        <div class="table toggle-square {{type}}">
+            <div hidden$="{{!hasHeaderRow}}">
+                <div class="table-header horizontal layout justified">
+                    <div hidden$="{{_isColumnHidden(_columnHeaders)}}" style="width:45px"></div>
+                    <template id="headerTemplate" is="dom-repeat" items="{{_columnHeaders}}" as="column">
+                        <div hidden$="{{column.hideColumn}}" on-click="_sort" isAscending="true" class="flex table-header-div">
+                            <span>{{column.value}}</span>
+                            <span class="resp-table-sort-indicator" hidden$="{{column.ignoreSort}}">
+							<iron-icon icon="arrow-back" hidden$="{{isAscending(column.isSorted)}}" class="asc"></iron-icon>
+							<iron-icon icon="arrow-forward" hidden class="desc"></iron-icon>
+						</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            <div class="layout vertical justified table-body">
+                <template is="dom-repeat" items="{{_paginatedRecords}}" as="record">
+                    <div id$="{{index}}" class$="{{_putStyle(index)}}">
+                        <div class="table-body-arrow" hidden$="{{_isColumnHidden(record)}}">
+                            <t-button only-icon ico="expand-more" on-click="_toggleDetailPanel" class="toggle"></t-button>
+                        </div>
+                        <template is="dom-repeat" items="{{_getColumnData(record)}}" as="field">
+                            <div class="flex table-body-div" value$="{{field.value}}" key$="{{field.key}}" action$="{{field.action}}" hidden$="{{field.hideColumn}}">{{field.value}}</div>
+                        </template>
+                    </div>
+                    <div id$="{{_concatenate('row',index)}}" index$="{{index}}" class="mobile-row hidden">
+                        <div colspan$="{{_columnHeaders.length}}">
+                            <iron-collapse id$="{{_concatenate('collapse', index)}}">
+                                <template is="dom-repeat" items="{{_childRow}}" as="row">
+                                    <div class="padding48">
+                                        <span style="width:10%; min-width:40px">{{row.columnName}}</span>
+                                        <span style="width:10%; min-width:40px">{{row.columnValue}}</span>
+                                    </div>
+                                </template>
+                            </iron-collapse>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+        <div class="paginationController">
+            <t-pagination id="paginator" page-count="{{pageCount}}"></t-pagination>
+        </div>
+        <iron-media-query id="phone" query="(max-width: 480px)" on-query-matches-changed="_onPhone">
+        </iron-media-query>
+        <iron-media-query id="tablet" query="(max-width: 640px)" on-query-matches-changed="_onTablet">
+        </iron-media-query>
+        <iron-ajax id="searchgridcall" url="{{searchUrl}}" handleAs="json" method="GET" on-response="_handleSearchCallSuccess" on-error="_handleCallFailure">
+        </iron-ajax>
+        <iron-ajax id="populategridcall" url="{{dataUrl}}" handleAs="json" method="GET" on-response="_handleGetDataCallSuccess" on-error="handleGetDataCallFailure">
+        </iron-ajax>
+        <content id="tableformat" select="t-column"></content>
+        <content id="data" select="t-body"></content>
+        <content id="templates" select="template"></content>
+    </template>
+    <script>
+    getPageCount = function(_dataRows) {
+        var pageCount = parseInt(_dataRows.length / 10);
+        if (pageCount == 0 || _dataRows.length % 10 > 0) pageCount = pageCount + 1;
+        return pageCount;
+    };
+
+    Polymer({
+        is: 't-table',
+
+        observers: ['_setDetailPanelData(_currentScreen.*)'],
+
+        hostAttributes: {
+            tabindex: 0
+        },
+
+        properties: {
+
+            /**
+             * Number of pages present in case of Api based data table.
+             */
+            pageCount: {
+                type: Number,
+                value: 1
+            },
+
+            /**
+             * The table is searchable or not.
+             */
+            searchable: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The table has headerRow or not.
+             */
+            hasHeaderRow: {
+                type: Boolean,
+                value: true
+            },
+
+            /**
+             * The table supports sorting or not.
+             */
+            sortable: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The table rows have hover effect or not.
+             */
+            hoverable: {
+                type: Boolean,
+                value: false,
+                notify: true,
+                reflectToAttribute: true,
+                observer: '_onStylingChange'
+            },
+
+            /**
+             * The table rows are banded.
+             */
+            bandedRows: {
+                type: Boolean,
+                value: false,
+                notify: true,
+                reflectToAttribute: true,
+                observer: '_onStylingChange'
+            },
+
+            /**
+             * The table is Api driven or client side.
+             */
+            apiBased: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The URL target of the table data request.
+             */
+            dataUrl: String,
+
+            /**
+             * The URL target of the table search request.
+             */
+            searchUrl: String,
+
+            _loading: {
+                type: Boolean,
+                value: true
+            },
+
+            _ignoreSort: {
+                computed: '_onSortableChange(sortable)'
+            },
+
+            _errorMessage: String,
+
+            _sortedByDefault: {
+                type: Boolean,
+                value: false
+            },
+
+            _childRowsExists: {
+                type: Boolean,
+                value: false
+            },
+
+            _isProcessing: {
+                type: Boolean,
+                value: false
+            },
+
+            _paginatedRecords: {
+                type: Array,
+                notify: true,
+                value: []
+            },
+
+            _childRow: {
+                type: Array,
+                value: [],
+                notify: true
+            },
+
+            _columnHeaders: {
+                type: Array,
+                notify: true,
+                value: []
+            },
+
+            _columnTemplates: {
+                type: Array
+            },
+
+            _columns: {
+                type: Array,
+                value: []
+            },
+
+            _dataRows: {
+                type: Array,
+                notify: true,
+                value: [],
+                observer: '_dataRowsChanged'
+            },
+
+            _searchValue: {
+                type: String,
+                notify: true,
+                observer: '_searchValueChanged'
+            },
+
+            _previousDetailPanel: String,
+
+            _originalDataSet: {
+                type: Array
+            },
+
+            _selectedRow: Object,
+
+            _currentScreen: {
+                type: Object,
+                notify: true
+            },
+
+            _paging: {
+                type: Object,
+                notify: true
+            },
+
+        },
+
+        attached: function() {
+            var table = this;
+            table._columnTemplates = [];
+            table._paging = {
+                'pageNumber': 1,
+                'pageSize': 10
+            };
+            // table._dataRows=[];
+            table._columnHeaders = [];
+            table._originalDataSet = [];
+            table.addEventListener('t-paginated', function(eventParams) {
+                table._isProcessing = true;
+                table._loading = true;
+                table._paging = eventParams.detail;
+                table._getPaginatedDisplaySet();
+            });
+            setTimeout(function() {
+                table._domReady();
+            }, 0);
+        },
+
+        reload: function() {
+            this.$.populategridcall.params = this._paging;
+            this.$.populategridcall.generateRequest();
+        },
+
+        _getPaginatedDisplaySet: function() {
+            if (this._dataRows.length > 0) {
+                var table = this;
+                table._paginatedRecords = [];
+                table._isProcessing = false;
+                table._loading = true;
+                var start = (table._paging.pageNumber - 1) * table._paging.pageSize;
+                var end = start + table._paging.pageSize;
+                table._paginatedRecords = table._dataRows.slice(start, end);
+            }
+            if (table._paginatedRecords.length === 0 && table.apiBased) {
+                table.reload();
+            }
+        },
+
+        _setColumnHeaders: function(elem) {
+            var table = this;
+            var hideOn = elem.hideOn;
+            var data = {
+                dataValue: elem.dataValue,
+                displayValue: elem.displayValue,
+                ignoreSort: this.ignoreSort(elem.ignoreSort),
+                isChildRow: elem.isChildRow,
+                columnTemplate: elem.columnTemplate,
+                action: elem.action,
+                isSorted: false
+            };
+            if (table.sortable && !(elem.ignoreSort || table._sortedByDefault)) {
+                table._sortedByDefault = true;
+                data.isSorted = true;
+                table._orderBy(elem.dataValue, true);
+            }
+            if (elem.isChildRow && !table._childRowsExists) table._childRowsExists =
+                true;
+            var screens = {
+                all: false,
+                smallerDevices: false,
+                phone: false,
+                tablet: false,
+                always: false
+            };
+            if (hideOn !== null && hideOn !== undefined) {
+                hideOn = hideOn.split(',');
+                if (hideOn.indexOf('all') !== -1) {
+                    screens.all = true;
+                } else {
+                    if ((hideOn.indexOf('phone') !== -1 && hideOn.indexOf('tablet') !== -1)) {
+                        screens.smallerDevices = true;
+                    } else {
+                        if (hideOn.indexOf('phone') !== -1) {
+                            screens.phone = true;
+                        } else {
+                            if (hideOn.indexOf('tablet') !== -1) {
+                                screens.tablet = true;
+                            }
+                        }
+                    }
+                }
+            } else {
+                screens.always = true;
+            }
+            table.push('_columnHeaders', {
+                key: data.dataValue,
+                value: data.displayValue,
+                hideOn: screens,
+                ignoreSort: data.ignoreSort,
+                isChildRow: data.isChildRow,
+                columnTemplate: data.columnTemplate,
+                action: data.action,
+                isSorted: data.isSorted
+            });
+        },
+
+        _getColumnData: function(value) {
+            var columns = [];
+            var table = this;
+            table._columnHeaders.forEach(function(header, index) {
+                columns.push({
+                    key: header.key,
+                    value: value[header.key],
+                    columnTemplate: table._columnTemplates[index],
+                    hideOn: header.hideOn,
+                    isChildRow: header.isChildRow,
+                    action: header.action,
+                    hideColumn: table._hideColumn(header.hideOn, header.isChildRow)
+                });
+            });
+            return columns;
+        },
+
+        _toggleSearch: function(e) {
+            this.$.fld_searchbox.classList.add("toggle");
+            this.$.searchInput.focus();
+        },
+
+        _setDetailPanelData: function() {
+            this._childRow = [];
+            if (this._selectedRow !== null && this._selectedRow !== undefined) {
+                var rows = this._selectedRow.querySelectorAll('.table-body-div');
+                for (var i = 0; i < rows.length; i++) {
+                    var key = rows[i].getAttribute('key');
+                    var table = this;
+                    this._columnHeaders.forEach(function(header) {
+                        if (header.key === key) {
+                            if (table._checkIfColumnShouldBeShownInDetailPanel(header.isChildRow,
+                                    header.hideOn, rows[i].getAttribute('hide'))) {
+                                table.push('_childRow', {
+                                    columnName: header.value,
+                                    columnValue: rows[i].getAttribute('value'),
+                                    columnTemplate: header.columnTemplate,
+                                    action: header.action
+                                });
+                            }
+                        }
+                    }); //This throws an error saying dont make function on loop
+                }
+                if (this._childRow.length === 0) {
+                    this.querySelector('#row' + this._selectedRow.id).classList.add('hidden');
+                    this._resetToggleButtons();
+                }
+            }
+        },
+
+        _isHoverable: function() {
+            if (this.hoverable) return 'hover';
+        },
+
+        _putStyle: function(index) {
+            var classes = "layout horizontal justified";
+            if (this._isHoverable()) classes = classes + " " + "hover";
+            if (this.bandedRows && index % 2 === 0) classes = classes + " " +
+                'striped';
+            return classes;
+        },
+
+        _toggleDetailPanel: function(e) {
+            this._selectedRow = e.currentTarget.parentElement.parentElement;
+            var index = this._selectedRow.id;
+            this._toggleButtonIcon(e.currentTarget, index);
+            //this._resetToggleButtons(e.currentTarget);
+            this._setDetailPanelData();
+            if (this._childRow.length === 0) {
+                this.querySelector('#row' + this._selectedRow.id).classList.add('hidden');
+            } else {
+                this._setDetailPanelDisplay(index);
+            }
+        },
+
+        _toggleButtonIcon: function(button, index) {
+            if (index === this._previousDetailPanel) {
+                if (button.ico === 'expand-more') {
+                    button.ico = "expand-less";
+                } else {
+                    button.ico = "expand-more";
+                }
+            } else {
+                this._resetToggleButtons();
+                button.ico = "expand-less";
+            }
+        },
+
+        _resetToggleButtons: function() {
+            var button = this.querySelectorAll('.toggle');
+            for (var counter = 0; counter < button.length; counter++) {
+                button[counter].ico = "expand-more";
+            }
+        },
+
+        _setDetailPanelDisplay: function(index) {
+            if (!this.querySelector('#collapse' + index).opened) this._closeAllOtherOpenDetailViews();
+            if (this._previousDetailPanel == index) this._toggleDisplay(this.querySelector(
+                '#row' + this._previousDetailPanel));
+            else {
+                if (this._previousDetailPanel !== undefined) this.querySelector('#row' +
+                    this._previousDetailPanel).classList.add('hidden');
+                this.querySelector('#row' + index).classList.remove('hidden');
+            }
+            this.querySelector('#collapse' + index).opened = true;
+            this._previousDetailPanel = index;
+        },
+
+        _toggleDisplay: function(element) {
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+            } else {
+                element.classList.add('hidden');
+            }
+        },
+
+        _checkIfColumnShouldBeShownInDetailPanel: function(isChildRow, responsivenessParams, isHiddenForAll) {
+            if (isChildRow) return true;
+            if (isHiddenForAll == 'true') return false;
+            if ((responsivenessParams.smallerDevices && (this._currentScreen.isPhone ||
+                    this._currentScreen.isTablet)) || (this._currentScreen.isPhone &&
+                    responsivenessParams.phone) || (this._currentScreen.isTablet &&
+                    responsivenessParams.tablet)) return true;
+            return false;
+        },
+
+        _closeAllOtherOpenDetailViews: function() {
+            var collapses = this.querySelectorAll('iron-collapse');
+            for (var i = 0; i < collapses.length; i++) {
+                collapses[i].opened = false;
+            }
+        },
+
+        _resetDataSet: function() {
+            this._dataRows = this._originalDataSet;
+            this._paging.pageNumber = 1;
+        },
+
+        _searchValueChanged: function() {
+            if (this._searchValue.length === 0) this._resetDataSet();
+        },
+
+        _makeTextBasedSearch: function() {
+            var regexSearchPattern = new RegExp(this._searchValue, "i");
+            var filteredRows = [];
+            for (var i = 0; i < this._dataRows.length; i++) {
+                if (this._isFilteredRow(this._dataRows[i], regexSearchPattern)) {
+                    filteredRows.push(this._dataRows[i]);
+                }
+            }
+            return filteredRows;
+        },
+
+        _isFilteredRow: function(searchTree, regexSearchPattern) {
+            var keys = Object.keys(searchTree);
+            for (var index in keys) {
+                var key = keys[index];
+                if (typeof(searchTree[key]) === 'object') {
+                    return this.findValue(searchTree[key]);
+                } else {
+                    if (regexSearchPattern.test(searchTree[key])) return true;
+                }
+            }
+            return false;
+        },
+
+        _closeSearch: function(e) {
+            this.$.fld_searchbox.classList.remove("toggle");
+            e.preventDefault();
+        },
+
+        _domReady: function() {
+            this._parseTableStructure();
+            this._removeTableStructure();
+            if (this._dataRows.length === 0) {
+                this._isProcessing = true;
+                this._loading = true;
+            }
+            if (this.apiBased) {
+                this.reload();
+            }
+            this._originalDataSet = this._dataRows;
+        },
+
+        _parseTableStructure: function() {
+            this._columns = Polymer.dom(this.$.tableformat).getDistributedNodes();
+            var rows = this._columns;
+            var tableRows = [];
+            var templates = Polymer.dom(this.$.templates).getDistributedNodes();
+            for (i = 0; i < rows.length; i++) {
+                var elem = rows[i];
+                // this._appendTemplateInShadowDom(elem, templates);
+                this._setColumnHeaders(elem);
+            }
+            if (!this.apiBased) {
+                this._dataRows = JSON.parse(Polymer.dom(this.$.data).getDistributedNodes()[
+                    0].textContent);
+            }
+            this._rerenderTable();
+        },
+
+        _appendTemplateInShadowDom: function(tableRow, templates) {
+            var templateId = tableRow.getAttribute('column-template');
+            this._columnTemplates.push(templateId);
+            var template = templates.filter(function(element) {
+                return element.id == templateId;
+            })[0];
+            if (templateId !== undefined && templateId !== null) {
+                if (templateId && template !== null) {
+                    Polymer.dom(this.root).appendChild(template);
+                }
+            }
+        },
+
+        _dataRowsChanged: function() {
+            if (this._dataRows.length > 0) {
+                if (!this.apiBased) {
+                    this.pageCount = getPageCount(this._dataRows);
+                }
+                this._getPaginatedDisplaySet();
+            }
+            this._isProcessing = false;
+            this._loading = true;
+        },
+
+        _removeTableStructure: function() {
+            var rows = this.querySelectorAll('t-column');
+            var element = this.querySelector('t-body');
+            if (element !== null) element.parentNode.removeChild(element);
+            for (i = 0; i < rows.length; i++) {
+                rows[i].parentNode.removeChild(rows[i]);
+            }
+        },
+
+        _handleSearchCallSuccess: function(e) {
+            var response = e.detail.response;
+            if (response.status.issuccessful) {
+                this.pageCount = getPageCount(response.dataList);
+                this._paging.pageNumber = 1;
+                this._dataRows = response.dataList;
+            } else {
+                this._loading = false;
+                if (response.status.error === undefined || response.status.error.length ===
+                    0) this._errorMessage = 'Error while retrieving data.';
+                else this._errorMessage = response.status.error;
+            }
+        },
+
+        _handleGetDataCallSuccess: function(e) {
+            this.blurIt = false;
+            var response = e.detail.response;
+            if (response.status.issuccessful) {
+                this.pageCount = response.pageCount;
+                this._originalDataSet = response.dataList;
+                this._resetDataSet();
+            } else {
+                this._loading = false;
+                if (response.status.error === undefined || response.status.error === null)
+                    this._errorMessage = 'Error while retrieving data.';
+                else this._errorMessage = response.status.error;
+            }
+            this._resetDataSet();
+        },
+
+        _handleCallFailure: function(e) {
+            this._loading = false;
+            if (response.status.error === undefined || response.status.error.length ===
+                0) this._errorMessage = 'Error while retrieving data.';
+            else this._errorMessage = response.status.error;
+        },
+
+        _hideOverlay: function() {
+            this._isProcessing = false;
+        },
+
+        _sortOnApi: function(isDescending, key) {
+            var params = {
+                paging: this._paging,
+                sortingInfo: {
+                    orderBy: key,
+                    sortDesc: false
+                }
+            };
+            if (isDescending) {
+                params.sortingInfo.sortDesc = true;
+            }
+            this.$.populategridcall.params = params;
+            this.$.populategridcall.generateRequest();
+        },
+
+        _sortFunc: function(keyName) {
+            return function(a, b) {
+                if (typeof(a[keyName]) === 'number') return parseInt(a[keyName]) -
+                    parseInt(b[keyName]);
+                else {
+                    if (typeof(a[keyName]) === 'string') return a[keyName].localeCompare(b[
+                        keyName]);
+                }
+            };
+        },
+
+        _sort: function(event, detail, sender) {
+            if (this.sortable) {
+                var key = event.model.column.key;
+                var isAscending = Boolean(event.currentTarget.getAttribute("isAscending"));
+                if (isAscending) event.currentTarget.removeAttribute("isAscending");
+                else event.currentTarget.setAttribute("isAscending", "true");
+                this._orderBy(key, isAscending);
+                this._hideIcons('.asc');
+                this._hideIcons('.desc');
+                if (isAscending) {
+                    event.currentTarget.querySelector('.asc').hidden = false;
+                    event.currentTarget.querySelector('.desc').hidden = true;
+                } else {
+                    event.currentTarget.querySelector('.desc').hidden = false;
+                    event.currentTarget.querySelector('.asc').hidden = true;
+                }
+                this._dataRowsChanged();
+            }
+        },
+
+        _orderBy: function(key, isAscending) {
+            if (this.apiBased) {
+                this._sortOnApi(isAscending, key);
+            } else {
+                if (isAscending) this._dataRows.sort(this._sortFunc(key));
+                else this._dataRows.reverse(this._sortFunc(key));
+            }
+        },
+
+        _hideIcons: function(selector) {
+            var icons = this.querySelectorAll(selector);
+            for (var i = 0; i < icons.length; i++) {
+                icons[i].hidden = true;
+            }
+        },
+
+        _hideColumn: function(hideOn, isChildRow) {
+            return ((this._currentScreen.isPhone && hideOn.phone === true) || (hideOn.tablet &&
+                    this._currentScreen.isTablet) || (hideOn.all) || (hideOn.smallerDevices &&
+                    (this._currentScreen.isTablet || this._currentScreen.isPhone))) ||
+                isChildRow;
+        },
+
+        _onSortableChange: function() {
+            if (this._dataRows !== undefined) {
+                this._sortedByDefault = false;
+                this._columnHeaders = [];
+                for (i = 0; i < this._columns.length; i++) {
+                    var elem = this._columns[i];
+                    this._setColumnHeaders(elem);
+                }
+            }
+        },
+
+
+        _isColumnHidden: function(hideOn) {
+            return !(this._currentScreen.isPhone || this._currentScreen.isTablet) && !
+                this._childRowsExists;
+        },
+
+        _concatenate: function(str1, str2) {
+            return str1 + str2;
+        },
+
+        _onStylingChange: function() {
+            this._rerenderTable();
+        },
+
+        _onPhone: function(e) {
+            if (this._currentScreen === undefined) this._currentScreen = Object;
+            this._currentScreen.isPhone = e.detail.value;
+            this._rerenderTable();
+        },
+
+        _onTablet: function(e) {
+            if (this._currentScreen === undefined) this._currentScreen = Object;
+            this._currentScreen.isTablet = e.detail.value;
+            this._rerenderTable();
+        },
+
+        _rerenderTable: function() {
+            var table = this;
+            var _columnHeaders = table._columnHeaders;
+            table._columnHeaders = [];
+            var test = [];
+            if (_columnHeaders !== undefined) {
+                _columnHeaders.forEach(function(data, index) {
+                    data.hideColumn = table._hideColumn(data.hideOn, data.isChildRow);
+                    setTimeout(function() {
+                        table.push('_columnHeaders', data);
+                    }, 0);
+                });
+                if (this._dataRows !== undefined) {
+                    var _paginatedRecords = table._paginatedRecords;
+                    table._paginatedRecords = [];
+                    _paginatedRecords.forEach(function(record) {
+                        setTimeout(function() {
+                            table.push('_paginatedRecords', record);
+                        }, 0);
+                    });
+                }
+            }
+        },
+
+        isAscending: function(isSorted) {
+            return !(isSorted && this.sortable);
+        },
+
+        ignoreSort: function(ignoreSort) {
+            return (ignoreSort && !this.sortable);
+        },
+
+        searchTable: function(e) {
+            if (e.keyCode === 13) {
+                this._resetDataSet();
+                this._isProcessing = true;
+                this._loading = true;
+                if (this.apiBased) {
+                    // make this search wildcard based
+                    var data = {};
+                    data.text = this._searchValue;
+                    if (this._searchValue.length === 0) {
+                        // this._paging.pageNumber=1;
+                        // this._paging.pageCount=10;
+                        this.reload(this._paging);
+                    } else {
+                        // this.$.searchgridcall.params=data;
+                        this.$.searchgridcall.params = data;
+                        this.$.searchgridcall.generateRequest();
+                    }
+                } else {
+                    // make a text based search on the table rows
+                    var filteredRows = this._makeTextBasedSearch();
+                    if (filteredRows.length > 0) this._dataRows = filteredRows;
+                    else this._loading = false;
+                }
+            } else {}
+        }
+
+    });
+    </script>
+</dom-module>

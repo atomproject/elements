@@ -1,0 +1,51 @@
+{
+  "name": "t-form",
+  "version": "0.0.0",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-ajax": "PolymerElements/iron-ajax#1.0.0",
+    "paper-item": "PolymerElements/paper-item#1.0.2",
+    "t-autosuggest": "atomelements/t-autosuggest#master",
+    "t-button": "atomelements/t-button#master",
+    "t-calendar": "atomelements/t-calendar#master",
+    "t-checkbox-group": "atomelements/t-checkbox-group#master",
+    "t-colorpicker": "atomelements/t-colorpicker#master",
+    "t-dropdown": "atomelements/t-dropdown#master",
+    "t-input": "atomelements/t-input#master",
+    "t-notify": "atomelements/t-notify#master",
+    "t-radio-group": "atomelements/t-radio-group#master",
+    "t-slider": "atomelements/t-slider#master",
+    "t-stepper": "atomelements/t-stepper#master",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "~0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6"
+  },
+  "resolutions": {
+    "paper-behaviors": "~1.0.10"
+  }
+}

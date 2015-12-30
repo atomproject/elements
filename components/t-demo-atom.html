@@ -1,0 +1,321 @@
+<script type="text/javascript" src="../bower_components/iframe-resizer/js/iframeResizer.js"></script>
+<script type="text/javascript" src="../scripts/lodash.custom.js"></script>
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/t-device-view/t-device-view.html">
+<link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../bower_components/t-button/t-button.html">
+<link rel="import" href="t-component-panel/t-component-panel.html">
+<link rel="import" href="t-component-code.html">
+<link rel="import" href="t-device-toggle.html">
+
+<dom-module id="t-demo-atom">
+	<template>
+    <style>
+      :host {
+        display: block;
+        position: relative;
+        height: 100%;
+      }
+
+      #filterDrawerPanel [main] {
+        background-color: #fff;
+      }
+
+      #filterDrawerPanel [drawer] {
+        border-left: 1px solid;
+        border-bottom: 1px solid;
+        border-color: var(--grey-two);
+      }
+
+      .right-panel {
+        height: 100%;
+      }
+
+      .header {
+        height: 45px;
+      }
+
+      .body {
+        margin: 10px 0;
+        overflow: auto;
+      }
+
+      .header, .body {
+        padding: 8px 16px;
+      }
+
+      t-device-toggle {
+        border-bottom: 1px solid;
+        border-color: var(--grey-two);
+      }
+
+      t-component-code {
+        margin-top: 20px;
+      }
+
+      hr {
+        border: none;
+        border-bottom: 1px solid;
+        border-color: var(--grey-one);
+      }
+
+      #demo {
+        width: 100%;
+      }
+    </style>
+
+  	<paper-drawer-panel id="filterDrawerPanel" class="main-drawer-panel"
+      transition disable-swipe right-drawer responsive-width="1100px"
+      main drawer-width="{{filterWidth}}" on-paper-responsive-change="_setWidth"
+      drawer-toggle-attribute="filter-toggle">
+
+        <div class="layout vertical" selected main>
+          <div class="header">
+            <t-button ico="filter-list" only-icon filter-toggle paper-drawer-toggle>
+            </t-button>
+          </div>
+          <div class="body" active$="{{activated}}" >
+            <device-view device="{{device}}" landscape="{{landscape}}">
+              <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
+            </device-view>
+            <hr>
+            <t-component-code id="code"
+              org-name="[[orgName]]"
+              component-name="[[componentName]]"
+              component-html="[[componentHtml]]">
+            </t-component-code>
+          </div>
+        </div>
+        <div drawer>
+          <div class="right-panel layout vertical">
+            <t-device-toggle device="{{device}}" landscape="{{landscape}}">
+            </t-device-toggle>
+            <div style="overflow:auto;">
+              <t-component-panel id="componentPanel"
+                on-path-changed="updatePath"
+                property-source="{{propertiesFile}}"
+                component="{{componentName}}">
+              </t-component-panel>
+            </div>
+          </div>
+        </div>
+
+    </paper-drawer-panel>
+
+    <content></content>
+  </template>
+  <script>
+    Polymer({
+
+      is: 't-demo-atom',
+
+      properties:{
+        /*filter width for handling responsive*/
+        filterWidth: String,
+        propertiesFile: String,
+        componentName: String,
+        componentHtml: String,
+        demoFile: String,
+        orgName: String,
+
+        landscape: {
+          type: Boolean,
+          value: false,
+          notify: true
+        },
+
+        device: {
+          type: String,
+          value: 'laptop',
+          notify: true
+        },
+
+        /*activated the  toggle of code section*/
+        activated:{
+          type:Boolean,
+          value:false,
+          reflectToAttribute:true
+        },
+
+        _demoComponent: Object
+      },
+
+      //listen to the load event of iframe
+      listeners: {
+        'demo.load': 'setDemoComponent'
+      },
+
+      ready: function() {
+        var template = Polymer.dom(this).querySelector('template');
+
+        //if the load event of iframe triggers earlier than the
+        //ready callback then `this.componentName` won't be available
+        //so we trigger the `setDemoComponent` callback here
+        if (!this._demoComponent) {
+          this.setDemoComponent();
+        }
+
+        if (template) {
+          this.componentHtml = template.innerHTML;
+        }
+      },
+
+      //the load event is triggered twice, it shouldn't be a problem
+      //but why the heck is it triggered twice?.
+      setDemoComponent: function(event) {
+        var iframeDoc, targetComponent;
+
+        //the name of the component to find is not available.
+        //current method is also called in the `ready` hook
+        if (!this.componentName) {
+          return;
+        }
+
+        iframeDoc = this.$.demo.contentWindow.document;
+        targetComponent = iframeDoc.querySelector(this.componentName);
+
+        this.initIframe(this.$.demo);
+
+        if (targetComponent) {
+          this._demoComponent = targetComponent;
+          this.applyProperties();
+        }
+      },
+
+      initIframe: function(iframe) {
+        var script, doc, head;
+
+        iFrameResize({
+          checkOrigin: true,
+          heightCalculationMethod: 'bodyScroll',
+          scrolling: true
+        }, iframe);
+
+        doc = iframe.contentWindow.document;
+
+        script = doc.createElement('script');
+        script.type = 'text/javascript';
+        script.async = true;
+        script.defer = true;
+        //we need a better way of serving this file
+        script.src = 'https://rawgit.com/davidjbradshaw/iframe-resizer/master/js/iframeResizer.contentWindow.min.js'
+
+        head = doc.querySelector('head');
+        head.appendChild(script);
+      },
+
+      canBeChanged: function(propertyAttributes) {
+        var defaultValue, isComputed, isReadOnly;
+
+        isComputed = propertyAttributes.computed;
+        isReadOnly = propertyAttributes.readOnly;
+
+        //if the property is a computed or read only property then
+        //don't touch it
+        if (isComputed || isReadOnly) {
+          return false;
+        }
+
+        return true;
+      },
+
+      getDefaultValue: function(propertyAttributes, component) {
+        var defaultValue = propertyAttributes.value;
+
+        //if the defaultValue is not a primitive value
+        if (typeof defaultValue === 'function') {
+          //we're not calling with `this` since nowhere do docs (polymer)
+          //mention that the initializer function __must__ have access
+          //to the current element
+          return defaultValue.call(component);
+        }
+
+        return defaultValue;
+      },
+
+      applyCurrentValue: function(defaultValue, currentValue,
+        propertyAttributes) {
+        //both the default and current values should be different but
+        //they must be of same type. The `_.isEqual` function is needed
+        //to handle the eqaulity checks for complex types like objects.
+        return currentValue !== undefined &&
+          currentValue !== null &&
+          !isNaN(currentValue) &&
+          currentValue.constructor === propertyAttributes.type &&
+          !_.isEqual(defaultValue, currentValue);
+      },
+
+      //Call this method when component to be demoed is available in DOM.
+      //Get default property values of the element and show them as attributes
+      //in the HTML code
+      applyProperties: function() {
+        //get the custom properties of the element
+        var properties = this._demoComponent.properties;
+        var propertyKeys = Object.keys(properties);
+
+        propertyKeys.forEach(function(propertyKey) {
+          var panelProperties = this.$.componentPanel._metadata || {};
+          //get the attributes of the property, this is kind of _reflection_
+          var propertyAttributes = this._demoComponent.properties[propertyKey];
+          var value, defaultValue, currentValue, applyCurrentValue;
+
+          if (!this.canBeChanged(propertyAttributes)) {
+            return;
+          }
+
+          defaultValue = this.getDefaultValue(propertyAttributes,
+            this._demoComponent);
+          currentValue = this._demoComponent[propertyKey];
+
+          //see if an initial value is provided in the properties panel
+          if (propertyKey in panelProperties) {
+            value = panelProperties[propertyKey].value;
+
+            if (value !== undefined) {
+              this.updateTargets(propertyKey, value);
+            }
+          } else if (this.applyCurrentValue(defaultValue, currentValue,
+              propertyAttributes)) {
+            //since initial value is not provided and the current value
+            //differs from the default value, update the values in html code
+            value = currentValue;
+            this.$.code.set('componentAttributes.' + propertyKey, value);
+          }
+        }.bind(this));
+      },
+
+      //this callback is triggered on the `path-chaned` event
+      //the event is fired by the `t-component-panel` when some property changes
+      updatePath: function(event) {
+        var path = event.detail.path;
+        var value = event.detail.value;
+
+        if (!this._demoComponent || !path ||
+          value === undefined || value === null) {
+          return;
+        }
+
+        this.updateTargets(path, value);
+      },
+      
+      //update the changes to properties
+      updateTargets: function(key, value) {
+        value = _.cloneDeep(value);
+        //update the demo component itself
+        this._demoComponent.set(key, value);
+
+        value = _.cloneDeep(value);
+        //update the html attributes in code
+        this.$.code.set('componentAttributes.' + key, value);
+      },
+
+      //calculate the width and put value
+      _setWidth:function(){
+        var winWid =  window.innerWidth;
+
+        this.filterWidth = (winWid < 600 ? '75%' : '300px');
+      }
+    });
+  </script>
+</dom-module>

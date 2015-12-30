@@ -1,0 +1,93 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-tabs/paper-tabs.html">
+
+<dom-module id="t-scaffold-fusion">
+<link rel="import" type="css" href="fusion-header.css">
+<template>
+    <style>
+        
+        .header-bar {
+            height: 114px;
+            border-bottom: 1px solid #eee;
+        }
+        paper-header-panel.paper-header-panel-0 paper-toolbar:after, paper-header-panel.paper-header-panel-0 .paper-header:after {
+            display:none
+        }
+        .header-bar::content > div#bottomBar,
+        .header-bar::content > div#bottomBar paper-tabs {
+            height: 49px;
+            color: #000;
+            background: #f5f5f5;
+            padding: 0;
+            font-size: 14px;
+        }
+         .header-bar::content > div#bottomBar paper-tab:focus .tab-content.paper-tab, .header-bar::content > div#bottomBar paper-tab .tab-content.paper-tab{
+            opacity: 1;
+            font-weight: 500;
+        }
+        .header-bar::content > div#bottomBar paper-tabs #selectionBar{
+            background-color: var(--default-primary-color);
+            height:1px;
+        }
+        paper-header-panel ::content #dropShadow{
+            display: none;
+        }
+        .bottom{
+            width: 90%;
+        }
+        @media (min-width: 600px){
+            .bottom{
+                width: 500px;
+            }
+        }
+    </style>
+    <!-- <link rel="import" type="css" href="t-nav-list.css">
+   -->
+    <paper-header-panel class="list-panel" main>
+        <div class="paper-header">
+            
+        <paper-toolbar bottom-justify="center" class="header-bar">
+            <span class="top flex">
+              <content select="header-toolbar"></content>
+            </span>
+            <div class="login-section top">
+              <t-button link label="Sign out" noink></t-button>
+            </div>
+                <div class="bottom">
+                    <content select="nav-content"></content>
+                </div>
+            </paper-toolbar>
+    	</div>
+		<div class="content fit">
+            <content select=".content"></content>
+        </div>
+    </paper-header-panel>
+</template>
+</dom-module>
+<script>
+    Polymer({
+
+        is: 't-scaffold-fusion',
+
+        properties: {
+          
+            toggleLogin: {
+                type: Object,
+                reflectToAttribute: true
+            },
+
+            responsiveWidth: {
+                type: String,
+                value: '768px'
+            }
+        },
+        /* // this will be placed when drop down.
+        toggleHandler: function(toggleLogin) {
+            this.toggleLogin = (this.toggleLogin != 'active' ? 'active' : "");
+            // results in this.setAttribute('toggle', 'loaded');
+        },*/
+
+    });
+</script>

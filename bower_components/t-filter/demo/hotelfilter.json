@@ -1,0 +1,1694 @@
+{
+  "filters": [
+    {
+      "category": "Hotel Name",
+      "type": "Search",
+      "label": "Hotel Name",
+      "items": [
+        {
+          "group": "Name",
+          "name": "Name",
+          "label": "Hotel Name",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": null
+        }
+      ],
+      "settings": null
+    },
+    {
+      "category": "Price",
+      "type": "Range",
+      "label": "Price",
+      "items": [
+        {
+          "group": "Price",
+          "name": "Min",
+          "label": "Minimum Price",
+          "displayValue": "$35.65",
+          "value": "35.65",
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Unit",
+              "value": "$"
+            }
+          ]
+        },
+        {
+          "group": "Price",
+          "name": "Max",
+          "label": "Maximum Price",
+          "displayValue": "$2,138.32",
+          "value": "2138.32",
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Unit",
+              "value": "$"
+            }
+          ]
+        }
+      ],
+      "settings": null
+    },
+    {
+      "category": "Rating",
+      "type": "Options",
+      "label": "Rating",
+      "items": [
+        {
+          "group": "Rating",
+          "name": "5",
+          "label": "5 Star",
+          "displayValue": "$220.50",
+          "value": "220.5",
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "51"
+            }
+          ]
+        },
+        {
+          "group": "Rating",
+          "name": "4",
+          "label": "4 Star",
+          "displayValue": "$177.50",
+          "value": "177.5",
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "71"
+            }
+          ]
+        },
+        {
+          "group": "Rating",
+          "name": "3",
+          "label": "3 Star",
+          "displayValue": "$56.40",
+          "value": "56.40",
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "370"
+            }
+          ]
+        },
+        {
+          "group": "Rating",
+          "name": "2",
+          "label": "2 Star",
+          "displayValue": "$35.65",
+          "value": "35.65",
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "100"
+            }
+          ]
+        },
+        {
+          "group": "Rating",
+          "name": "1",
+          "label": "1 Star",
+          "displayValue": "$97.50",
+          "value": "97.5",
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "group": "Rating",
+          "name": "0",
+          "label": "Unrated",
+          "displayValue": "$99.85",
+          "value": "99.85",
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "4"
+            }
+          ]
+        }
+      ],
+      "settings": [
+        {
+          "key": "EnableSearch",
+          "value": "false"
+        }
+      ]
+    },
+    {
+      "category": "Distance",
+      "type": "Range",
+      "label": "Distance",
+      "items": [
+        {
+          "group": "Distance",
+          "name": "Min",
+          "label": "Closest",
+          "displayValue": "1.39 Mile",
+          "value": "1.39",
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Unit",
+              "value": "Mile"
+            }
+          ]
+        },
+        {
+          "group": "Distance",
+          "name": "Max",
+          "label": "Farthest",
+          "displayValue": "28.3 Mile",
+          "value": "28.3",
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Unit",
+              "value": "Mile"
+            }
+          ]
+        }
+      ],
+      "settings": null
+    },
+    {
+      "category": "AreaAttractions",
+      "type": "Options",
+      "label": "Area Attractions",
+      "items": [
+        {
+          "group": "AreaAttractions",
+          "name": "Delhi (Del Indira Gandhi Intl)",
+          "label": "Delhi (Del Indira Gandhi Intl)",
+          "displayValue": null,
+          "value": "Delhi (Del Indira Gandhi Intl)",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Gole Market",
+          "label": "Gole Market",
+          "displayValue": null,
+          "value": "Gole Market",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Connaught Place",
+          "label": "Connaught Place",
+          "displayValue": null,
+          "value": "Connaught Place",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Palika Bazaar",
+          "label": "Palika Bazaar",
+          "displayValue": null,
+          "value": "Palika Bazaar",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Sadar Bazaar",
+          "label": "Sadar Bazaar",
+          "displayValue": null,
+          "value": "Sadar Bazaar",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Laxminarayan Temple",
+          "label": "Laxminarayan Temple",
+          "displayValue": null,
+          "value": "Laxminarayan Temple",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Birla Mandir Temple",
+          "label": "Birla Mandir Temple",
+          "displayValue": null,
+          "value": "Birla Mandir Temple",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Jantar Mantar",
+          "label": "Jantar Mantar",
+          "displayValue": null,
+          "value": "Jantar Mantar",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Gurudwara Bangla Sahib",
+          "label": "Gurudwara Bangla Sahib",
+          "displayValue": null,
+          "value": "Gurudwara Bangla Sahib",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Karol Bagh Shopping Market",
+          "label": "Karol Bagh Shopping Market",
+          "displayValue": null,
+          "value": "Karol Bagh Shopping Market",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Jama Masjid",
+          "label": "Jama Masjid",
+          "displayValue": null,
+          "value": "Jama Masjid",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Chandni Chowk",
+          "label": "Chandni Chowk",
+          "displayValue": null,
+          "value": "Chandni Chowk",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Gurudwara Sis Ganj Temple",
+          "label": "Gurudwara Sis Ganj Temple",
+          "displayValue": null,
+          "value": "Gurudwara Sis Ganj Temple",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Parliament of India",
+          "label": "Parliament of India",
+          "displayValue": null,
+          "value": "Parliament of India",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Red Fort",
+          "label": "Red Fort",
+          "displayValue": null,
+          "value": "Red Fort",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Cathedral Church of the Redemption",
+          "label": "Cathedral Church of the Redemption",
+          "displayValue": null,
+          "value": "Cathedral Church of the Redemption",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "St James Church",
+          "label": "St James Church",
+          "displayValue": null,
+          "value": "St James Church",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Guru Gobind Singh Indraprastha University",
+          "label": "Guru Gobind Singh Indraprastha University",
+          "displayValue": null,
+          "value": "Guru Gobind Singh Indraprastha University",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Delhi (DEL Indira Gandhi Intl)",
+          "label": "Delhi (DEL Indira Gandhi Intl)",
+          "displayValue": null,
+          "value": "Delhi (DEL Indira Gandhi Intl)",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Medanta",
+          "label": "Medanta",
+          "displayValue": null,
+          "value": "Medanta",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Unitech Cyber City",
+          "label": "Unitech Cyber City",
+          "displayValue": null,
+          "value": "Unitech Cyber City",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Galaxy Mall",
+          "label": "Galaxy Mall",
+          "displayValue": null,
+          "value": "Galaxy Mall",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Omaxe Celebration Mall",
+          "label": "Omaxe Celebration Mall",
+          "displayValue": null,
+          "value": "Omaxe Celebration Mall",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Mgf Metropolitan Mall",
+          "label": "Mgf Metropolitan Mall",
+          "displayValue": null,
+          "value": "Mgf Metropolitan Mall",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Leisure Valley",
+          "label": "Leisure Valley",
+          "displayValue": null,
+          "value": "Leisure Valley",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Kingdom of Dreams",
+          "label": "Kingdom of Dreams",
+          "displayValue": null,
+          "value": "Kingdom of Dreams",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Gurgaon Central Mall",
+          "label": "Gurgaon Central Mall",
+          "displayValue": null,
+          "value": "Gurgaon Central Mall",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Dlf Park Place",
+          "label": "Dlf Park Place",
+          "displayValue": null,
+          "value": "Dlf Park Place",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Sahara Mall",
+          "label": "Sahara Mall",
+          "displayValue": null,
+          "value": "Sahara Mall",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Dlf Golf Course",
+          "label": "Dlf Golf Course",
+          "displayValue": null,
+          "value": "Dlf Golf Course",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Dlf Cyber City",
+          "label": "Dlf Cyber City",
+          "displayValue": null,
+          "value": "Dlf Cyber City",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Ambience Mall",
+          "label": "Ambience Mall",
+          "displayValue": null,
+          "value": "Ambience Mall",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Ayyappa Temple",
+          "label": "Ayyappa Temple",
+          "displayValue": null,
+          "value": "Ayyappa Temple",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Sultanpur Bird Sanctuary",
+          "label": "Sultanpur Bird Sanctuary",
+          "displayValue": null,
+          "value": "Sultanpur Bird Sanctuary",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Shah Kotla Stadium",
+          "label": "Shah Kotla Stadium",
+          "displayValue": null,
+          "value": "Shah Kotla Stadium",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Presidential Palace",
+          "label": "Presidential Palace",
+          "displayValue": null,
+          "value": "Presidential Palace",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Pusa Hill Forest",
+          "label": "Pusa Hill Forest",
+          "displayValue": null,
+          "value": "Pusa Hill Forest",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Gk Market",
+          "label": "Gk Market",
+          "displayValue": null,
+          "value": "Gk Market",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Secretariat Building",
+          "label": "Secretariat Building",
+          "displayValue": null,
+          "value": "Secretariat Building",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Matthew Town (Iga Inagua) 13",
+          "label": "Matthew Town (Iga Inagua) 13",
+          "displayValue": null,
+          "value": "Matthew Town (Iga Inagua) 13",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Iskcon Temple",
+          "label": "Iskcon Temple",
+          "displayValue": null,
+          "value": "Iskcon Temple",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "M Block Market",
+          "label": "M Block Market",
+          "displayValue": null,
+          "value": "M Block Market",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Deshbandhu College",
+          "label": "Deshbandhu College",
+          "displayValue": null,
+          "value": "Deshbandhu College",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Lotus Temple",
+          "label": "Lotus Temple",
+          "displayValue": null,
+          "value": "Lotus Temple",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Kalkaji Mandir",
+          "label": "Kalkaji Mandir",
+          "displayValue": null,
+          "value": "Kalkaji Mandir",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Ansal Plaza",
+          "label": "Ansal Plaza",
+          "displayValue": null,
+          "value": "Ansal Plaza",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Siri Fort Auditorium",
+          "label": "Siri Fort Auditorium",
+          "displayValue": null,
+          "value": "Siri Fort Auditorium",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Fortis Escorts Heart Institute",
+          "label": "Fortis Escorts Heart Institute",
+          "displayValue": null,
+          "value": "Fortis Escorts Heart Institute",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "All India Institute of Medical Sciences",
+          "label": "All India Institute of Medical Sciences",
+          "displayValue": null,
+          "value": "All India Institute of Medical Sciences",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Jawaharlal Nehru Stadium",
+          "label": "Jawaharlal Nehru Stadium",
+          "displayValue": null,
+          "value": "Jawaharlal Nehru Stadium",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Jamia Millia Islamia",
+          "label": "Jamia Millia Islamia",
+          "displayValue": null,
+          "value": "Jamia Millia Islamia",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Select Citywalk",
+          "label": "Select Citywalk",
+          "displayValue": null,
+          "value": "Select Citywalk",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Max Super Specialty Hospital",
+          "label": "Max Super Specialty Hospital",
+          "displayValue": null,
+          "value": "Max Super Specialty Hospital",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Delhi (DEL Indira Gandhi Intl) 12",
+          "label": "Delhi (DEL Indira Gandhi Intl) 12",
+          "displayValue": null,
+          "value": "Delhi (DEL Indira Gandhi Intl) 12",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Dilli Haat Market",
+          "label": "Dilli Haat Market",
+          "displayValue": null,
+          "value": "Dilli Haat Market",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Fortis Hospital",
+          "label": "Fortis Hospital",
+          "displayValue": null,
+          "value": "Fortis Hospital",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Lado Sarai Golf Club",
+          "label": "Lado Sarai Golf Club",
+          "displayValue": null,
+          "value": "Lado Sarai Golf Club",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Dada Dev Mandir",
+          "label": "Dada Dev Mandir",
+          "displayValue": null,
+          "value": "Dada Dev Mandir",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Swaminarayan Akshardham Temple",
+          "label": "Swaminarayan Akshardham Temple",
+          "displayValue": null,
+          "value": "Swaminarayan Akshardham Temple",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Raj Ghat",
+          "label": "Raj Ghat",
+          "displayValue": null,
+          "value": "Raj Ghat",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Great India Place",
+          "label": "Great India Place",
+          "displayValue": null,
+          "value": "Great India Place",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "National Gandhi Museum",
+          "label": "National Gandhi Museum",
+          "displayValue": null,
+          "value": "National Gandhi Museum",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Shanti Vana",
+          "label": "Shanti Vana",
+          "displayValue": null,
+          "value": "Shanti Vana",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Old Fort",
+          "label": "Old Fort",
+          "displayValue": null,
+          "value": "Old Fort",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Shankar's International Dolls Museum",
+          "label": "Shankar's International Dolls Museum",
+          "displayValue": null,
+          "value": "Shankar's International Dolls Museum",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Delhi Zoo",
+          "label": "Delhi Zoo",
+          "displayValue": null,
+          "value": "Delhi Zoo",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Pragati Maidan",
+          "label": "Pragati Maidan",
+          "displayValue": null,
+          "value": "Pragati Maidan",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "National Crafts Museum",
+          "label": "National Crafts Museum",
+          "displayValue": null,
+          "value": "National Crafts Museum",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Humayun's Tomb",
+          "label": "Humayun's Tomb",
+          "displayValue": null,
+          "value": "Humayun's Tomb",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Nodia Golf Course",
+          "label": "Nodia Golf Course",
+          "displayValue": null,
+          "value": "Nodia Golf Course",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Salimgarh Fort",
+          "label": "Salimgarh Fort",
+          "displayValue": null,
+          "value": "Salimgarh Fort",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Dhyan Chand National Stadium",
+          "label": "Dhyan Chand National Stadium",
+          "displayValue": null,
+          "value": "Dhyan Chand National Stadium",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Delhi Golf Club",
+          "label": "Delhi Golf Club",
+          "displayValue": null,
+          "value": "Delhi Golf Club",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Delhi High Court",
+          "label": "Delhi High Court",
+          "displayValue": null,
+          "value": "Delhi High Court",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "National Gallery of Modern Art",
+          "label": "National Gallery of Modern Art",
+          "displayValue": null,
+          "value": "National Gallery of Modern Art",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Nizamuddin Dargah",
+          "label": "Nizamuddin Dargah",
+          "displayValue": null,
+          "value": "Nizamuddin Dargah",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Khan Market",
+          "label": "Khan Market",
+          "displayValue": null,
+          "value": "Khan Market",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "India Gate",
+          "label": "India Gate",
+          "displayValue": null,
+          "value": "India Gate",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "India Habitat Centre",
+          "label": "India Habitat Centre",
+          "displayValue": null,
+          "value": "India Habitat Centre",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Lodhi Garden",
+          "label": "Lodhi Garden",
+          "displayValue": null,
+          "value": "Lodhi Garden",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Vigyan Bhavan",
+          "label": "Vigyan Bhavan",
+          "displayValue": null,
+          "value": "Vigyan Bhavan",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Ambi Mall",
+          "label": "Ambi Mall",
+          "displayValue": null,
+          "value": "Ambi Mall",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Dlf Promenade Vasant Kunj",
+          "label": "Dlf Promenade Vasant Kunj",
+          "displayValue": null,
+          "value": "Dlf Promenade Vasant Kunj",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "World Square Mall",
+          "label": "World Square Mall",
+          "displayValue": null,
+          "value": "World Square Mall",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Abes Engineering College",
+          "label": "Abes Engineering College",
+          "displayValue": null,
+          "value": "Abes Engineering College",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Institute of Management Technology",
+          "label": "Institute of Management Technology",
+          "displayValue": null,
+          "value": "Institute of Management Technology",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Varanasi (Vns Babatpur)",
+          "label": "Varanasi (Vns Babatpur)",
+          "displayValue": null,
+          "value": "Varanasi (Vns Babatpur)",
+          "selectedValue": null,
+          "additionalInfo": null
+        },
+        {
+          "group": "AreaAttractions",
+          "name": "Indraprashtha Apollo Hospital",
+          "label": "Indraprashtha Apollo Hospital",
+          "displayValue": null,
+          "value": "Indraprashtha Apollo Hospital",
+          "selectedValue": null,
+          "additionalInfo": null
+        }
+      ],
+      "settings": [
+        {
+          "key": "EnableSearch",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "category": "Amenities",
+      "type": "Options",
+      "label": "Amenities",
+      "items": [
+        {
+          "group": "Amenities",
+          "name": "1",
+          "label": "Airport Transfer",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "314"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "28",
+          "label": "Bar",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "381"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "75",
+          "label": "BreakFast",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "389"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "53",
+          "label": "Business Center",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "353"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "77",
+          "label": "Casino",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "3"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "82",
+          "label": "Children Facilities",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "82"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "2",
+          "label": "Fitness Facility",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "228"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "3",
+          "label": "Internet",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "516"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "9",
+          "label": "Laundry",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "533"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "22",
+          "label": "Non-Smoking Unit",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "80"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "6",
+          "label": "Restaurant",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "372"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "23",
+          "label": "Spa",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "78"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "7",
+          "label": "Swimming Pool",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "131"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "12",
+          "label": "Television",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "583"
+            }
+          ]
+        },
+        {
+          "group": "Amenities",
+          "name": "4",
+          "label": "Vehicle Parking",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "250"
+            }
+          ]
+        }
+      ],
+      "settings": [
+        {
+          "key": "EnableSearch",
+          "value": "true"
+        }
+      ]
+    },
+    {
+      "category": "Brand",
+      "type": "Options",
+      "label": "Brand",
+      "items": [
+        {
+          "group": "Brand",
+          "name": "3106",
+          "label": "Oyo Rooms",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "19"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2758",
+          "label": "Global Hotels & Resorts",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2136",
+          "label": "Bed and Breakfast",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "5"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2460",
+          "label": "Ginger Hotels",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "4"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "235",
+          "label": "Park Inn",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "3"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2587",
+          "label": "The Lalit",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2588",
+          "label": "Fortune Hotels",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "6"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2713",
+          "label": "Formule 1",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "206",
+          "label": "Country Inn & Suites",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "5"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "213",
+          "label": "Golden Tulip",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "3"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "236",
+          "label": "Park Plaza",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "4"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2648",
+          "label": "Red Fox Hotels",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2461",
+          "label": "Sarovar Hotels",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "5"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2485",
+          "label": "Parkland Hotels",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2141",
+          "label": "Ibis",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2524",
+          "label": "Citrus Hotels",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2459",
+          "label": "Lemon Tree",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "4"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2059",
+          "label": "Hilton Garden Inn",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2866",
+          "label": "Welcome Hotels",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "65",
+          "label": "Hyatt Hotels",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2431",
+          "label": "Radisson Blu",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2458",
+          "label": "Royal Orchid",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "256",
+          "label": "Crowne Plaza",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "309",
+          "label": "Four Points",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2586",
+          "label": "Vivanta by Taj",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "4"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "56",
+          "label": "Holiday Inn",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "2595",
+          "label": "The Gateway Hotels",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "152",
+          "label": "Westin",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "734",
+          "label": "Taj Hotels, Resorts & Palaces",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "2"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "17",
+          "label": "Best Western",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "115",
+          "label": "Radisson",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        },
+        {
+          "group": "Brand",
+          "name": "320",
+          "label": "Luxury Collection",
+          "displayValue": null,
+          "value": null,
+          "selectedValue": null,
+          "additionalInfo": [
+            {
+              "key": "Count",
+              "value": "1"
+            }
+          ]
+        }
+      ],
+      "settings": [
+        {
+          "key": "EnableSearch",
+          "value": "true"
+        }
+      ]
+    }
+  ],
+  "pagingInfo": {
+    "enabled": true,
+    "startingFrom": 1,
+    "stopAt": 0,
+    "total": 598,
+    "filteredCount": 598
+  },
+  "responseContentType": "Rates",
+  "status": {
+    "isSuccessful": true,
+    "code": 200,
+    "message": "Successful",
+    "referenceId": "ceca4820-97d2-4fcd-844d-ac033b2cab8c",
+    "additionalMessages": []
+  }
+}

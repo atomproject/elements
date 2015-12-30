@@ -1,0 +1,37 @@
+{
+    "name": "Checkbox List",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "label": {
+                "name": "Label",
+                "type": "string",
+                "value": "Untitled Checkbox List"
+            },
+            "data": {
+                "name": "Choices",
+                "type": "list",
+                "value": ["First Choice","Second Choice","Third Choice"]
+            }
+        }
+    }, {
+        "name": "Properties",
+        "fields": {
+            "required": {
+                "name": "Mandatory Field",
+                "type": "Boolean",
+                "value": true
+            },
+            "inline": {
+                "name": "Horizontal List",
+                "type": "Boolean",
+                "value": false
+            },
+            "checkboxRight": {
+                "name": "Right Align Checkboxes",
+                "type": "Boolean",
+                "value": false
+            }
+        }
+    }]
+}

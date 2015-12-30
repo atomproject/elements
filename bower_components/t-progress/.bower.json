@@ -1,0 +1,47 @@
+{
+  "name": "t-progress",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-progress",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
+    "iron-range-behavior": "PolymerElements/iron-range-behavior#1.0.2",
+    "paper-styles": "PolymerElements/paper-styles#1.0.11",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "~0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6",
+    "t-shared-components": "atomelements/t-shared-components#~0.0.0"
+  },
+  "_release": "ccdef9f28c",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "ccdef9f28cc437077e1cad82ebf453c1b38c8b8f"
+  },
+  "_source": "git://github.com/atomelements/t-progress.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-progress"
+}

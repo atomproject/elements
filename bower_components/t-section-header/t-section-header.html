@@ -1,0 +1,79 @@
+<link rel="import" href="../polymer/polymer.html">
+<!--
+`t-section-header` is a dropdown to select an item from a list of dropdown. The default text if you don't pass any level is "Select value from items"
+
+or you can pass the default in label
+
+Example:
+
+    <t-section-header label="Select one">
+        </t-section-header>
+-->
+<dom-module id="t-section-header">
+    <style is="custom-style">
+    :host {
+        display: block;
+        color: var(--dark-color-1, --grey-four);
+        font-size: var(--section-header-text-size, 16px);
+        font-family: var(--primary-font-family);
+        font-weight: 500;
+        margin-bottom: 15px;
+    }
+    
+    :host #border {
+        margin-top: 9px;
+        height: 1px;
+        background-color: var(--dark-color-2, --grey-three);
+    }
+    
+    h5 {
+        margin: 0;
+        font-weight: normal;
+        font-size: var(--font-12,12px);
+    }
+    
+    @media (max-width: 600px) {
+        :host #border {
+            display: none;
+        }
+        :host {
+            /*     border-bottom: 1px solid ;
+        border-color: var(--border-color,--grey-three);
+         */
+            padding: 10px;
+            background: var(--grey-two,#eeeeee);
+        }
+    }
+    </style>
+    <template>
+        <div class="layout horizontal center">
+            <label>{{label}}</label>
+            <div class="flex"></div>
+            <h5>{{secondaryLabel}}</h5>
+        </div>
+        <div id="border"></div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: 't-section-header',
+
+    properties: {
+
+        /*Change the content of the section
+         */
+        label: {
+            type: String,
+            value: 'New Section',
+            reflectToAttribute: true
+        },
+
+        secondaryLabel: {
+            type: String,
+            value: ""
+        }
+
+    }
+
+});
+</script>

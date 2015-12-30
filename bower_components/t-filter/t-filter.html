@@ -1,0 +1,466 @@
+<!-- We are still creating this components -->
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../t-input/t-input.html" />
+<link rel="import" href="../t-button/t-button.html" />
+<link rel="import" href="../t-range/t-range.html" />
+<link rel="import" href="../t-starrating/t-starrating.html" />
+<link rel="import" href="../iron-ajax/iron-ajax.html" />
+<link rel="import" href="../iron-collapse/iron-collapse.html" />
+<link rel="import" href="../t-checkbox/t-checkbox.html" />
+<link rel="import" href="../t-header/t-header.html" />
+<link rel="import" href="../paper-item/paper-item.html" />
+<link rel="import" href="../iron-icon/iron-icon.html" />
+<link rel="import" href="../iron-list/iron-list.html" />
+<link rel="import" href="../iron-icons/hardware-icons.html">
+<!--
+    `<t-filter>` is a polymer component that generates a playground for interacting with components.
+
+
+    <div class="demo-canvas">
+        
+    </div>
+
+    <t-filter metadata-source="metadata url" property-source="property url" component="component name">
+        
+        <div class="component">
+            
+            'component template'
+        </div>
+    </t-filter>     
+-->
+<dom-module id="t-filter">
+    <template>
+        <style>
+        :root {
+            --checkbox-unchecked-color: var(-grey-two, #eeeeee);
+            --checkbox-unchecked-ink-color: var(-grey-two, #eeeeee);
+        }
+        
+        :host {
+            font-size: var(--font-12, 12px);
+            cursor: pointer;
+            display: block;
+            color: var(--grey-six, #333333);
+        }
+        
+        #controller {
+            padding: 10px;
+        }
+        
+        #controller > * {
+            border-bottom: 1px solid;
+            border-color: var(--grey-two, #eeeeee);
+        }
+        
+        #controller .category {
+            padding: 10px 0;
+        }
+        
+        iron-icon {
+            color: var(--grey-three, #bbbbbb);
+        }
+        
+        #controller .heading {
+            margin-top: 0;
+            margin-bottom: 10px;
+            border-bottom: 0;
+        }
+        
+        .heading a {
+            color: var(--default-primary-color, --base-color);
+        }
+        
+        .filter-block {
+            padding: 0 0 10px;
+        }
+        
+        .filter-block .layout {
+            margin-top: 10px;
+        }
+        
+        .filter-block .layout:first-child {
+            margin-top: 0;
+        }
+        
+        .chip {
+            background: #ffffd0;
+            padding: 10px 5px;
+            font-weight: 600;
+            border-bottom: 1px solid;
+            border-color: var(--grey-two, #eeeeee);
+        }
+        
+        .chip:last-child {
+            border-bottom: 0;
+        }
+        
+        .chip iron-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .range-block{
+                padding: 10px;
+        }
+
+        </style>
+        <t-header normal-heading label="Filter Your Search Results" on-click="_revertChanges" >
+        </t-header>
+        <div id="controller">
+            <div class="heading layout horizontal center item-layout">
+                <a on-click="_resetFilters">reset</a>
+                <span class="flex"></span>
+                <t-button label="Apply Filters" class="primary" on-click="_applyFilters"></t-button>
+            </div>
+            <div class="chips layout vertical flex">
+                <iron-list id="chips" items="[[cachedFilters]]" style="width:100%">
+                    <template>
+                        <div class="chip horizontal layout">
+                            <div class="flex value">
+                                <span>{{_getChip(item,index)}}</span>
+                            </div>
+                            <iron-icon class="icon" on-click="_removeFilter" icon="close"></iron-icon>
+                        </div>
+                    </template>
+                </iron-list>
+            </div>
+            <template is="dom-repeat" items="{{response}}" as="key">
+                <div class="layout">
+                    <template is="dom-if" if="{{_isTypeMatching(key,'Options')}}">
+                        <div class="category layout horizontal center" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
+                            <div class="flex label">[[key.category]]</div>
+                            <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+                        </div>
+                        <iron-collapse opened="[[opened]]" id="[[key.category]]" data-label$="[[key.label]]">
+                            <div class="filter-block">
+                                <template is="dom-if" if="[[_isNotRating(key.category)]]">
+                                    <template is="dom-repeat" items="[[key.items]]" as="item">
+                                        <div class="layout item-layout justified style-scope t-component-panel">
+                                            <t-checkbox data-label$="{{key.label}}" data-type$="[[key.type]]" on-checked-change="_checkChanged">[[item.label]]</t-checkbox>
+                                        </div>
+                                    </template>
+                                </template>
+                                <template is="dom-if" if="[[_isRating(key.category)]]" as="key">
+                                    <template is="dom-repeat" items="[[key.items]]" as="item">
+                                        <div class="layout item-layout justified style-scope t-component-panel">
+                                            <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
+                                                <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>[[item.displayValue]]
+                                            </t-checkbox>
+                                        </div>
+                                    </template>
+                                </template>
+                            </div>
+                        </iron-collapse>
+                    </template>
+                    <template is="dom-if" if="{{_isTypeMatching(key,'Range')}}">
+                        <div class="category layout horizontal center" data-category$="[[key.category]]" on-click="_toggle">
+                            <div class="flex label">[[_getDisplayLabel(key)]]</div>
+                            <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+                        </div>
+                        <iron-collapse opened="[[opened]]" id="[[key.category]]">
+                            <div class="filter-block">
+                                <div class="range-block"> 
+                                    <t-range data-category$="[[key.category]]" data-type$="[[key.type]]" data-label$="[[key.label]]" min="[[_getInt(key.items.0.value)]]" max="[[_getInt(key.items.1.value)]]" on-range-change="_rangeChanged"></t-range>
+                                </div>
+                            </div>
+                        </iron-collapse>
+                    </template>
+                </div>
+            </template>
+        </div>
+        <iron-ajax id="call" url="{{filterApi}}"  headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" on-response="_handleResponse" on-error="_handleError">
+        </iron-ajax>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-filter',
+
+    properties: {
+
+
+        response: {
+            type: Array,
+            value: []
+        },
+
+        auto:{
+            type: Boolean,
+            value:false
+        },
+
+        filterApi: {
+            type: String,
+            value: ''
+        },
+
+        appliedFilters: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        excludeGroups: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        cachedFilters: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        _interstitialFilters: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        opened: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        }
+    },
+
+    attached: function() {
+        var demo = this;
+        Polymer.dom(this.$.component).getDistributedNodes()[0];
+        if (this.filterApi != '' && this.auto)
+            this.generateFilter();
+    },
+
+    generateFilter: function () {
+        this.$.call.generateRequest();
+    },
+
+    _isTypeMatching: function(key, type) {
+        if (key.type === type && key.items.length > 0)
+            return true;
+        return false;
+    },
+
+    _handleResponse: function(e) {
+        this.response = this._applyExclusions(e.detail.response.filters);
+    },
+
+    _handleError: function(e) {
+        this.$.controller.textContent = "No configuration found.";
+    },
+
+    _checkChanged: function(e) {
+        var instance = e.model.item;
+        if (instance) {
+            var label = e.currentTarget.getAttribute("data-label");
+            var type = e.currentTarget.getAttribute("data-type");
+            var currentFilter = {
+                "category": instance.group,
+                "group": instance.group,
+                "name": instance.name,
+                "value": instance.value,
+                "label": label,
+                "textLabel": instance.label,
+                "type": type
+            };
+
+            if (e.target.checked) {
+                currentFilter.element = e.target;
+                this.push('cachedFilters', currentFilter);
+            } else {
+                this.cachedFilters = this.cachedFilters.filter(function(filter) {
+                    if (filter.category == currentFilter.category && filter.name == currentFilter.name)
+                        return false;
+                    return true;
+                });
+            }
+        }
+    },
+
+    _applyExclusions: function(filters) {
+        var component = this;
+        if (this.excludeGroups.length == 0)
+            return filters;
+
+        var inclusiveFilters = filters.filter(function(group) {
+            if (component.excludeGroups.indexOf(group.category) == -1)
+                return true;
+            return false;
+        });
+        return inclusiveFilters;
+    },
+
+    _rangeChanged: function(e) {
+
+        var instance = e.model.item;
+        var category = e.currentTarget.getAttribute("data-category");
+        var type = e.currentTarget.getAttribute("data-type");
+
+        this.cachedFilters = this.cachedFilters.filter(function(instance) {
+            return instance.category != category;
+        });
+
+        var currentFilter = {
+            "category": category,
+            "group": category,
+            "name": "Range",
+            "min": parseInt(e.currentTarget.from),
+            "max": parseInt(e.currentTarget.to),
+            "label": category,
+            "type": type
+        };
+
+        currentFilter.element = e.target;
+        this.push('cachedFilters', currentFilter);
+
+    },
+
+    _toggle: function(event) {
+        var collapseId = event.target.parentElement.getAttribute('data-category');
+        var element = this.querySelector('#' + collapseId);
+        if (element !== null)
+            element.toggle();
+        event.stopPropagation();
+        return false;
+    },
+
+    _isRating: function(category) {
+        return category.toLowerCase() === 'rating';
+    },
+
+    _isNotRating: function(category) {
+        return category.toLowerCase() != 'rating';
+    },
+
+    _resetElement: function(element, name) {
+        switch (element.tagName.toLowerCase()) {
+            case 't-checkbox':
+                element.checked = false;
+                break;
+            case 't-range':
+                if (name.toLowerCase() == 'range') {
+                    element.from = element.min;
+                    element.to = element.max;
+                }
+
+                break;
+        }
+    },
+
+    _removeFilter: function(event) {
+        var currentFilter = event.model.item;
+        var component = this;
+
+        var element = component.cachedFilters[event.model.index].element;
+        component._resetElement(element, currentFilter.name);
+
+        component.cachedFilters = component.cachedFilters.filter(function(filter, index) {
+            if (filter.category == currentFilter.category && filter.name == currentFilter.name && event.model.index == index)
+                return false;
+            return true;
+        });
+    },
+
+    _getDisplayLabel: function(key) {
+        return key.category + ' (' + key.items[0].additionalInfo[0].value + ')';
+    },
+
+    _applyFilters: function() {
+        var component = this;
+        var filters = [];
+        this._interstitialFilters = this.cachedFilters;
+        this.cachedFilters.forEach(function(filter) {
+            filters = filters.concat(component._getAppliedFilter(filter));
+        });
+        this.appliedFilters = filters;
+        this.$.chips.fire('resize');
+        setTimeout(function() {
+            component.fire('filter-change', {
+                "filters": component.appliedFilters,
+                "count": component.cachedFilters.length
+            });
+        }, 0);
+    },
+
+    _getAppliedFilter: function(filter) {
+        var filters = [];
+        switch (filter.type) {
+            case 'Options':
+                filters.push({
+                    "category": filter.group,
+                    "group": filter.group,
+                    "name": filter.name,
+                    "value": filter.value,
+                    "label": filter.label
+                });
+                break;
+            case 'Range':
+                filters.push({
+                    "category": filter.category,
+                    "group": filter.category,
+                    "name": "Min",
+                    "value": filter.min,
+                    "label": filter.label
+                });
+                filters.push({
+                    "category": filter.category,
+                    "group": filter.category,
+                    "name": "Max",
+                    "value": filter.max,
+                    "label": filter.label
+                });
+        }
+
+        return filters;
+    },
+
+    _resetFilters: function() {
+        var component = this;
+        this.cachedFilters.forEach(function(cache) {
+            component._resetElement(cache.element, cache.name);
+        });
+        this.cachedFilters = [];
+        this.$.chips.fire('resize');
+
+        this.appliedFilters = [];
+        setTimeout(function() {
+            component.fire('filter-change', {
+                "filters": component.appliedFilters,
+                "count": component.cachedFilters.length
+            });
+        }, 0);
+    },
+
+    _getChip: function(item, index) {
+        var filter = this.cachedFilters[index];
+        switch (filter.type) {
+            case 'Options':
+                return filter.textLabel;
+            case 'Range':
+                return filter.category + ": " + filter.min + " - " + filter.max;
+        }
+    },
+
+    _getInt: function(deci) {
+        return parseInt(deci);
+    },
+
+    _hideIfMax: function(item) {
+        return item.name === "Max";
+    },
+
+    _revertChanges: function(event) {
+        var component = this;
+        this.cachedFilters = this._interstitialFilters;
+        component.fire('filter-close');
+        return false;
+    }
+
+})
+</script>

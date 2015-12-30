@@ -1,0 +1,132 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-icons/social-icons.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../iron-icons/communication-icons.html">
+<link rel="import" href="../iron-icons/device-icons.html">
+<link rel="import" href="../iron-icons/editor-icons.html">
+<link rel="import" href="../iron-icons/maps-icons.html">
+<link rel="import" href="../iron-icons/hardware-icons.html">
+<link rel="import" href="../iron-icons/av-icons.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../neon-animation/neon-animation.html">
+<link rel="import" href="../paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../t-section-header/t-section-header.html">
+<link rel="import" href="../t-input/t-input.html">
+<dom-module id="t-icon-selector">
+    <style>
+    .container {
+        padding: 1em 0.5em;
+        cursor: pointer;
+    }
+    
+    paper-dialog-scrollable ::content #scrollable {
+        padding-top: 1em;
+        max-height: 500px;
+    }
+    
+    :host paper-dialog.size-position {
+        position: fixed;
+        z-index: 20;
+        top: 16px;
+        left: 16px;
+    }
+    
+    t-section-header {
+        text-transform: capitalize;
+    }
+    
+    paper-dialog-scrollable {
+        margin: 0;
+    }
+
+    t-input {
+        width: 100%;
+    }
+
+    .iconWrapper {
+        position: relative;
+    }
+
+    .inputIcon {
+        position: absolute;
+        bottom: 11px;
+        right: 12px;
+    }
+    </style>
+    <template>
+        <iron-meta type="iconset" list="{{iconsets}}"></iron-meta>
+        <paper-dialog id="iconModal" class="size-position">
+            <paper-dialog-scrollable>
+                <template is="dom-if" if="{{_attachDialog}}">
+                    <div>
+                        <template is="dom-repeat" items="{{iconsets}}">
+                            <t-section-header label="{{item.name}}"></t-section-header>
+                            <div class="set horizontal wrap layout">
+                                <template is="dom-repeat" items="{{getIconNames(item)}}">
+                                    <span class="container vertical center layout">
+                              <iron-icon on-click="_iconChanged" icon="{{item}}"></iron-icon>
+                            </span>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </paper-dialog-scrollable>
+            <div class="buttons">
+                <paper-button dialog-dismiss on-click="_clearIcon">Remove Icon</paper-button>
+                <paper-button dialog-confirm autofocus>OK</paper-button>
+            </div>
+        </paper-dialog>
+        <div class="horizontal layout iconWrapper">
+            <t-input value="{{value}}" label="Choose Icon" on-click="_openDialog"></t-input>
+            <iron-icon class="inputIcon" icon="{{value}}"></iron-icon>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-icon-selector',
+
+    properties: {
+
+        /**
+         * The name of the icon currently selected.
+         * @type {Object}
+         */
+        value: {
+            type: String,
+            value: ""
+        },
+
+        _attachDialog: {
+            type: Boolean,
+            value: false
+        }
+    },
+
+    _openDialog: function() {
+        this._attachDialog = true;
+        this.$.iconModal.open();
+    },
+
+    _iconChanged: function(e) {
+        this.value = e.target.icon;
+        this.fire('icon-changed');
+        this.$.iconModal.toggle();
+        this._attachDialog = false;
+    },
+
+    getIconNames :function(iconset) {
+      return iconset.getIconNames();
+    },
+
+    _clearIcon: function() {
+        this.value = "";
+        this.fire('icon-changed');
+        this._attachDialog = false;
+    }
+});
+</script>

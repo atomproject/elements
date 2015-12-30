@@ -1,0 +1,13 @@
+{
+    "name": "Page",
+    "properties": [{
+        "name": "Properties",
+        "fields": {
+            "background": {
+            	"name":"Background color",
+                "type": "color",
+                "value": "#ffffff"
+            }
+        }
+    }]
+}

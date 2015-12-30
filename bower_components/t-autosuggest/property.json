@@ -1,0 +1,37 @@
+{
+    "name": "Autosuggest",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "label": {
+                "name": "Label",
+                "type": "string",
+                "value": "Untitled Autosuggest"
+            },
+            "dataUrl": {
+                "name": "Autosuggest Api",
+                "type": "string",
+                "value": "http://qa-mystiquecode.tavisca.com/api/content/autosuggest/"
+            },
+            "tokenParam": {
+                "name": "Token parameter",
+                "type": "string",
+                "value": "formattedAddress"
+            },
+            "queryParams": {
+                "name": "Query Parameters",
+                "type": "string",
+                "value": "cid=nxtb2bsite"
+            }
+        }
+    }, {
+        "name": "Properties",
+        "fields": {
+            "required": {
+                "name": "Mandatory Field",
+                "type": "Boolean",
+                "value": true
+            }
+        }
+    }]
+}

@@ -1,0 +1,46 @@
+{
+  "name": "t-google-youtube",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-google-youtube",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-localstorage": "PolymerElements/iron-localstorage#1.0.4",
+    "t-google-apis": "atomelements/t-google-apis#0.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "~0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6",
+    "t-shared-components": "atomelements/t-shared-components#~0.0.0"
+  },
+  "_release": "cb3ea6faa2",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "cb3ea6faa29eb35011a0279ac82fa0a2d35f66c8"
+  },
+  "_source": "git://github.com/atomelements/t-google-youtube.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-google-youtube"
+}

@@ -1,0 +1,536 @@
+<!doctype html>
+<html>
+<head>
+
+    <title>Atom</title>
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<link rel="shortcut icon" href="/elements/favicon.ico" />
+
+<script src="/elements/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="stylesheet" href="/elements/styles/custom.css" media="all" async type="text/css">
+<link rel="import" href="/elements/components/elements.html">
+<!--[if lt IE 10 ]>
+    <script type='text/javascript'>
+        alert( 'Your IE is Old' );
+
+        // or set a flag or something
+
+        var oldIE = true;
+    </script>
+<![endif]-->
+
+
+</head>
+<body class="layout horizontal center center-justified">
+
+    <div class="overlay"></div>
+
+    <t-scaffold id="scaff" scaffold-type="atom">
+        <nav-toolbar>
+            <div class="product-logo" >
+                <a href="/elements/">
+                    <img src="/elements/assets/logos/atom-grey.png" id="prod_brand" />
+                </a>
+            </div>
+        </nav-toolbar>
+
+        <header-toolbar style="width:100%">
+            <div class="horizontal layout center">
+                
+                    <span id="selectedComponent">Table</span>
+                    
+                        <a class="buildStatus" href="https://travis-ci.org/atomelements/t-table/">
+                            <img src="https://travis-ci.org/atomelements/t-table.svg?branch=master" alt="Build Status">
+                        </a>
+                    
+                
+                <span class="flex"></span>
+                <span class="badge-alpha-testing">Alpha</span>
+            </div>
+        </header-toolbar>
+
+        <nav-content>
+            <t-menu>
+                <t-item onClick="redirect('/elements/about')" label="About"></t-item>
+                <t-submenu aria-selected class="iron-selected" label="Elements" >
+                    
+                        <t-submenu
+                            label="Data"
+                             aria-selected >
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Table"
+                                    data-component="t-table"
+                                    onclick="redirect('/elements/table.html')"
+                                    data-category="data"
+                                     aria-selected >
+                                </t-item>
+                            
+                        </t-submenu>
+                    
+                        <t-submenu
+                            label="Form Basic"
+                            >
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Auto Suggest"
+                                    data-component="t-autosuggest"
+                                    onclick="redirect('/elements/auto-suggest.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Button"
+                                    data-component="t-button"
+                                    onclick="redirect('/elements/button.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Calendar"
+                                    data-component="t-calendar"
+                                    onclick="redirect('/elements/calendar.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Checkbox List"
+                                    data-component="t-checkbox-group"
+                                    onclick="redirect('/elements/checkbox-list.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Color Picker"
+                                    data-component="t-colorpicker"
+                                    onclick="redirect('/elements/color-picker.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Dropdown"
+                                    data-component="t-dropdown"
+                                    onclick="redirect('/elements/dropdown.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Icon Selector"
+                                    data-component="t-icon-selector"
+                                    onclick="redirect('/elements/icon-selector.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Input Field"
+                                    data-component="t-input"
+                                    onclick="redirect('/elements/input-field.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Radio List"
+                                    data-component="t-radio-group"
+                                    onclick="redirect('/elements/radio-list.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Range"
+                                    data-component="t-range"
+                                    onclick="redirect('/elements/range.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Section Header"
+                                    data-component="t-section-header"
+                                    onclick="redirect('/elements/section-header.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Slider"
+                                    data-component="t-slider"
+                                    onclick="redirect('/elements/slider.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Stepper"
+                                    data-component="t-stepper"
+                                    onclick="redirect('/elements/stepper.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                        </t-submenu>
+                    
+                        <t-submenu
+                            label="Form Composite"
+                            >
+                            
+                        </t-submenu>
+                    
+                        <t-submenu
+                            label="Page"
+                            >
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Error Block"
+                                    data-component="t-error-block"
+                                    onclick="redirect('/elements/error-block.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Google Map"
+                                    data-component="t-google-map"
+                                    onclick="redirect('/elements/google-map.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Image"
+                                    data-component="t-image"
+                                    onclick="redirect('/elements/image.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="list"
+                                    data-component="t-list"
+                                    onclick="redirect('/elements/list.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Loader"
+                                    data-component="t-loader"
+                                    onclick="redirect('/elements/loader.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Notification"
+                                    data-component="t-notify"
+                                    onclick="redirect('/elements/notification.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Progress Bar"
+                                    data-component="t-progress"
+                                    onclick="redirect('/elements/progress-bar.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Tabs"
+                                    data-component="t-tabs"
+                                    onclick="redirect('/elements/tabs.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Youtube Video"
+                                    data-component="t-google-youtube"
+                                    onclick="redirect('/elements/youtube-video.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                        </t-submenu>
+                    
+
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                            <t-item
+                                class="component-link"
+                                label="Demo Tester"
+                                data-component="demo-tester"
+                                onclick="redirect('/elements/demo-tester.html')"
+                                >
+                            </t-item>
+                        
+                    
+                </t-submenu>
+                <t-item onClick="redirect('/elements/settings')" label="Settings"></t-item>
+            </t-menu>
+        </nav-content>
+
+        <build-status element-ids-file-path="/elements/element-ids.json"></build-status>
+
+        
+<div id="elementContent" class="content layout vertical fit content-component">
+    <div id="tabBar" class="layout horizontal center-justified">
+        <paper-tabs noink selected="2">
+            <paper-tab>Design Considerations</paper-tab>
+            <paper-tab>Dev Zone</paper-tab>
+            <paper-tab>Demo</paper-tab>
+        </paper-tabs>
+    </div>
+    <iron-pages selected="2" class="flex" style="position:relative">
+        <div class="fit designTabWrapper">
+            <div class="designTab">
+                <marked-element>
+                    <div class="markdown-html"></div>
+                    <script type="text/markdown">
+						
+A table is an element used to display entries of structured data arranged in rows and columns. It is similar to the list in many of the functions it performs. The table can be populated with data in 4 ways — using an Excel Sheet, Google Sheet, Custom data entered by the user, or via an API based data source. Table includes the following functionality:
+
+* Searching
+* Sorting (a separate component manages this)
+* Pagination
+
+There are some features which have not yet been implemented:
+
+* Filtering (a separate component manages this)
+* Adding new items & deleting existing items
+* Multi-select operations
+* Infinite Scroll
+* Reordering of items
+* Accommodating a details pane
+
+### Data Needed 
+
+**1. Choice of data source**
+
+* Lets the user choose from where to get data to populate the table.
+* Shown as a pill button in the property panel.
+* Possible Values: ‘Excel’, ‘GSheet’, ‘Custom’, ‘API’.
+* Default Value: ‘GSheet’.
+
+### Properties Exposed 
+
+**1. Sortable**
+
+* Enables the sorting functionality & displays relevant controls in the list. The ‘Different header row’ property must be enabled for sorting controls to be visible.
+* Shown as a checkbox in the property panel.
+* Default Value: Checked.
+
+**2. Searchable**
+
+* Enables the search functionality & displays relevant controls in the list.
+* Shown as a checkbox in the property panel.
+* Default Value: Checked.
+
+**3. Different header row**
+
+* Displays a strip of colour in the first row. This property must be enabled for sorting controls to be visible.
+* Shown as a checkbox in the property panel.
+* Default Value: Checked.
+
+**4. Banded rows**
+
+* Changes the background colour of alternate rows so that rows of the table appear as bands.
+* Shown as a checkbox in the property panel.
+* Default Value: Checked.
+
+**5. Hoverable rows**
+
+* Changes the colour of the row over which the user currently has a mouse hover.
+* Shown as a checkbox in the property panel.
+* Default Value: Checked.
+
+                    </script>
+                </marked-element>
+            </div>
+        </div>
+        <div class="fit">
+            <iframe id="idIframe" src="bower_components/t-table/" width="100%"></iframe>
+        </div>
+        <div class="fit">
+            <t-demo-atom
+                demo-file="bower_components/t-table/demo/index.html"
+                properties-file="bower_components/t-table/property.json"
+                component-name="t-table"
+                org-name="atomelements">
+                <template><t-column hide-on="tablet" data-value="fruit" display-value="Name" column-template="test"></t-column>
+			<t-column hide-on="phone" data-value="alice" display-value="Role"></t-column>
+			<t-column ignore-sort="true" data-value="bill" display-value="Last"></t-column>
+			<t-column data-value="casey" display-value="Status"></t-column>
+				<template id="test" name="edit">
+					<iron-icon src="http://www.unixstickers.com/image/cache/data/stickers/golang/golang.sh-600x600.png" style="width: 24px; height: 24px;"> </iron-icon>
+					<span>{{}}</span>
+				</template>	
+
+				<t-body>
+					[
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;pear&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 2,	&quot;casey&quot;: 8 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;pear&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 2,	&quot;casey&quot;: 8 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;pear&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 2,	&quot;casey&quot;: 8 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;pear&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 2,	&quot;casey&quot;: 8 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;pear&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 2,	&quot;casey&quot;: 8 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;pear&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 2,	&quot;casey&quot;: 8 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;pear&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 2,	&quot;casey&quot;: 8 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 },
+					{ &quot;fruit&quot;:&quot;pear&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 2,	&quot;casey&quot;: 8 },
+					{ &quot;fruit&quot;:&quot;apple&quot;,	&quot;alice&quot;: 4,	&quot;bill&quot;: 10,	&quot;casey&quot;: 2 },
+					{ &quot;fruit&quot;:&quot;banana&quot;,	&quot;alice&quot;: 0,	&quot;bill&quot;: 4,	&quot;casey&quot;: 0 },
+					{ &quot;fruit&quot;:&quot;grape&quot;,	&quot;alice&quot;: 2,	&quot;bill&quot;: 3,	&quot;casey&quot;: 5 }
+					]
+				</t-body></template>
+            </t-demo-atom>
+        </div>
+    </iron-pages>
+</div>
+
+<script type="text/javascript">
+    (function() {
+        var pages = document.querySelector('iron-pages');
+        var tabs = document.querySelector('paper-tabs');
+        
+        tabs.addEventListener('iron-select', function () {
+            pages.selected = tabs.selected;
+        });
+    })(); 
+</script>
+
+    </t-scaffold>
+
+    <script>
+        window.addEventListener('WebComponentsReady', function (e) {
+            var overlay = document.querySelector('.overlay');
+
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        });
+
+        //this is __BAD__, first of all it shouldn't be global function
+        //second if this function doesn't do much apart from simple plain
+        //redirection then it should be handled using anchor tags
+        function redirect(url) {
+            window.location = url;
+        }
+    </script>
+</body>
+</html>

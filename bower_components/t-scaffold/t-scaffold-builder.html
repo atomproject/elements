@@ -1,0 +1,121 @@
+<link rel="import" href="../polymer/polymer.html">
+
+
+<link rel="import" href="../paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+
+  <link rel="import" type="css" href="t-scaffold-atom.css"/>
+<!--
+Left Nav + View
+ -->
+<dom-module id="t-scaffold-builder">
+
+<link rel="import" type="css" href="fusion-header.css">
+<style is="custom-style">
+   #mainDrawerPanel ::content .component-list{
+    overflow: hidden; 
+    color:var(--header-text-color);
+  }
+   #propertyDrawerPanel ::content #drawer,
+  #mainDrawerPanel ::content .component-list.active{
+    overflow-y: auto; 
+  }
+  #content-header{
+    display: none;
+  }
+  :host.responsive #content-header{
+    display: block;
+  }
+  paper-drawer-panel {
+  --paper-drawer-panel-drawer-container: {
+      border-right:1px solid #eee;
+      border-left:1px solid #eee;
+    };
+  }
+  
+  
+
+</style>
+
+  <template>
+  <paper-header-panel class="flex">
+    <div class="paper-header">
+        <paper-toolbar bottom-justify="center" class="header-bar">
+            <span class="top flex">
+              <content select="header-toolbar"></content>
+            </span>
+            <div class="login-section top">
+              <t-button link label="Sign out" noink></t-button>
+            </div>
+        </paper-toolbar>
+    </div>
+    <div >  
+      <paper-drawer-panel drawer-toggle-attribute="item-toggle" on-paper-responsive-change="_changeToMobile" id="mainDrawerPanel">
+        <div class="items-list" drawer>
+          <content select="nav-content"></content>
+        </div>
+        <div main>
+          <paper-drawer-panel id="propertyDrawerPanel" responsive-width="1024px" drawer-width="300px" right-drawer>
+            <div drawer>
+              <content select="nav-list"></content>
+            </div>
+            <div main>
+              <paper-header-panel>
+                <div class="paper-header" id="content-header">
+                  <div class="layout horizontal center">
+                    <div class="flex">  
+                      <content select="search-bar"></content>
+                    </div>
+                    <t-button label="Browse" item-toggle></t-button>
+                  </div>
+                </div>
+                <div class="main-body">
+                  <content select=".content"></content>
+                </div>
+              </paper-header-panel>
+            </div>
+          </paper-drawer-panel>  
+        </div>
+      </paper-drawer-panel>
+    </div>
+  </paper-header-panel> 
+  </template>
+
+</dom-module>
+
+  <script>
+      
+    Polymer({
+      
+      is: 't-scaffold-builder',
+      
+      properties:{
+            toggleLogin: {
+                type: Object,
+                reflectToAttribute: true
+            },
+
+            responsiveWidth: {
+                type: String,
+                value: '768px'
+            }
+        },
+
+        /* // this will be placed when drop down.
+        toggleHandler: function(toggleLogin) {
+            this.toggleLogin = (this.toggleLogin != 'active' ? 'active' : "");
+            // results in this.setAttribute('toggle', 'loaded');
+        },*/
+
+      _changeToMobile:function(){
+        if(this.$.mainDrawerPanel.narrow){
+          this.classList.add('responsive');
+          this.$.mainDrawerPanel.drawerWidth = "90%";
+        }else{
+          this.classList.remove('responsive');
+          this.$.mainDrawerPanel.drawerWidth = "260px";
+        }
+      }
+    });
+  </script>
+

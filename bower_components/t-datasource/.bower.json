@@ -1,0 +1,45 @@
+{
+  "name": "t-datasource",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-datasource",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-ajax": "PolymerElements/iron-ajax#1.0.0",
+    "iron-meta": "PolymerElements/iron-meta#1.0.3",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "~0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6"
+  },
+  "_release": "6c6a43d8ae",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "6c6a43d8ae58224f8d1282691ea779e34966f5c0"
+  },
+  "_source": "git://github.com/atomelements/t-datasource.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-datasource"
+}

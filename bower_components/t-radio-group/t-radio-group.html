@@ -1,0 +1,255 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
+<link rel="import" href="../iron-a11y-keys-behavior/iron-a11y-keys-behavior.html">
+<link rel="import" href="../t-radio-button/t-radio-button.html">
+<!--
+`t-radio-group` allows user to select only one radio button from a set.
+Checking one radio button that belongs to a radio group unchecks any
+previously checked radio button within the same group. Use
+`selected` to get or set the selected radio button.
+
+Example:
+
+    <t-radio-group selected="small">
+      <t-radio-button name="small" label="Small"></t-radio-button>
+      <t-radio-button name="medium" label="Medium"></t-radio-button>
+      <t-radio-button name="large" label="Large"></t-radio-button>
+    </t-radio-group>
+
+See <a href="t-radio-button.html">t-radio-button</a> for more
+information about `t-radio-button`.
+
+-->
+<dom-module id="t-radio-group">
+    <link rel="import" type="css" href="t-radio-group.css">
+    <template>
+        <label hidden$="{{hideLabel}}">{{label}}</label>
+        <iron-selector selected="{{selectedItem}}" attr-for-selected="name" selectable="t-radio-button">
+            <content id="items" select="*"></content>
+            <template is="dom-repeat" items="[[data]]" as="item">
+                <t-radio-button name$="{{item}}">{{item}}</t-radio-button>
+            </template>
+        </iron-selector>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: 't-radio-group',
+
+    behaviors: [
+        Polymer.IronA11yKeysBehavior
+    ],
+
+    hostAttributes: {
+        role: 'radiogroup',
+        tabindex: 0
+    },
+
+    properties: {
+
+        /**
+         * Put the checkmark on the right.
+         *
+         * @attribute checked
+         * @type boolean
+         * @default false
+         */
+        radioRight: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+
+        /**
+         * Name property
+         */
+        name: {
+            type: String,
+            value: '',
+            reflectToAttribute: true
+        },
+
+        /**
+         * Sets the label of the group leave empty for no label
+         * @default ""
+         */
+        label: {
+            type: String,
+            value: "",
+            reflectToAttribute: true
+        },
+
+        /**
+         * Sets the boxes inline
+         * @default false
+         */
+        pillButton: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+
+        /**
+         * Sets the boxes inline
+         * @default false
+         */
+        inline: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+
+        hideLabel: {
+            type: Boolean,
+            computed:'_checkLabel(label)'
+        },
+
+        /**
+         * Gets or sets the selected element. Use the `name` attribute of the
+         * <t-radio-button> that should be selected.
+         *
+         * @attribute selected
+         * @type String
+         * @default null
+         */
+        selectedItem: {
+            type: String,
+            value: "0",
+            notify: true,
+            reflectToAttribute: true,
+            observer: "_selectedChanged"
+        },
+
+
+        /**
+         * Json list based Radio group.
+         *
+         * @attribute checked
+         * @type boolean
+         * @default false
+         */
+        data: {
+            type: Array,
+            value: function() {
+                return [];
+            },
+            notify: true,
+            observer: '_dataChanged',
+            reflectToAttribute: true
+        }
+    },
+
+    listeners: {
+        // TODO: this can be replaced by <iron-a11y-keys> when it's ready.
+        keydown: '_onKeyDown'
+    },
+
+
+    _checkLabel:function(label){
+        return this.label.length == 0;
+    },
+    _selectedChanged: function() {
+        // TODO: This only needs to be async while a domReady event is unavailable.
+        var component = this;
+        this.async(function() {
+            setTimeout(function() {
+
+                component._selectIndex(component._valueToIndex(component.items, component.selectedItem));
+                component.fire('t-radio-group-changed');
+            }, 0);
+        });
+    },
+
+    _dataChanged: function() {
+        if (this.data.length > 0) {
+            Polymer.dom(this.$.items).getDistributedNodes().forEach(function(element) {
+                element.remove();
+            });
+        }
+    },
+
+    _onKeyDown: function(event) {
+        if (event.keyCode === 37 || event.keyCode == 38) {
+            // Up/Left key goes back.
+            this.selectedItem = this._previousNode();
+        } else if (event.keyCode === 39 || event.keyCode == 40) {
+            // Down/Right key advances.
+            this.selectedItem = this._nextNode();
+        } else {
+            event.preventDefault();
+        }
+    },
+
+    /**
+     * Returns an array of all items.
+     *
+     * @property items
+     * @type array
+     */
+    get items() {
+        if (this.data.length > 0)
+            return this.querySelectorAll('t-radio-button');
+        return Polymer.dom(this.$.items).getDistributedNodes();
+    },
+
+    _nextNode: function() {
+        var items = this.items;
+        var index = this._selectedIndex;
+        var newIndex = index;
+        do {
+            newIndex = (newIndex + 1) % items.length;
+            if (newIndex === index) {
+                break;
+            }
+        } while (items[newIndex].disabled);
+        return this._valueForNode(items[newIndex]);
+    },
+
+    _previousNode: function() {
+        var items = this.items;
+        var index = this._selectedIndex;
+        var newIndex = index;
+        do {
+            newIndex = (newIndex || items.length) - 1;
+            if (newIndex === index) {
+                break;
+            }
+        } while (items[newIndex].disabled);
+        return this._valueForNode(items[newIndex]);
+    },
+
+    _selectIndex: function(index) {
+        if (index == this._selectedIndex)
+            return;
+        var nodes = this.items;
+        // If there was a previously selected node, deselect it.
+        if (nodes[this._selectedIndex]) {
+            nodes[this._selectedIndex].checked = false;
+        }
+        // Select a new node.
+        nodes[index].checked = true;
+        //nodes[index].focus();
+        this._selectedIndex = index;
+    },
+
+    _valueForNode: function(node) {
+        return node["name"] || node.getAttribute("name");
+    },
+
+    // Finds an item with value == |value| and return its index.
+    _valueToIndex: function(items, value) {
+        for (var index = 0, node;
+            (node = items[index]); index++) {
+            if (this._valueForNode(node) == value) {
+                return index;
+            }
+        }
+        // If no item found, the value itself is probably the index.
+        return value;
+    },
+
+    validate:function(){
+        return true;
+    }
+});
+</script>

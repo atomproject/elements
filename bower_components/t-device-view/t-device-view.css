@@ -1,0 +1,112 @@
+:host {
+    display: block;
+    position: relative;
+    height: 100%;
+}
+
+:host([device=phone]) {
+    width: 360px;
+    height: 640px;
+    margin: 65px auto;
+    /*
+    since the `:after` element goes beyond the height of
+    parent element we need following margin, it is a hack
+    TODO: style the device view properly
+     */
+    margin-bottom: 140px;
+}
+
+:host([device=phone][landscape]) {
+    width: 640px;
+    height: 360px;
+}
+
+:host([device=tablet]) {
+    width: 768px;
+    height: 1024px;
+    margin: 65px auto;
+    /*
+    since the `:after` element goes beyond the height of
+    parent element we need following margin, it is a hack
+    TODO: style the device view properly
+     */
+    margin-bottom: 140px;
+}
+
+:host([device=tablet][landscape]) {
+    width: 1024px;
+    height: 768px;
+}
+
+:host([device=phone]):before,
+:host([device=tablet]):before {
+    display: block;
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: -60px -16px -96px -16px;
+    border-radius: 32px;
+    background: #666;
+    @apply(--shadow-elevation-16dp);
+}
+
+:host([device=phone][landscape]):before,
+:host([device=tablet][landscape]):before {
+    margin: -16px -96px -16px -60px;
+}
+
+:host([device=phone]):after,
+:host([device=tablet]):after {
+    display: block;
+    content: "";
+    position: absolute;
+    bottom: -76px;
+    left: 50%;
+    width: 56px;
+    height: 56px;
+    margin-left: -28px;
+    border-radius: 28px;
+    background: #fff;
+}
+
+:host([device=phone][landscape]):after,
+:host([device=tablet][landscape]):after {
+    top: 50%;
+    right: -76px;
+    bottom: auto;
+    left: auto;
+    margin-top: -28px;
+}
+
+
+:host([device=phone]) .device-wrapper ::content > *,
+:host([device=tablet]) .device-wrapper ::content > *,
+:host([device=phone]) .device-wrapper,
+:host([device=tablet]) .device-wrapper  {
+    height: 100% !important;
+    width: 100% !important;
+}
+
+.device-wrapper > ::content > *  {
+    position: relative;
+    background-color: #fff;
+    border: 0;
+}
+
+
+.device-wrapper > ::content > *::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    background: transparent;
+}
+
+.device-wrapper > ::content > *::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.5);
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    width: 4px;
+    height: 4px;
+}

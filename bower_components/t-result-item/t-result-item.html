@@ -1,0 +1,270 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html">
+<dom-module id="t-result-item">
+    <template>
+        <style>
+        :host {
+            display: block;
+        }
+        
+        #resultItem {
+            font-size: var(--font-12, 12px);
+            font-family: var(--primary-font-family);
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 10px;
+            border-bottom: 1px solid;
+            border-color: var(--grey-two, #eeeeee);
+        }
+        
+        .vertical-margin {
+            margin-bottom: 5px;
+        }
+        
+        .resultItem__content {
+            margin: 0 10px;
+        }
+        
+        span ,.stops{
+            line-height: 15px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+        
+        .min-width {
+            max-width: 20%;
+            min-width: 5px;
+            height: 20px;
+        }
+        
+        .content-section {
+            overflow: hidden;
+        }
+        
+        .price h3 {
+            font-size: var(--font-16, 16px);
+            font-weight: 600;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .price {
+            text-align: right;
+        }
+        
+        .time {
+            font-size: var(--font-16, 16px);
+        }
+        
+        .airlineName,
+        .duration,
+        .stops {
+            color: #bbbbbb;
+        }
+        
+        .duration {}
+        
+        img {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .currency {
+            font-size: var(--font-12, 12px);
+            color: var(--grey-three, #bbbbbb);
+            font-weight: normal;
+            margin-bottom: 5px;
+        }
+        
+        .content-section ::content .resultItem-roundTrip:nth-child(2) {
+            margin-top: 10px;
+        }
+        :host([price-left]) .content-section {
+            order:2;
+        }
+        :host([price-left]) .price {
+            min-width:60px;
+            text-align:left;
+        }
+        :host([price-left]) .min-width {
+            max-width:100%;
+        }
+            :host([price-left]) .duration,
+            :host([price-left]) .stops {
+                text-align: right;
+            }
+
+        .am-pm {
+            /* padding-left:2px; */
+            font-size: 12px;
+        }
+        .timeSection{
+        	min-width:145px;
+        }
+        </style>
+        <div class="layout horizontal center" id="resultItem">
+            <div class="layout vertical flex content-section">
+                <template is="dom-repeat" items="[[itinerary.legs]]">
+                    <div class="flex layout horizontal center resultItem-roundTrip">
+                        <div class="layout ">
+                            <img src$="[[_getAirlineLogo(item.segments)]]" alt$="[[_getAirlineName(item.segments)]]">
+                        </div>
+                        <div class="layout horizontal flex center resultItem__content">
+                            <div class="layout vertical flex timeSection">
+                                <span class="layout horizontal vertical-margin time">
+                                    <span>[[_getTime(item.departureTime)]]</span><span>&nbsp;</span><span class="am-pm">[[_getAMPM(item.departureTime)]]</span>
+                                    <span>&nbsp;-&nbsp;</span>
+                                    <span>[[_getTime(item.arrivalTime)]]</span><span>&nbsp;</span><span class="am-pm">{{_getAMPM(item.arrivalTime)}}</span>
+                                </span>
+                                <span class="airlineName">[[_getAirlineName(item.segments)]]</span>
+                            </div>
+                            <span class=" min-width"></span>
+                            <div class="layout flex vertical">
+                                <span class="vertical-margin duration">{{_getFormattedDuration(item.totalJourneyDuration)}}</span>
+                                <div class="stops">
+                                	{{_getFormattedStops(item.noOfStops)}}
+                            		<span>&nbsp;|&nbsp;</span>
+                            		{{item.cabinType}}
+                            	</div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div class="layout center price">
+                <h3 class="layout vertical">
+                    <span class="currency">{{itinerary.minFare.fare.currency}}</span>
+                    <span>{{_trimPrice(itinerary.minFare.fare.amount)}}</span>
+                </h3>
+            </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+
+        is: 't-result-item',
+
+        properties: {
+
+            itinerary: {
+                type: Object,
+                value: function () {
+                    return null;
+                }
+            },
+
+            showTwelveHourClock: {
+                type: Boolean,
+                value: false
+            },
+
+            priceLeft: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true
+            },
+
+            defaultLogo: {
+                type: String
+            }
+        },
+        /*    listeners: {
+                'resultItem.tap': 'selectedResult'
+            },*/
+
+        _getFormattedDuration: function (delta) {
+
+            // calculate (and subtract) whole days
+            var days = Math.floor(delta / 1440);
+            delta -= days * 1440;
+
+            // calculate (and subtract) whole hours
+            var hours = Math.floor(delta / 60);
+            delta -= hours * 60;
+
+            // calculate (and subtract) whole minutes
+            var minutes = delta;
+
+            var formattedDuration = '';
+            if (days > 0)
+                formattedDuration = days + 'd ' + hours + 'h ';
+            else
+                formattedDuration = hours + 'h ';
+
+            if (minutes > 0)
+                formattedDuration = formattedDuration + minutes + 'm';
+
+            return formattedDuration;
+        },
+
+        _getAirlineLogo: function (segments) {
+            var code = segments[0].airline.code;
+            for (var i = segments.length - 1; i >= 1; i--) {
+                if (segments[i].airline.code != code)
+                    return this.defaultLogo;
+            };
+            return segments[0].airline.imageUrl;
+        },
+
+        _getAirlineName: function (segments) {
+            var code = segments[0].airline.code;
+            for (var i = segments.length - 1; i >= 1; i--) {
+                if (segments[i].airline.code != code)
+                    return 'Mixed Airlines';
+            };
+            return segments[0].airline.name;
+        },
+
+        _getAMPM: function (date) {
+            if (this.showTwelveHourClock) {
+                if (date.time.indexOf('AM') >= 0)
+                    return 'am';
+                if (date.time.indexOf('PM') >= 0)
+                    return 'pm';
+            }
+        },
+
+        _get24HourTime: function (time) {
+            var hours = parseInt(time.substr(0, 2));
+            if (time.indexOf('AM') != -1) {
+                if (hours < 10)
+                    time = '0' + time;
+                if (hours == 12)
+                    time = time.replace('12', '00');
+            }
+            if (time.indexOf('PM') != -1 && hours < 12) {
+                time = time.replace(hours, (hours + 12));
+            }
+            return time.trim();
+        },
+
+        _getTime: function (dateTime) {
+            var time = dateTime.time;
+            if (!this.showTwelveHourClock) {
+                time = this._get24HourTime(time);
+            }
+            return time.replace(/(AM|PM)/, '').trim().toLowerCase();
+        },
+
+        _trimPrice: function (price) {
+            return parseInt(price);
+        },
+
+        _getFormattedStops: function (stops) {
+            switch (stops) {
+                case 0:
+                    return "Non stop";
+                case 1:
+                    return stops + " Stop";
+                default:
+                    return stops + " Stops";
+            }
+        }
+
+    });
+</script>

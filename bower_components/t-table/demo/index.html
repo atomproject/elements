@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">   
+    
+	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  
+	<link rel="import" href="../t-table.html"/>
+	<link rel="import" href="../t-column.html"/> 
+	<link rel="import" href="../../t-shared-components/theme.html">
+	<link rel="import" href="../../iron-icon/iron-icon.html">
+</head>
+
+<body unresolved>
+	<div style="margin:10px">
+		<t-table id="rtable" banded-rows sortable searchable>
+			<t-column hide-on="tablet" data-value="fruit" display-value="Name"  column-template="test"></t-column>
+			<t-column hide-on="phone"  data-value="alice" display-value="Role"></t-column>
+			<t-column ignore-sort="true" data-value="bill" display-value="Last" ></t-column>
+			<t-column data-value="casey" display-value="Status" ></t-column>
+				<template id="test" name="edit">
+					<iron-icon src="http://www.unixstickers.com/image/cache/data/stickers/golang/golang.sh-600x600.png" style="width: 24px; height: 24px;"> </iron-icon>
+					<span>{{}}</span>
+				</template>	
+
+				<t-body>
+					[
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"pear",	"alice": 4,	"bill": 2,	"casey": 8 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"pear",	"alice": 4,	"bill": 2,	"casey": 8 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"pear",	"alice": 4,	"bill": 2,	"casey": 8 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"pear",	"alice": 4,	"bill": 2,	"casey": 8 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"pear",	"alice": 4,	"bill": 2,	"casey": 8 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"pear",	"alice": 4,	"bill": 2,	"casey": 8 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"pear",	"alice": 4,	"bill": 2,	"casey": 8 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 },
+					{ "fruit":"pear",	"alice": 4,	"bill": 2,	"casey": 8 },
+					{ "fruit":"apple",	"alice": 4,	"bill": 10,	"casey": 2 },
+					{ "fruit":"banana",	"alice": 0,	"bill": 4,	"casey": 0 },
+					{ "fruit":"grape",	"alice": 2,	"bill": 3,	"casey": 5 }
+					]
+				</t-body>
+		</t-table>	
+	</div>
+</body>
+</html>
+

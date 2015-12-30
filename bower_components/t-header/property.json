@@ -1,0 +1,23 @@
+{
+    "name": "App header",
+    "properties": [{
+        "name": "Properties",
+            "fields": {
+            "label": {
+                "name":"Label",
+                "type": "string",
+                "value": "New Section"
+            },
+            "src": {
+                "name":"Image Source",
+                "type": "string",
+                "value": "http://lorempixel.com/180/46"
+            },
+            "logoUrl": {
+                "name":"Logo url",
+                "type": "string",
+                "value": "http://lorempixel.com/180/46"
+            }
+        }
+    }]
+}

@@ -1,0 +1,23 @@
+{
+    "name": "Device view",
+    "properties": [{
+        "name": "Properties",
+        "fields": {
+            "device": {
+                "name": "View",
+                "type": "options",
+                "values": ["tablet", "phone"],
+                "value": "tablet"
+            }
+        }
+    },{
+        "name": "Properties",
+        "fields": {
+            "landscape": {
+                "name": "Landscape",
+                "type": "Boolean",
+                "value": false
+            }
+        }
+    }]
+}

@@ -1,0 +1,45 @@
+<link rel="import" href="../polymer/polymer.html"/>
+
+<dom-module id="t-pagination" >
+	<template>
+		<h2>{{heading}}</h2>
+		<content select="*"></content>
+	</template>
+</dom-module>
+
+<script>
+	Polymer({
+	
+		is:'t-page',
+
+		properties:{
+
+			heading:{
+				type:String,
+				value: 'Untitled Page',
+				reflectToAttribute: true
+			},
+
+			name:{
+				type:String,
+				value: 'Untitled-Page',
+				reflectToAttribute: true
+			},
+
+			background:{
+				type:String,
+				value:'#ffffff',
+				reflectToAttribute:true,
+				notify:true,
+				observer:'_backgroundChanged'
+			}
+
+		},
+
+		_backgroundChanged: function(){
+			this.style.background = this.background;
+		}
+	});
+
+</script>
+

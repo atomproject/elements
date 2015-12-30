@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>Star rating Demo</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="../t-starrating.html">
+  <!-- Importing a different icon pack for custom icons -->
+  <link rel="import" href="../../iron-icons/social-icons.html"> 
+
+	<style>
+		body {
+		    background: #fafafa;
+		    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+		    color: #333;
+		}
+		.custom-wrapper{
+		    background: #333;
+        margin: -10px;
+		}
+		.custom-class .t-starrating-wrapper > span{
+        padding: 2px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+		    font-size: 2em;
+		}
+    .gold .t-starrating-wrapper > span{
+        color : gold;
+		}
+    .pink .t-starrating-wrapper > span{
+        color : pink;
+		}
+	</style>
+</head>
+<body unresolved>
+	<h3>Default behaviour:</h3>
+  <t-starrating></t-starrating>
+  <t-starrating icon="face"></t-starrating>   
+  <t-starrating icon="heart"></t-starrating>
+  
+  <h3>Using customcharicon:</h3>
+  <t-starrating customcharicon="thumb-up"></t-starrating>
+  <t-starrating customcharicon="social:person"></t-starrating>
+    
+  <h3>Custom number of stars:</h3>
+  <t-starrating stars="10"></t-starrating>
+    
+  <h3>Default rate selected:</h3>
+  <t-starrating stars="10" rate="2"></t-starrating>
+
+  <h3>Custom styles:</h3>
+  <div class="custom-wrapper gold">
+    <t-starrating showtotals="true" stars="12" rate="7" class="custom-class"></t-starrating>
+  </div>
+  <div class="custom-wrapper pink">
+    <t-starrating showtotals="true" icon="heart" stars="12" rate="4" class="custom-class"></t-starrating>
+  </div>
+</body>
+</html>

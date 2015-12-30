@@ -1,0 +1,211 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+<link rel="import" href="../iron-icons/editor-icons.html" />
+<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html" />
+  
+<dom-module id="t-flight-header">
+    <template>
+        <style>
+        :host {
+            display: block;
+        }
+        
+        h6 {
+            font-size: 16px;
+            line-height: 20px;
+            text-transform: uppercase;
+            margin: 0;
+            padding: 0;
+            font-weight: normal;
+        }
+        
+        p {
+            margin: 0;
+            padding: 0;
+            font-size: 12px;
+            line-height: 20px;
+        }
+        #travelIcon{
+            color: var(--base-color-1, #147be1);
+            background-color:  var(--light-color, #fff);
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            padding: 2px;
+            margin: 0 5px;
+            vertical-align: baseline;
+        }
+        
+        #pencil {
+            width: 9px;
+            height: 9px;
+            vertical-align: inherit;
+            margin-left: 5px;
+        }
+        .modal{
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #fff;
+            display: none;
+            width: 100%;
+            height: 100%;
+            z-index: 9;
+            color: initial;
+        }
+        :host([toggle]) .modal{
+            display: block;
+        }
+        :host([center-align]){
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        :host([center-align]) h6{
+            display:inline;
+        }
+        </style>
+        <div class="layout vertical">
+            <h6 class="layout horizontal center">
+                <span>{{fromPlace}}</span>
+                <iron-icon id="travelIcon" icon="{{travelIcon}}"></iron-icon>
+                <span>{{toPlace}}</span>
+            </h6>
+            <p id="detail" on-click="_takeBack" class="layout horizontal center center-justified"> <!-- on-click="modalFunction"  -->
+                <span>{{_getDate(departureDate)}}</span> 
+                <span hidden$="{{isOneWay}}" class="layout horizontal"><span>&nbsp;-&nbsp;</span>
+                <span>{{_getDate(returnDate)}}</span></span>
+                <template is="dom-repeat" items="[[passengerData]]" as="item">
+                    <template is="dom-if" if="{{_checkPassengerQuantity(item.quantity,item.type)}}">
+                    <span>,&nbsp;<span>{{_getPassenger(item.quantity,item.type)}}</span>
+                    </span>
+                    </template>
+                </template>
+                <iron-icon hidden$={{hideIcon}} id="pencil" icon="editor:mode-edit" ></iron-icon>
+            </p>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-flight-header',
+
+    properties: {
+
+        travelIcon:{
+            type: String,
+            computed:'_travelIcon(isOneWay)'
+        },
+
+        isOneWay:{
+            type: Boolean,
+            notify: true,
+            reflectToAttribute:true,
+            value:false
+        },
+
+        fromPlace: {
+            type: String,
+            value: ''
+        },
+
+        toPlace: {
+            type: String,
+            value: ''
+        },
+
+        departureDate: {
+            type: String
+        },
+
+        returnDate: {
+            type: String
+        },
+
+        toggle: {
+            type: Boolean,
+            reflectToAttribute: true
+        },
+
+        centerAlign: {
+            type: Boolean,
+            value:false,
+            reflectToAttribute: true
+        },
+
+        url:{
+            type:String,
+            value:""
+        },
+
+        passengerData: {
+            type: Array,
+            value: [{
+                "quantity": 1,
+                "type": "Adult",
+                "ages": []
+            }, {
+                "quantity": "2",
+                "type": "Child",
+                "ages": []
+            }, {
+                "quantity": "0",
+                "type": "Senior",
+                "ages": []
+            }, {
+                "quantity": "0",
+                "type": "Infant",
+                "ages": []
+            }],
+            notify: true
+        }
+
+    },
+
+    _checkPassengerQuantity:function(quantity,type){
+        return quantity > 0;
+    },
+
+    _getPassenger: function (quantity, type) {
+        switch(type) {
+            case 'Child':
+                if (quantity == 0 || quantity > 1)
+                    return quantity + " Children";
+                return (quantity + " " + type).trim();
+                break;
+            default:
+                if (quantity == 0 || quantity > 1)
+                    return quantity + " " +type +"s";
+                return (quantity + " " + type).trim();
+        }
+        
+    },
+
+    _travelIcon:function(isOneWay){
+        if(!this.isOneWay){
+            return 'swap-horiz';
+        }else{
+            return 'trending-flat';
+        }
+    },
+
+    modalFunction:function(){
+        if(!this.hideModal){
+            this.toggle = !this.toggle;
+        }
+    },
+
+    _getDate: function(val) {
+        var dateObj = new Date(val);
+        var date = dateObj.getDate() < 10 ? '0' + dateObj.getDate() : dateObj.getDate();
+        var month = dateObj.toDateString().substr(3, 5);
+        return (date + " " + month).trim();
+    },
+
+    _takeBack: function(){
+        window.location.href = this.url;
+    }
+});
+</script>

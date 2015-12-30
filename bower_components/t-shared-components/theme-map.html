@@ -1,0 +1,183 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<style is="custom-style">
+  
+:root {
+
+
+/*Common styles*/
+--form-label-color:var(--grey-four);
+--form-label-size:16px;
+--form-label-margin:10px;
+
+--form-label-mobile-size: 12px;
+--form-label-mobile-margin:5px;
+
+--error-color:var(--error-theme-color); 
+--error-text-size:12px;
+--standard-border-radius:2px;
+--standard-padding-input-field:12px;
+--standard-input-field-text-size:16px;
+
+/*Calendar*/
+--calendar-input-border-color:var(--light-primary-color);
+
+--calendar-input-placeholder-color:#ccc;
+
+--calendar-box-background-color:#fff;
+--calendar-input-text-size:var(--standard-input-field-text-size);
+--calendar-input-value-color:var(--grey-four);
+
+--calendar-year-month-text-color:var(--grey-five);
+
+--calendar-box-prev-next-color:var(--grey-five);
+--calendar-box-prev-next-hover-color:#fff;
+--calendar-box-prev-next-hover-bg:var(--default-primary-color);
+
+--calendar-disabled-text-color:var(--disabled-text-color);
+
+--calendar-weekday-text-size:var(--standard-input-field-text-size);
+--calendar-weekday-text-color:var(--grey-four);
+
+--calendar-day-text-color:var(--default-primary-color);
+--calendar-day-hover-bg:var(--default-primary-color);
+--calendar-day-hover-text:#fff;
+
+--calendar-day-selected-bg:var(--default-primary-color);
+--calendar-box-border-color:#eee;
+
+/*Dropdown*/
+--dropdown-field-bg:#fff;
+--dropdown-field-text-size:var(--standard-input-field-text-size);
+--dropdown-field-text-color: var(--grey-four);/* The defalut text color in dropdown*/
+--dropdown-border-color: var(--light-primary-color);
+
+--dropdown-arrow-size:10px;
+--dropdown-arrow-color:#bbbbbb;
+
+--dropdown-item-font-size:var(--standard-input-field-text-size);
+--dropdown-item-border-color:#bbbbbb;
+
+--dropdown-item-bg:#fff;
+--dropdown-item-hover-bg:#eee;
+
+/*Checkbox (& checkbox list) */
+--checkbox-unchecked-bg:#fff;
+--checkbox-unchecked-color: var(--grey-four);
+--checkbox-unchecked-ink-color: var(--grey-four);
+
+--checkbox-check-sign-color:#fff;
+--checkbox-checked-color: var(--default-primary-color);
+--checkbox-checked-ink-color: var(--default-primary-color);
+
+--checkbox-item-margin:14px;/* the distance between two item */
+
+--checkbox-item-text-size: 14px ;
+--checkbox-item-text-color:var(--grey-four);
+
+/* Radiobutton and Pill button */
+--radio-button-item-margin:14px;
+
+--radio-button-unchecked-color:var(--grey-four);
+--radio-button-unchecked-ink-color: var(--grey-four);
+
+--radio-button-checked-color: var(--default-primary-color);
+--radio-button-checked-ink-color: var(--default-primary-color);
+
+--radio-item-text-size: 14px ;
+--radio-item-text-color:var(--grey-four);
+
+/*Pill button */
+--pill-border-color: var(--default-primary-color);
+--pill-radio-text-size: 14px;
+--pill-radio-text-selected-color: var(--primary-background-color);
+--pill-radio-text-unselected-color: var(--default-primary-color);
+
+/* button Styling */
+--button-text-size:14px;
+--button-text-color: var(--grey-four);
+--button-bg-color:#fff;
+--button-primary-bg-color: var(--default-primary-color);
+--button-primary-text-color:var(--secondary-text-color);
+
+--button-disabled-bg-color: var(--primary-disabled-background-color);
+--button-disabled-text-color:#a8a8a8;
+
+--button-min-width: 5.14em;
+
+--icon-color: var(--grey-four);
+--icon-bg-color:transparent;
+--button-icon-size:24px;
+
+/* Style start Autosuggest */
+
+--autosuggest-input-border-color: var(--light-primary-color);
+--autosuggest-input-text-size: var(--standard-input-field-text-size);
+
+--autosuggest-input-placeholder-color:#ccc;
+--autosuggest-input-value-color:var(--grey-four);
+
+--autosuggest-item-text-size:12px;
+--autosuggest-item-text-color:var(--grey-four);
+--autosuggest-item-bg-color:#fafafa;
+--autosuggest-item-border-color:#eee;
+--autosuggest-item-padding: 12px 10px;
+
+/* Start t-table */
+--table-header-bg: var(--grey-four);
+--table-header-text-size: 11px;
+--table-header-text-color:#fff;
+
+--table-body-text-size:12px;
+--table-body-text-color: var(--grey-four);
+--table-div-padding: 16px 15px;
+--table-row-border-color: var(--table-row-striped-bg);
+--table-row-striped-bg: var(--grey-one);
+--table-row-hover-bg: #eeeeee;
+
+/* pagination */
+--middle-pagination-border: 1px solid var(--grey-one);
+--total-pagination-border: 1px solid var(--grey-one);
+--pagination-text-color: var(--grey-four);
+--pagination-bg-color:#eee;
+--pagination-hover-bg:var(--grey-one);
+
+/* Color-picker */
+--color-picker-height:42px;
+
+/* loader */
+
+--t-loader-layer-1-color: var(--default-primary-color);
+--t-loader-layer-2-color: var(--default-primary-color);
+--t-loader-layer-3-color: var(--default-primary-color);
+--t-loader-layer-4-color: var(--default-primary-color);
+
+
+/* Slider */
+--t-slider-active-color: var(--default-primary-color);
+--t-slider-secondary-color: var(--default-primary-color);
+--t-slider-disabled-active-color: var(--grey-three);
+--t-slider-disabled-secondary-color: var(--grey-two);
+--t-slider-knob-color: var(--default-primary-color);
+--t-slider-pin-color: var(--default-primary-color);
+--t-slider-font-color: var(-grey-one);
+--t-slider-disabled-knob-color: var(--grey-three);
+
+/* Section Header */
+--section-header-text-size: 16px;
+--section-header-line-color: var(--grey-three);
+--section-header-color: var(--grey-four);
+--section-header-bg-color: var(--grey-two);
+
+/* Input Style for both text area and input */
+--t-input-field-text-size: var(--standard-input-field-text-size);
+
+--t-input-border-color: var(--light-primary-color);
+
+/* Range Slider  */
+
+
+
+}
+
+</style>

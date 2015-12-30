@@ -1,0 +1,281 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+
+
+
+  
+
+<dom-module id="t-stepper">
+    <style is="custom-style">
+      :host {
+          display: block;
+          font-family: var(--header-font-family, --primary-font-family);
+          color: var(--stepper-font-color,--grey-four);
+          -webkit-user-select: none;  /* Chrome all / Safari all */
+          -moz-user-select: none;     /* Firefox all */
+          -ms-user-select: none;      /* IE 10+ */
+          user-select: none;  
+          -webkit-tap-highlight-color: transparent;
+      }
+      #add,
+      #minus{
+        border: 1px solid ;
+        border-color: var(--grey-three, #bbbbbb);
+        color: var(--grey-three, #bbbbbb);
+        cursor: pointer;
+      }
+      :host #minus{
+        border-right:0;
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+      }
+      :host #add{
+        border-top-right-radius: 2px;
+        border-bottom-right-radius: 2px;
+      }
+      #label,
+      #count{
+        font-size: var(--standard-input-field-text-size,16px);
+        padding-left: 5px;
+      }
+      .secondaryLabel{
+        font-size: var(--secondary-input-field-text-size,12px);
+      }
+      iron-icon{ 
+        -ms-align-self: center;
+        -webkit-align-self: center;
+        align-self: center;
+        padding: 0 5px;
+      }
+      :host([styled]) #minus{
+        order:0;
+        border-right: 1px solid;
+
+      }
+      :host([styled]) #add{
+        order:3;
+      }
+      :host([styled]) #space{
+        display:none;
+      }
+      :host([styled]) .layout >div{
+        -ms-align-self: stretch;
+        -webkit-align-self: stretch;
+        align-self: stretch;
+      }
+      :host([styled]) #count,
+      :host([styled]) #label{
+        order:2;
+        -ms-flex: 2;
+        -webkit-flex: 2;
+        flex: 2;
+        border-top:1px solid;
+        border-bottom: 1px solid;
+        border-color: var(--grey-three, #bbbbbb);
+        text-align: right;
+        padding: 5px;
+      }
+      :host([styled]) #label{
+        -ms-flex: 4;
+        -webkit-flex: 4;
+        flex: 4;
+        text-align:left 
+      }
+      :host([disable-plus]) #add iron-icon,
+      :host([disable-minus]) #minus iron-icon{
+        background: var(--grey-two, #eeeeee);
+        color: var( --primary-background-color, #fff);
+        opacity: 0.7;
+
+      }
+
+    </style>
+    <template>
+        <div class="layout horizontal center">
+          <div id="icon" hidden$="{{!hasIcon}}" restamp="true">
+            <iron-icon icon="{{ico}}"></iron-icon>
+          </div>
+          <div id="count">{{count}}</div><span>&nbsp;</span>
+          <div id="label">
+              <span>{{_label}}</span>
+              &nbsp;
+              <span class="secondaryLabel">{{secondaryLabel}}</span>
+          </div>
+          <div id="space" class="flex" hidden$="{{styled}}" restamp="true">
+          </div>
+          
+          <div id="minus" disable="{{disableMinus}}"  class="layout horizontal center">
+            <iron-icon icon="remove" on-click="minusTap"></iron-icon>
+          </div>
+          <div id="add" disable="{{disablePlus}}"  class="layout horizontal center" >
+            <iron-icon icon="add" on-click="addTap"></iron-icon>
+          </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-stepper',
+
+    properties: {
+
+        /**
+       * Stepper label
+       */
+        singularLabel:{
+          type: String,
+          value:'',
+          reflectToAttribute : true,
+          observer:'_setLabel'
+        },
+
+        _label:{
+          type: String,
+          value:''
+        },
+
+        pluralLabel:{
+          type: String,
+          value:'',
+          reflectToAttribute : true,
+          observer:'_setLabel'
+        },
+
+        secondaryLabel:{
+          type: String,
+          value:'',
+          reflectToAttribute : true,
+          observer:'_setLabel'
+        },
+
+        min:{
+          type:Number,
+          value:0,
+          reflectToAttribute : true,
+          observer:'getMin'
+        },
+
+        max:{
+          type:Number,
+          value:1,
+          reflectToAttribute : true,
+          notify:true,
+          observer:'_maxChanged'
+        },
+
+        count:{
+          type:Number,
+          value:'',
+          notify:true,
+          observer:'_setLabel'
+        },
+        /**
+       * The value of icon
+       */
+        ico :{
+          type: String,
+          reflectToAttribute:true,
+          notify:true,
+          observer:'_checkIcon'
+        },
+
+        /**
+       * To check if it is styled
+       */
+        styled:{
+          type: Boolean,
+          value:false,
+          reflectToAttribute:true
+        },
+
+        /**
+       * To check if theres an icon
+       */
+        hasIcon:{
+          type: Boolean,
+          value:false,
+          reflectToAttribute:true
+        },
+
+        /**
+       * To check if theres an icon
+       */
+        disableMinus:{
+          type: Boolean,
+          value:false,
+          reflectToAttribute:true,
+          computed:'checkDisableMinus(count,min)'
+        },
+
+        /**
+       * To check if plus
+       */
+        disablePlus:{
+          type: Boolean,
+          value:false,
+          reflectToAttribute:true,
+          computed:'checkDisableAdd(count,max)'
+        }
+
+
+    },
+
+    attached: function(){
+      this._setLabel();
+    },
+
+    getMin:function(min){
+      this.count = this.min;
+    },
+
+    _checkIcon: function(ico){
+      if(this.ico == '')
+        this.removeAttribute('ico');
+      this.hasIcon = this.hasAttribute('ico');
+    },
+
+    addTap:function(){
+      if(this.count < this.max) {
+        this.count++;
+      }    
+    },
+
+    minusTap:function(){
+      if(this.count > this.min) {
+        this.count--;
+      }
+    },
+
+    _setLabel: function(){
+        switch(this.count) {
+            case 0:
+                this._label = this.pluralLabel;
+                break;
+            case 1:
+                this._label =  this.singularLabel;
+                break;
+            default :
+                this._label = this.pluralLabel;
+        }
+    },
+
+    checkDisableMinus:function(count,min){
+      return count == min;
+    },
+
+    checkDisableAdd:function(count,max){
+      return count == max;
+    },
+
+    _maxChanged: function(){
+      if(this.max < this.count)
+        this.count = this.min;
+    },
+
+    validate:function(){
+      return true;
+    }
+}) ;
+</script>

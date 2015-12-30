@@ -1,0 +1,52 @@
+{
+  "name": "t-icon-selector",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-icon-selector",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#1.0.3",
+    "iron-icons": "PolymerElements/iron-icons#1.0.3",
+    "neon-animation": "PolymerElements/neon-animation#1.0.4",
+    "paper-button": "PolymerElements/paper-button#1.0.3",
+    "paper-dialog": "PolymerElements/paper-dialog#1.0.1",
+    "paper-dialog-scrollable": "PolymerElements/paper-dialog-scrollable#1.0.1",
+    "t-input": "atomelements/t-input#0.0.0",
+    "t-section-header": "atomelements/t-section-header#0.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "~0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6",
+    "t-shared-components": "atomelements/t-shared-components#~0.0.0"
+  },
+  "_release": "4155968df0",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "4155968df0837bd798515240baf9f424aa59921d"
+  },
+  "_source": "git://github.com/atomelements/t-icon-selector.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-icon-selector"
+}

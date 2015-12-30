@@ -1,0 +1,134 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="t-scaffold-atom.html">
+<link rel="import" href="t-scaffold-simple.html">
+<link rel="import" href="t-scaffold-nav-list.html">
+<link rel="import" href="t-scaffold-fusion.html">
+<link rel="import" href="t-scaffold-builder.html">
+
+<!--
+  `<t-scaffold>` is a polymer component that generates responsive and functional scaffolding layout. There are three layouts as of now simple, atom and nav-list.
+
+Example:
+
+    <t-scaffold import-url="../t-scaffold-atom.html" scaffold-type="atom">
+      <nav-list>
+        <paper-item></paper-item>
+        <paper-item></paper-item>
+        <paper-item></paper-item>
+      </nav-list>
+    </t-scaffold> 
+-->
+
+<dom-module id="t-scaffold">
+<style is="custom-style">
+  :host{
+    font-family: var(--primary-font-family);
+  }
+</style>
+<template>
+  <content id="navToolbar" select="nav-toolbar"></content>
+  <content id="searchBar" select="search-bar"></content>
+  <content id="navContent" select="nav-content"></content>
+  <content id="buildStatus" select="build-status"></content>
+<!-- new for atom tabcontent-->
+  <content id="tabContent" select="tab-content"></content>
+  <content id="mainContent" select=".content"></content>
+  <content id="headerToolbar" select="header-toolbar"></content>
+
+  <content id="navList" select="nav-list"></content>
+  
+  <content id="demoContent" select=".demo-content"></content>
+  <content id="codeContent" select=".code-content"></content>
+  <content id="rightPanel" select=".right-panel"></content>
+  <content id="footer" select="footer"></content>
+
+  <template  is="dom-if" if="{{_isOfType('simple', scaffoldType)}}">
+    <t-scaffold-simple  id="scaffold">
+    </t-scaffold-simple>
+  </template>
+  
+  <template  is="dom-if" if="{{_isOfType('nav-list', scaffoldType)}}">
+    <t-scaffold-nav-list id="scaffold">
+    </t-scaffold-nav-list>
+  </template>
+
+  <template  is="dom-if" if="{{_isOfType('atom', scaffoldType)}}">
+    <t-scaffold-atom  id="scaffold">
+    </t-scaffold-atom>
+  </template>
+
+  <template  is="dom-if" if="{{_isOfType('fusion', scaffoldType)}}">
+    <t-scaffold-fusion  id="scaffold">
+    </t-scaffold-fusion>
+  </template>
+
+  <template  is="dom-if" if="{{_isOfType('builder', scaffoldType)}}">
+    <t-scaffold-builder  id="scaffold">
+    </t-scaffold-builder>
+  </template>
+
+</template>
+
+</dom-module>
+
+<script>
+  Polymer({
+
+    is: 't-scaffold',
+
+    properties:{
+
+      /**
+      * Three types of scaffolds are supported as of now.
+      * simple, nav-list, atom
+      * @default: simple
+      */
+      scaffoldType:{
+        type: String,
+        value: 'simple'
+      },
+      
+      /**
+      * scaffold responsive width breakpoint.
+      * @default: 1280px
+      */
+      responsiveWidth: {
+        type: String,
+        value: '1280px'
+      }
+    },
+
+    attached:function(){
+      var container= this;
+      setTimeout(function(){
+        Polymer.dom(scaffold).appendChild(container.$.navToolbar);
+        Polymer.dom(scaffold).appendChild(container.$.searchBar);
+        Polymer.dom(scaffold).appendChild(container.$.headerToolbar);
+        Polymer.dom(scaffold).appendChild(container.$.navContent);
+        Polymer.dom(scaffold).appendChild(container.$.buildStatus);
+        Polymer.dom(scaffold).appendChild(container.$.mainContent);
+        Polymer.dom(scaffold).appendChild(container.$.navList);
+        Polymer.dom(scaffold).appendChild(container.$.rightPanel);
+        Polymer.dom(scaffold).appendChild(container.$.demoContent);
+        Polymer.dom(scaffold).appendChild(container.$.codeContent);
+        Polymer.dom(scaffold).appendChild(container.$.footer);
+
+      },0);
+      
+    },
+
+    _isOfType:function(type){
+      if(this.scaffoldType == type)
+        return true;
+      return false;
+    },
+    runTheming:function(obj){
+      var component = this;
+      Object.keys(obj).forEach(function(key) {
+        component.customStyle['--' + key] = obj[key];
+      });
+      Polymer.updateStyles();
+    }
+  });
+</script>

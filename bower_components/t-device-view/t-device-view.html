@@ -1,0 +1,47 @@
+
+<link rel="import" href="../polymer/polymer.html">
+<!--
+Displays a page on a device layout.
+    <device-view device="phone"></device-view>
+-->
+<dom-module id="device-view">
+
+  <link rel="import" type="css" href="t-device-view.css">
+
+  <template>
+    <div class="device-wrapper">
+      <content></content>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'device-view',
+      properties: {
+        /**
+         * The device layout to show.  Possible values are `phone`, `tablet` and `laptop`.
+         */
+        device: {
+          type: String,
+          value: 'laptop',
+          reflectToAttribute: true
+        },
+        /**
+         * Use landscape orientaion if this is true.
+         */
+        landscape: {
+          type: Boolean,
+          value: false,
+          reflectToAttribute: true
+        }
+      },
+      /**
+       * Toggles the landscape orientation.
+       */
+      toggleLandscape: function() {
+        this.landscape = !this.landscape;
+      }
+    });
+  </script>
+
+</dom-module>

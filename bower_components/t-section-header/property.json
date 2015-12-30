@@ -1,0 +1,13 @@
+{
+	"name": "Section Header",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "label": {
+                "name":"Label",
+                "type": "string",
+                "value": "New Section"
+            }
+        }
+    }]
+}

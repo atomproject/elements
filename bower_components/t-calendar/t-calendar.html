@@ -1,0 +1,305 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../paper-material/paper-material.html">
+<link rel="import" href="../t-shared-components/jquery.html">
+<link rel="import" href="calendar-dependency.html">
+<link rel="import" href="../t-shared-components/shared-styles.html" />
+<!--
+`t-calendar` is a polymer component which lets the user choose a date. The date picker is built on top of pickadate.js
+ 
+ Follow this url for further assitance http://amsul.ca/pickadate.js/date/
+
+Example:
+
+    <t-calendar label="Select one"></t-calendar>
+-->
+<dom-module id="t-calendar">
+    <link rel="import" type="css" href="date.css">
+    <template>
+        <style include="shared-styles"></style>
+        <label>{{label}}</label>
+        <div id="input">
+            <input is="iron-input" required$="{{required}}" id="date" placeholder="{{placeholder}}" value="{{selectedDate}}">
+        </div>
+        <p class="error">{{errorMessage}}</p>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: 't-calendar',
+
+    properties: {
+
+        /**
+         * Name property
+         */
+        name: {
+            type: String,
+            value: '',
+            reflectToAttribute: true
+        },
+
+        /**
+         * No label float is to make the label either on the body or on the top.
+         */
+        noLabelFloat: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false,
+            observer: '_checkLabel'
+        },
+
+        /**
+         * This attribute will return the selected date
+         */
+        selectedDate: {
+            type: String,
+            value: '',
+            reflectToAttribute: true,
+            notify: true,
+            observer: '_floatedLabel'
+        },
+
+        /**
+         * This attribute will put the default place holder of the input box
+         */
+        label: {
+            type: String,
+            reflectToAttribute: true,
+            value: '',
+            observer: '_checkLabel'
+        },
+
+        /**
+         * errorMessage is to put the error msg
+         */
+        errorMessage: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'Please select a date!'
+        },
+
+        /**
+         * This attribute will put the format of the date selected in the place holder.
+         *@default: dddd, dd mmm, yyyy
+         */
+        format: {
+            type: String,
+            value: 'dddd, dd mmm, yyyy',
+            reflectToAttribute: true,
+            notify: true
+        },
+
+
+        /**
+         * This attribute will put the submit format of the date selected in the place holder.
+         *@default: yyyy,mm,dd
+         */
+        submitFormat: {
+            type: String,
+            value: 'yyyy,mm,dd',
+            notify: true
+        },
+
+        /**
+         * Pass the array of dates to be disabled
+         *@default: null
+         */
+        disabledDates: {
+            type: Array,
+            value: function() {
+                return null;
+            },
+            notify: true,
+            observer: '_setDisableDates'
+        },
+
+        /**
+         * This is for the input required
+         */
+        required: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+
+        /**
+         * picker object will help you pass further methods
+         */
+        picker: Object,
+
+        _input: Object,
+
+        /**
+         * This is an object to put further methods on it.
+         */
+        _instance: Object,
+
+        /**
+         * This is an object to put further methods on it.
+         */
+        isDob: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+            observer: '_manageRange'
+        },
+
+        min: {
+            type: Object,
+            value: function() {
+                return null;
+            },
+            notify: true
+
+        },
+
+        max: {
+            type: Object,
+            value: function() {
+                return null;
+            },
+            notify: true
+        },
+
+        _date: {
+            type: Object,
+            notify: true,
+            observer: '_dateFromObject'
+        }
+
+
+    },
+
+    attached: function() {
+        this._initiate();
+        this._changeMinMax();
+    },
+
+    _getMinMax: function() {
+        var range = {};
+        range.min = (this.min === null) ? true : this.min;
+        range.max = (this.max === null) ? false : this.max;
+
+        return range;
+    },
+
+    _dateFromObject: function() {
+        if (this.picker !== undefined) {
+            this.picker.set('select', this._date);
+            this.selectedDate = this.picker.get('select', this.format);
+        }
+    },
+
+    _changeMinMax: function() {
+        if (!this.min) {
+            this.min = new Date();
+            this.min.setFullYear(this.min.getFullYear() - 120);
+            if (this.max !== null) this.picker.set('max', this.max);
+        } else {
+            this.picker.set('min', this.min);
+            this.picker.set('max', this.max);
+        }
+    },
+
+    _checkLabel: function() {
+        this.placeholder = this.noLabelFloat ? this.label : "";
+    },
+
+    //to initiate the date picker...  
+
+    _initiate: function() {
+        this._input = $(this.$.date);
+        var component = this;
+        // component.disabledDates=[[2015,8,12]];
+
+        var pickerSettings = {
+            component: this,
+            labelMonthNext: 'Go to the next month',
+            labelMonthPrev: 'Go to the previous month',
+            labelMonthSelect: 'Pick a month from the dropdown',
+            labelYearSelect: 'Pick a year from the dropdown',
+            weekdaysShort: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+            today: "",
+            clear: "",
+            close: "",
+            //selectMonths: true,
+            //selectYears: true,
+            format: component.format,
+            closeOnSelect: true,
+            selectMonths: component.isDob,
+            onOpen: function() {
+
+            },
+            onClose: function() {
+                component.selectedDate = component.$.date.value;
+                $(document.activeElement).blur();
+                component.validate();
+                if (component._input.val() !== "") {
+                    component._input.addClass('yes-value').siblings('i').addClass('active');
+                } else {
+                    component._input.removeClass('yes-value').siblings('i').removeClass('active');
+                }
+            }
+        };
+
+        var range = this._getMinMax();
+        pickerSettings.selectYears = this.isDob ? 110 : false;
+        pickerSettings.min = range.min;
+        pickerSettings.max = range.max;
+        this._instance = this._input.pickadate(pickerSettings);
+        this.picker = this._input.pickadate('picker');
+    },
+
+    _setDisableDates: function() {
+        if (this.picker !== undefined) this.picker.set('disable', this.disabledDates);
+    },
+
+    _manageRange: function() {
+        var currentDate = new Date();
+        if (this.isDob) {
+
+            this.max = new Date();
+            this._initiate();
+        }
+    },
+
+    /*
+     * Private method to clear the value
+     */
+    _clear: function() {
+        this._instance.pickadate('picker').clear();
+        this.selectedDate = "";
+    },
+
+
+    /*
+     * Private method to clear the value
+     */
+    _floatedLabel: function() {
+
+        if (this.selectedDate.length > 0) {
+            this.classList.add('label-is-floating');
+        } else {
+            this.classList.remove('label-is-floating');
+        }
+    },
+    /**
+     * Function to validate if the date is selected
+     */
+    validate: function() {
+        if (this.required) {
+            if (this.selectedDate && this.selectedDate.length > 0) {
+                if ('.no-value') {
+                    $(this).removeClass('no-value');
+                }
+                return true;
+            }
+            $(this).addClass('no-value');
+            return false;
+        }
+    }
+
+});
+</script>

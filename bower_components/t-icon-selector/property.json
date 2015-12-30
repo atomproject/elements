@@ -1,0 +1,13 @@
+{
+    "name": "Icon Selector",
+    "properties": [{
+        "name": "Properties",
+        "fields": {
+            "value": {
+                "name": "Icon Name",
+                "type": "string",
+                "value": "icons:add-box"
+            }
+        }
+    }]
+}

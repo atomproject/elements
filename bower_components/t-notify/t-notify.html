@@ -1,0 +1,108 @@
+<link rel="import" href="../polymer/polymer.html">
+ <link rel="import" href="../iron-icons/iron-icons.html">
+<!--<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html"> -->
+
+<dom-module id="t-notify">
+    <template>
+        <style>
+        :host {
+            display: none;
+            color: var(--light-color, #fff);
+            text-align: left;
+            padding: 8px 12px 10px;
+            font-family: var(--primary-font-family, 'Open sans');
+        }
+        h4{
+            margin: 0;
+            font-size: var(--h4-text-size,16px);
+            font-weight: 400;
+            line-height: normal;
+        }
+        :host([active]){
+            display: block;
+        }
+        :host([type="error"]){
+            background: var(--error-color,#da4646);
+        }
+        :host([type="error"]) #done,
+        :host([type="warn"]) #done,
+        :host([type="success"]) #error{
+           display: none;
+        }
+        :host([type="success"]){
+            background: var(--success-color, #7fad4d);
+        }
+        :host([type="warn"]){
+            background: var(--notify-color, #e3b255);
+        }
+
+        /* 
+        ul{
+            margin: 8px 0 0;
+            padding: 0 0 0 20px;
+            list-style: disc;
+        }
+        :host ::content li {
+            margin: 0 0 5px;
+            padding: 0;
+            font-size: var(--font-size-medium,14px);
+            list-style: disc;
+        } */
+
+        </style>
+        <h4>
+            <iron-icon id="error" icon="error"></iron-icon>
+            <iron-icon id="done" icon="done"></iron-icon>
+            <span>{{message}}</span>
+        </h4><!-- 
+            <template is="dom-if"  if="{{onlyHead}}" restamp>
+                <ul>
+                    <template is="dom-repeat" items="[[data]]" as="item">
+                        <li>{{item}}</li>
+                    </template>
+                </ul>
+            </template> -->
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-notify',
+
+    properties: {
+
+        active:{
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false
+        },
+
+        type:{
+            type: String,
+            reflectToAttribute: true,
+            value: 'error'
+        },
+
+        message: {
+            type: String,
+            value: ''
+        }
+        /*,
+        data: {
+            type: Array,
+            value: function() {
+                return [];
+            },
+            notify: true,
+            reflectToAttribute: true,
+            observer:'_checkdata'
+        },
+        onlyHead:{
+            type:Boolean,
+            value:false,
+            notify: true
+        }*/
+    }
+
+});
+</script>

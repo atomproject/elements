@@ -1,0 +1,42 @@
+{
+    "name": "List",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "dataApi": {
+                "name": "URL for list data",
+                "type": "string",
+                "value": "results.json"
+            },
+            "filterApi": {
+                "name": "URL for the filter",
+                "type": "string",
+                "value": "filter.json"
+            },
+            "paginatedApi": {
+                "name": "URL for pagination",
+                "type": "string",
+                "value": ""
+            }
+        }
+    }, {
+        "name": "Properties",
+        "fields": {
+            "tokenParam": {
+                "name": "List key",
+                "type": "string",
+                "value": "inventories"
+            },
+            "withSorting": {
+                "name": "Show sorting controls",
+                "type": "boolean",
+                "value": true
+            },
+            "withFilter": {
+                "name": "Show filters",
+                "type": "boolean",
+                "value": true
+            }
+        }
+    }]
+}

@@ -1,0 +1,99 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+<link rel="import" href="../iron-icons/editor-icons.html" />
+<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html" />
+<link rel="import" href="../t-button/t-button.html" />
+
+
+<dom-module id="t-header">
+    <template>
+    <style>
+    :host{
+    	display: block;
+        position: relative;
+    }
+    .body {
+		display: block;
+		font-family: var(--header-font-family, --primary-font-family);
+		color: var(--light-color, #fff);
+/* 		padding: 0 10px;  */
+		text-align: center;
+		background: var(--base-color-1, #147be1);
+		height: var(-t-header-size,55px);
+		text-align: left;
+    }
+    :host([normal-heading]) a{
+        z-index: 1;
+    }
+    :host([normal-heading]) .header__mainRow{
+        position: absolute;
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        left: 0;
+    }
+    :host([normal-heading]) .header__mainRow ::content h1{
+        margin: 0 auto;
+        font-size: 22px;
+        line-height: var(-t-header-size,55px);
+        font-weight: 300;
+    }
+    iron-icon{
+    	background: transparent;
+    	min-width: 0;
+    	color:  var(--light-color, #fff);
+    	height: 30px;
+    	width: 30px;
+        padding: 10px 5px;
+    }
+    </style>
+        <div class="layout horizontal center body">
+            <a  on-click="_checkUrl">
+                <iron-icon icon="arrow-back"></iron-icon>
+            </a>
+            <div class="layout horizontal center flex header__mainRow">
+                <template is="dom-if" if="{{!normalHeading}}">
+                    <content select="*"></content>
+                </template>
+                <template is="dom-if" if="{{normalHeading}}">
+                    <h1>{{label}}</h1>
+                </template>
+            </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-header',
+
+    properties: {
+
+        label:{
+            type:String,
+            reflectToAttribute:true,
+            value:'Normal Heading'
+        },
+
+        url:{
+            type:String,
+            reflectToAttribute:true,
+            value:''
+        },
+
+        normalHeading:{
+            type:Boolean,
+            reflectToAttribute:true,
+            value:false
+        }
+
+    },
+
+    _checkUrl:function(e){
+        if(this.url !== ""){
+            window.location.href = this.url;
+        }
+    }
+
+}) ;
+</script>

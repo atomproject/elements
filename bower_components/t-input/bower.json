@@ -1,0 +1,42 @@
+{
+  "name": "t-input",
+  "version": "0.0.0",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-autogrow-textarea": "PolymerElements/iron-autogrow-textarea#1.0.4",
+    "iron-form-element-behavior": "PolymerElements/iron-form-element-behavior#1.0.4",
+    "iron-input": "PolymerElements/iron-input#1.0.6",
+    "paper-input": "PolymerElements/paper-input#1.0.12",
+    "paper-styles": "PolymerElements/paper-styles#1.0.11",
+    "t-shared-components": "atomelements/t-shared-components#0.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "~0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6",
+    "t-shared-components": "atomelements/t-shared-components#~0.0.0"
+  }
+}

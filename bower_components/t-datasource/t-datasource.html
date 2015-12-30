@@ -1,0 +1,50 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-meta/iron-meta.html">
+<dom-module id="t-datasource">
+    <template>
+        <iron-meta key="response" type="Object" value="[[response]]"></iron-meta>
+        
+        <iron-ajax 
+        auto 
+        verbose
+        url="[[url]]" 
+        params='[[params]]' 
+        handle-as="json" 
+        last-response="{{lastResponse}}"
+        on-response="_onAjaxResponse"
+        ></iron-ajax>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-datasource',
+
+    properties: {
+
+        url:{
+        	type:String,
+        	value:""
+        },
+
+        params:{
+        	type:String,
+        	value:""
+        },
+
+        response:{
+        	type:Object,
+        	value:function(){
+        		return null;
+        	}
+        }
+
+    },
+
+    _onAjaxResponse: function(event){
+    	this.response =  event.detail.response;
+    }
+
+});
+</script>

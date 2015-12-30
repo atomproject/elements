@@ -1,0 +1,120 @@
+:host{
+  font-family: var(--primary-font-family);
+  display: block;
+  position: relative;
+}
+
+:host([label]) label{
+  color: var(--form-label-color);
+  font-size: var(--form-label-size);
+  display: block;
+  margin-bottom: var(--form-label-margin);
+}
+:host([no-label-float]) label{
+  display: none;
+}
+
+
+:host a{
+  color: var(--dropdown-field-text-color);
+  display: block;
+  border: 1px solid;
+  border-color: var(--dropdown-border-color);
+  border-radius: var(--standard-border-radius);
+  padding: var(--standard-padding-input-field);
+  position: relative;
+  /* min-width: 200px; */
+  /* width: 100%; */
+  background: var(--dropdown-field-bg);
+  font-size: var(--dropdown-field-text-size);
+}
+:host([no-label-float]) a{
+  margin-top: 0;
+}
+
+:host a:after{
+  content: "▼";
+  position: absolute;
+  color: var(--dropdown-arrow-color);
+  right: 12px;
+  font-size: var(--dropdown-arrow-size);
+  bottom: 50%;
+  transform: translateY(50%);
+}
+ paper-menu{
+  display: flex;
+  max-height: 0;
+  overflow: hidden;
+  position: absolute;
+  padding: 0;
+  flex-direction: column;
+  width: 100%;
+  transition: all ease 0.3s;
+}
+:host ::content paper-material{
+  box-shadow: 0;
+}
+
+:host paper-menu ::content paper-item{
+  font-size: var(--dropdown-item-font-size);
+  padding: 12px;
+  line-height: 1;
+  min-height: 20px;
+  background: var(--dropdown-item-bg);
+  border-left: 1px solid var(--dropdown-item-border-color);
+  border-right: 1px solid var(--dropdown-item-border-color);
+}
+:host paper-menu ::content paper-item.iron-selected{
+  font-weight: normal;
+}
+:host paper-menu ::content paper-item.iron-selected:focus:after,:host paper-menu::content paper-item.iron-selected:focus:after{
+  display: none;
+}
+
+:host paper-menu ::content paper-item:focus,:host paper-menu ::content paper-item:focus:after{
+  background: var(--dropdown-item-bg)!important;
+}
+:host paper-menu ::content paper-item:hover{
+  background: var(--dropdown-item-hover-bg)!important;
+}
+:host t-button{
+  margin: 0;
+}
+:host[toggle="active"] paper-menu{
+  max-height: 600px;
+  z-index: 99;
+  border-bottom: 1px solid var(--dropdown-item-border-color);
+}
+:host #layover{
+  background: transparent;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+:host[toggle="active"] #layover{
+  display: block;
+}
+
+:host p{
+  display: none;
+}
+
+/* line 12, D:\filter\less\date-input.less */
+:host.no-value a {
+ border-bottom: 2px solid ;
+ border-color:var(--error-color)!important;
+}
+
+:host.no-value p {
+  display: block;
+  position: absolute;
+  top: 100%;
+  padding: 0;
+  margin: 0;
+  left: 0;
+  font-size: var(--error-text-size);
+  color: var(--error-color);
+}

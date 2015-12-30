@@ -1,0 +1,197 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../t-shared-components/shared-styles.html" />
+<!--
+`t-dropdown` is a dropdown to select an item from a list of dropdown. The default text if you don't pass any level is "Select value from items"
+
+or you can pass the default in label
+
+Example:
+
+    <t-dropdown label="Select one">
+          
+          <paper-tem>This is first</paper-item>
+          <paper-item>Second</paper-item>
+          <paper-item>Third</paper-item>
+          <paper-item>Fourth</paper-item>
+
+        </t-dropdown>
+-->
+<dom-module id="t-dropdown">
+
+    <link rel="import" type="css" href="dropdown.css">
+    <template>
+    <style include="shared-styles"></style>
+        <label>{{label}}</label>
+        <div style="position:relative">
+            <a id="toggler" on-click="toggleHandler">{{selectedItemLabel}}</a>
+            <paper-menu selected="{{selectedIndex}}">
+                <content id="items" select="paper-item"></content>
+                <template is="dom-repeat" items="[[data]]" as="item">
+                    <paper-item>{{item}}</paper-item>
+                </template>
+            </paper-menu>
+            <p class="error">{{errorMessage}}</p>
+        </div>
+        <div id="layover" on-click="toggleHandler"></div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-dropdown',
+
+    behaviors: [
+        Polymer.IronMenuBehavior,
+        Polymer.PaperInputBehavior
+    ],
+
+    properties: {
+
+        /**
+         * Name property
+         */
+        name: {
+            type: String,
+            value: '',
+            reflectToAttribute: true
+        },
+
+        /**
+         * Json list based dropdown.
+         *
+         * @attribute checked
+         * @type boolean
+         * @default false
+         */
+        data: {
+            type: Array,
+            value: function() {
+                return [];
+            },
+            notify: true,
+            observer: '_dataChanged',
+            reflectToAttribute: true
+        },
+
+        label: {
+            type: String,
+            value: '',
+            notify: true,
+            reflectToAttribute: true
+        },
+
+        toggle: {
+            type: Object,
+            reflectToAttribute: true
+        },
+
+        /**
+         * errorMessage is to put the error msg
+         */
+        errorMessage: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'Please select a value!'
+        },
+
+        required: {
+            type: Boolean,
+            reflectToAttribute:true,
+            value: false
+        },
+
+        selectedIndex: {
+            type: Number,
+            value: -1,
+            notify: true,
+            observer: '_selectedIndexChanged'
+        },
+
+        /**
+         * No label float is to make the label either on the body or on the top.
+         */
+        noLabelFloat: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false
+        },
+
+        selectedItemLabel: {
+            type: String,
+            notify: true,
+            reflectToAttribute: true
+        }
+
+
+    },
+
+    observers: [
+        '_checkLabel(noLabelFloat , label)'
+    ],
+
+   
+
+    _dataChanged: function() {
+        if (this.data.length > 0) {
+            Polymer.dom(this.$.items).getDistributedNodes().forEach(function(element) {
+                element.remove();
+            });
+        }
+    },
+
+
+    _activedChanged: function(actived) {
+        this.setAttribute('aria-actived', this.actived ? 'true' : 'false');
+        this.active = this.actived;
+    },
+
+    _selectedIndexChanged: function() {
+        if (this.selectedIndex >= 0) {
+            var selectedItem = this.data[this.selectedIndex];
+            this.selectedItemLabel = selectedItem || selectedItem.trim();
+            this.fire('dropdown-value-changed');
+            this.classList.add('label-is-floating');
+            this.toggleHandler();
+        }
+    },
+
+    _checkLabel: function() {
+        if (this.data.length > 0) {
+            var selectedItem = this.data[0];
+            this.selectedItemLabel = this.noLabelFloat ? this.label : selectedItem;
+        }
+    }, 
+    /*
+     *This is the function called by the iron menu behaviour.
+     */
+    select: function(index) {
+        this.selectedIndex = index;
+        this.toggleHandler();
+    },
+
+    /*
+     *This is the toggle function of the menu.
+     */
+    toggleHandler: function(toggle) {
+        if (this.required && this.toggle == 'active') {
+            this.validate();
+        }
+        this.toggle = (this.toggle != 'active' ? 'active' : "");
+        // results in this.setAttribute('toggle', 'loaded');
+
+    },
+
+    validate: function() {
+        if (this.required && this.selectedIndex < 0){
+            this.classList.add('no-value');
+            return false;
+        }
+        if ('.no-value') {
+            this.classList.remove('no-value');
+        }
+        return true;
+    }
+});
+</script>

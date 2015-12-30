@@ -1,0 +1,65 @@
+<link rel="import" href="../polymer/polymer.html"/>
+	
+<dom-module id="t-column" >
+	<template>
+	 		<content></content>
+	</template>
+</dom-module>
+
+<script>
+	Polymer({
+
+		is:'t-column',
+
+        properties:{
+
+        	dataValue:{
+        		
+        		type:String,
+        		
+        		reflectToAttribute: true
+        	},
+
+        	displayValue:{
+        		
+        		type:String,
+        		
+        		reflectToAttribute: true
+        	},
+
+        	columnTemplate:{
+        		
+        		type:String,
+        		
+        		reflectToAttribute: true
+        	},
+
+        	hideOn: {
+        		
+        		type:String,
+        		
+        		reflectToAttribute: true
+        	},
+
+		ignoreSort:{
+			
+			type:Boolean,
+
+			value:false,
+
+			reflectToAttribute: true
+		},
+
+		isChildRow:{
+			
+			type:Boolean,
+
+			value: false,
+
+			reflectToAttribute: true
+		}
+
+        }
+
+	});
+</script>

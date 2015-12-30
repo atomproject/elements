@@ -1,0 +1,422 @@
+<!doctype html>
+<html>
+<head>
+
+    <title>Atom</title>
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<link rel="shortcut icon" href="/elements/favicon.ico" />
+
+<script src="/elements/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="stylesheet" href="/elements/styles/custom.css" media="all" async type="text/css">
+<link rel="import" href="/elements/components/elements.html">
+<!--[if lt IE 10 ]>
+    <script type='text/javascript'>
+        alert( 'Your IE is Old' );
+
+        // or set a flag or something
+
+        var oldIE = true;
+    </script>
+<![endif]-->
+
+
+</head>
+<body class="layout horizontal center center-justified">
+
+    <div class="overlay"></div>
+
+    <t-scaffold id="scaff" scaffold-type="atom">
+        <nav-toolbar>
+            <div class="product-logo" >
+                <a href="/elements/">
+                    <img src="/elements/assets/logos/atom-grey.png" id="prod_brand" />
+                </a>
+            </div>
+        </nav-toolbar>
+
+        <header-toolbar style="width:100%">
+            <div class="horizontal layout center">
+                
+                    <span id="selectedComponent">Input Field</span>
+                    
+                        <a class="buildStatus" href="https://travis-ci.org/atomelements/t-input/">
+                            <img src="https://travis-ci.org/atomelements/t-input.svg?branch=master" alt="Build Status">
+                        </a>
+                    
+                
+                <span class="flex"></span>
+                <span class="badge-alpha-testing">Alpha</span>
+            </div>
+        </header-toolbar>
+
+        <nav-content>
+            <t-menu>
+                <t-item onClick="redirect('/elements/about')" label="About"></t-item>
+                <t-submenu aria-selected class="iron-selected" label="Elements" >
+                    
+                        <t-submenu
+                            label="Data"
+                            >
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Table"
+                                    data-component="t-table"
+                                    onclick="redirect('/elements/table.html')"
+                                    data-category="data"
+                                    >
+                                </t-item>
+                            
+                        </t-submenu>
+                    
+                        <t-submenu
+                            label="Form Basic"
+                             aria-selected >
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Auto Suggest"
+                                    data-component="t-autosuggest"
+                                    onclick="redirect('/elements/auto-suggest.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Button"
+                                    data-component="t-button"
+                                    onclick="redirect('/elements/button.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Calendar"
+                                    data-component="t-calendar"
+                                    onclick="redirect('/elements/calendar.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Checkbox List"
+                                    data-component="t-checkbox-group"
+                                    onclick="redirect('/elements/checkbox-list.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Color Picker"
+                                    data-component="t-colorpicker"
+                                    onclick="redirect('/elements/color-picker.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Dropdown"
+                                    data-component="t-dropdown"
+                                    onclick="redirect('/elements/dropdown.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Icon Selector"
+                                    data-component="t-icon-selector"
+                                    onclick="redirect('/elements/icon-selector.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Input Field"
+                                    data-component="t-input"
+                                    onclick="redirect('/elements/input-field.html')"
+                                    data-category="form"
+                                     aria-selected >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Radio List"
+                                    data-component="t-radio-group"
+                                    onclick="redirect('/elements/radio-list.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Range"
+                                    data-component="t-range"
+                                    onclick="redirect('/elements/range.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Section Header"
+                                    data-component="t-section-header"
+                                    onclick="redirect('/elements/section-header.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Slider"
+                                    data-component="t-slider"
+                                    onclick="redirect('/elements/slider.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Stepper"
+                                    data-component="t-stepper"
+                                    onclick="redirect('/elements/stepper.html')"
+                                    data-category="form"
+                                    >
+                                </t-item>
+                            
+                        </t-submenu>
+                    
+                        <t-submenu
+                            label="Form Composite"
+                            >
+                            
+                        </t-submenu>
+                    
+                        <t-submenu
+                            label="Page"
+                            >
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Error Block"
+                                    data-component="t-error-block"
+                                    onclick="redirect('/elements/error-block.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Google Map"
+                                    data-component="t-google-map"
+                                    onclick="redirect('/elements/google-map.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Image"
+                                    data-component="t-image"
+                                    onclick="redirect('/elements/image.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="list"
+                                    data-component="t-list"
+                                    onclick="redirect('/elements/list.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Loader"
+                                    data-component="t-loader"
+                                    onclick="redirect('/elements/loader.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Notification"
+                                    data-component="t-notify"
+                                    onclick="redirect('/elements/notification.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Progress Bar"
+                                    data-component="t-progress"
+                                    onclick="redirect('/elements/progress-bar.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Tabs"
+                                    data-component="t-tabs"
+                                    onclick="redirect('/elements/tabs.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                                <t-item
+                                    class="component-link"
+                                    label="Youtube Video"
+                                    data-component="t-google-youtube"
+                                    onclick="redirect('/elements/youtube-video.html')"
+                                    data-category="page"
+                                    >
+                                </t-item>
+                            
+                        </t-submenu>
+                    
+
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                    
+                        
+                            <t-item
+                                class="component-link"
+                                label="Demo Tester"
+                                data-component="demo-tester"
+                                onclick="redirect('/elements/demo-tester.html')"
+                                >
+                            </t-item>
+                        
+                    
+                </t-submenu>
+                <t-item onClick="redirect('/elements/settings')" label="Settings"></t-item>
+            </t-menu>
+        </nav-content>
+
+        <build-status element-ids-file-path="/elements/element-ids.json"></build-status>
+
+        
+<div id="elementContent" class="content layout vertical fit content-component">
+    <div id="tabBar" class="layout horizontal center-justified">
+        <paper-tabs noink selected="2">
+            <paper-tab>Design Considerations</paper-tab>
+            <paper-tab>Dev Zone</paper-tab>
+            <paper-tab>Demo</paper-tab>
+        </paper-tabs>
+    </div>
+    <iron-pages selected="2" class="flex" style="position:relative">
+        <div class="fit designTabWrapper">
+            <div class="designTab">
+                <marked-element>
+                    <div class="markdown-html"></div>
+                    <script type="text/markdown">
+						
+
+                    </script>
+                </marked-element>
+            </div>
+        </div>
+        <div class="fit">
+            <iframe id="idIframe" src="bower_components/t-input/" width="100%"></iframe>
+        </div>
+        <div class="fit">
+            <t-demo-atom
+                demo-file="bower_components/t-input/demo/index.html"
+                properties-file="bower_components/t-input/property.json"
+                component-name="t-input"
+                org-name="atomelements">
+                <template></template>
+            </t-demo-atom>
+        </div>
+    </iron-pages>
+</div>
+
+<script type="text/javascript">
+    (function() {
+        var pages = document.querySelector('iron-pages');
+        var tabs = document.querySelector('paper-tabs');
+        
+        tabs.addEventListener('iron-select', function () {
+            pages.selected = tabs.selected;
+        });
+    })(); 
+</script>
+
+    </t-scaffold>
+
+    <script>
+        window.addEventListener('WebComponentsReady', function (e) {
+            var overlay = document.querySelector('.overlay');
+
+            if (overlay) {
+                overlay.style.display = 'none';
+            }
+        });
+
+        //this is __BAD__, first of all it shouldn't be global function
+        //second if this function doesn't do much apart from simple plain
+        //redirection then it should be handled using anchor tags
+        function redirect(url) {
+            window.location = url;
+        }
+    </script>
+</body>
+</html>

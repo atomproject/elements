@@ -1,0 +1,170 @@
+<link rel="import" href="../polymer/polymer.html"/>
+<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html"/>
+
+<link rel="import" href="../iron-icons/image-icons.html"/>
+<link rel="import" href="../iron-icons/av-icons.html"/>
+<link rel="import" href="../t-button/t-button.html"/>
+
+<dom-module id="t-pagination" >
+	<link rel="import" type="css" href="t-pagination.css" />
+	<template>
+		<div class="pagination" hidden$="{{noPagination}}">
+			<ul>
+				<li id="firstload">
+					<t-button class=" center center-justified "  tabindex="0" aria-label="next"  on-click="getNextPageData" label="Next"></t-button>
+				</li>
+			</ul>
+			<span style="float:left;"> 
+			<ul>
+				<li id="first" >
+					<t-button only-icon class="min"  ico="av:skip-previous" on-click="getFirstPageData"></t-button>
+				</li>
+				<li id="prev" >
+					<t-button only-icon class="min"  ico="image:navigate-before"  on-click="getPrevPageData"></t-button >
+				</li>
+
+				<li id="current">
+					<t-button  class="center center-justified" tabindex="0" aria-label="search" label="{{pageNumber}}"></t-button>
+				</li>
+
+				<li id="next">
+					<t-button only-icon class="min"  ico="image:navigate-next" on-click="getNextPageData" ></t-button>
+				</li>
+			</ul>
+			</span>	
+						
+		</div>
+
+	</template>
+</dom-module>
+
+<script>
+	Polymer({
+	
+		is:'t-pagination',
+
+		properties:{
+
+			/**
+		       * Atrribute to bind for the count of the page
+		       *
+		       * @type Number
+		       * @default 1
+		       */
+			pageCount:{
+				type:Number,
+				value:1,
+				notify:true,
+				observer:'_pageCountChanged'
+			},
+
+			/**
+		       * The current page number
+		       */
+			pageNumber:{
+				type:Number,
+				value:1,
+				notify:true,
+				observer: '_pageNumberChanged'
+			},
+			
+			/**
+		       * Atrribute to bind for the size of the page
+		       *
+		       * @type Number
+		       * @default 10
+		       */
+			pageSize:{
+				type:Number,
+				value:10
+			}
+		},
+
+		attached:function(){
+			if(this.pageCount==0)
+			{
+				var err='specify page count';
+				throw err;
+			}
+			this._handleExtremities();
+		},
+
+		_pageCountChanged:function(){
+			this._handleExtremities();	
+		},
+
+		_handleExtremities:function(){
+			if(this.pageNumber==this.pageCount)
+			{
+				this.$.next.style.display='none';
+				this.$.prev.style.display='block';
+				this.$.first.style.display='block';
+				this.$.current.style.display='block';
+				this.$.firstload.style.display='none';
+			}
+			else{
+				if(this.pageNumber==1 ){
+					this.$.next.style.display='none';
+					this.$.prev.style.display='none';
+					this.$.first.style.display='none';
+					this.$.firstload.style.display='block';
+					this.$.current.style.display='none';
+				}
+				else{
+					this.$.next.style.display='block';
+					this.$.prev.style.display='block';
+					this.$.first.style.display='block';
+					this.$.firstload.style.display='none';
+					this.$.current.style.display='block';
+				}
+			}
+		},
+
+  		_pageNumberChanged:function(){
+  			this._handleExtremities();
+  		},
+
+  		/**
+	       * Function to call the table data 
+	       */
+		getTableData:function(){
+  			var data={
+				pageSize: 10,
+				pageNumber:this.pageNumber
+			};
+			return data;
+  		},
+
+  		/**
+	       * Function to call the NextPage data
+	       */
+		getNextPageData:function(){
+			this.pageNumber++;
+			this.fire('t-paginated',this.getTableData());
+  		},
+
+  		/**
+	       * Function to call the PrevPage data
+	       */
+  		getPrevPageData:function(){
+			this.pageNumber--;
+			this.fire('t-paginated',this.getTableData());
+  		},
+
+  		/**
+	       * Function to call the FirstPage data
+	       */
+  		getFirstPageData:function(){
+  			this.pageNumber=1;
+			this.fire('t-paginated',this.getTableData());
+  		},
+
+  		/**
+	       * Check the count if +1
+	       */
+  		noPagination:function(){
+  			return this.pageCount ==1;
+  		}
+	});
+
+</script>

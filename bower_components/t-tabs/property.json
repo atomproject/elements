@@ -1,0 +1,33 @@
+{
+    "name": "Tabs",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "tabs": {
+                "name": "Tabs",
+                "type": "list",
+                "value": ["First", "Second"]
+            }
+        }
+    }, {
+        "name": "Properties",
+        "fields": {
+            "inverted": {
+                "name": "Colored background",
+                "type": "Boolean",
+                "value": false
+            },
+            "alignBottom": {
+                "name": "Bottom align tabs",
+                "type": "Boolean",
+                "value": false
+            },
+            "alignment": {
+                "name": "Alignment",
+                "type": "options",
+                "values": ["left","center","fullbleed"],
+                "value":"left"
+            }
+        }
+    }]
+}

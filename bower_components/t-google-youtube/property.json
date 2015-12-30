@@ -1,0 +1,23 @@
+{
+    "name" : "Youtube Video",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "videoId": {
+                "name":"Youtube Video Link",
+                "type": "string",
+                "value": "yRbOSdAe_JU"
+            }            
+        }
+    },
+    {
+        "name": "Properties",
+        "fields": {
+            "height": {
+                "name":"Height",
+                "type": "string",
+                "value": "400px"
+            }
+        }
+    }]
+}

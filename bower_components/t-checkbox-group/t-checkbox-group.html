@@ -1,0 +1,330 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
+<link rel="import" href="../t-checkbox/t-checkbox.html">
+<!--
+`t-checkbox-group` allows user to select only one checkbox button from a set.
+Checking one checkbox button that belongs to a checkbox group unchecks any
+previously checked checkbox button within the same group. Use
+`selected` to get or set the selected checkbox button.
+
+Example:
+
+    <t-checkbox-group selected="small">
+      <t-checkbox name="small" label="Small"></t-checkbox>
+      <t-checkbox name="medium" label="Medium"></t-checkbox>
+      <t-checkbox name="large" label="Large"></t-checkbox>
+    </t-checkbox-group>
+
+-->
+<dom-module name="t-checkbox-group">
+    <style is="custom-style">
+    :host {
+        position: relative;
+        display: block;
+  font-family: var(--primary-font-family);
+    }
+    
+    :host([label]) label {
+        color: var(--form-label-color);
+        font-size: var(--form-label-size);
+        display: block;
+        margin-bottom: var(--form-label-margin);
+    }
+    
+    :host::content t-checkbox {
+        display: block;
+    }
+    
+    :host([inline]) ::content t-checkbox {
+        display: inline-block;
+        margin-right: 20px;
+        margin-bottom: 0;
+    }
+    
+    :host([inline]) ::content t-checkbox:last-child {
+        margin-right: 0;
+    }
+    
+    iron-selector::content > t-checkbox {
+        margin-top: var(--checkbox-item-margin);
+        line-height: 1;
+    }
+    
+    :host ::content t-checkbox:first-child {
+        margin-top: 0!important;
+    }
+    
+    :host p {
+        display: none;
+    }
+    /* line 12, D:\filter\less\date-input.less */
+    
+    :host.no-value p {
+        display: block;
+        position: absolute;
+        top: 100%;
+        padding: 0;
+        margin: 0;
+        left: 0;
+        font-size: var(--error-text-size);
+        color: var(--error-color);
+    }
+    
+    :host([checkbox-right]) ::content t-checkbox #checkboxLabel {
+        padding-left: 0;
+        padding-right: 8px;
+    }
+    
+    :host([checkbox-right]) ::content t-checkbox #checkboxContainer {
+        order: 2;
+    }
+    @media (max-width: 600px) {
+        :host([label]) label {
+            font-size: var(--form-label-mobile-size);
+            margin-bottom: var(--form-label-mobile-margin);
+        }
+    }
+    </style>
+    <template>
+        <label>{{label}}</label>
+        <p class="error">{{errorMessage}}</p>
+        <iron-selector multi selected-values="{{selectedValues}}" attr-for-selected="{{selectionAttribute}}" selectable="t-checkbox">
+            <content id="items" select="*"></content>
+            <template is="dom-repeat" items="[[data]]" as="item">
+                <t-checkbox name="{{item}}">{{item}}</t-checkbox>
+            </template>
+        </iron-selector>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-checkbox-group',
+
+    hostAttributes: {
+        role: 'checkboxgroup'
+    },
+
+    properties: {
+
+        /**
+         * Json list based checkbox group.
+         *
+         * @attribute checked
+         * @type boolean
+         * @default false
+         */
+        data: {
+            type: Array,
+            value: function() {
+                return [];
+            },
+            notify: true,
+            observer: '_dataChanged',
+            reflectToAttribute: true
+        },
+
+        /**
+         * Name property
+         */
+        name: {
+            type: String,
+            value: '',
+            reflectToAttribute: true
+        },
+
+        /**
+         * Sets the label of the group leave empty for no label
+         * @default ""
+         */
+        label: {
+            type: String,
+            value:"",
+            reflectToAttribute: true
+        },
+
+        /**
+         * Sets the boxes inline
+         * @default false
+         */
+        inline: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+
+        /**
+         * Gets the array of selected values
+         * @attribute selected
+         * @type Array
+         * @default null
+         */
+        selectedValues: {
+            type: Array,
+            value: []
+        },
+
+        /**
+         * Sets the attribute selection
+         * @attribute selected
+         * @type String
+         * @default name
+         */
+        selectionAttribute: {
+            type: String,
+            value: 'name'
+        },
+
+        /* @attribute selected
+         * @type Array
+         * @default null
+         */
+        selectedItem: {
+            type: Array,
+            value: null,
+            notify: true,
+            reflectToAttribute: true,
+            observer: "_selectedChanged"
+        },
+
+        required: {
+            type: Boolean,
+            value: false
+        },
+
+        /**
+         * errorMsg is to put the error msg
+         */
+        errorMessage: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'Please select atleast one value!'
+        },
+
+        /**
+         * Put the checkmark on the right.
+         *
+         * @attribute checked
+         * @type boolean
+         * @default false
+         */
+        checkboxRight: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        }
+
+
+
+    },
+
+    listeners: {
+        // TODO: this can be replaced by <iron-a11y-keys> when it's ready.
+        keydown: '_onKeyDown'
+    },
+
+    _dataChanged: function() {
+        if (this.data && this.data.length > 0) {
+            Polymer.dom(this.$.items).getDistributedNodes().forEach(function(element) {
+                element.remove();
+            });
+        }
+    },
+
+    _selectedChanged: function() {
+        // TODO: This only needs to be async while a domReady event is unavailable.
+        this.async(function() {
+            this._selectIndex(this._valueToIndex(this.items, this.selected));
+            this.fire('paper-checkbox-group-changed');
+        });
+    },
+
+    _onKeyDown: function(event) {
+        if (event.keyCode === 37 || event.keyCode == 38) {
+            // Up/Left key goes back.
+            this.selected = this._previousNode();
+        } else if (event.keyCode === 39 || event.keyCode == 40) {
+            // Down/Right key advances.
+            this.selected = this._nextNode();
+        } else {
+            event.preventDefault();
+        }
+    },
+
+    _selectIndex: function(index) {
+        if (index == this._selectedIndex)
+            return;
+        var nodes = this.items;
+        // If there was a previously selected node, deselect it.
+        if (nodes[this._selectedIndex]) {
+            nodes[this._selectedIndex].checked = false;
+        }
+        // Select a new node.
+        nodes[index].checked = true;
+        nodes[index].focus();
+        this._selectedIndex = index;
+    },
+
+    /**
+     * Returns an array of all items.
+     *
+     * @property items
+     * @type array
+     */
+    get items() {
+        return Polymer.dom(this.$.items).getDistributedNodes();
+    },
+
+    _nextNode: function() {
+        var items = this.items;
+        var index = this._selectedIndex;
+        var newIndex = index;
+        do {
+            newIndex = (newIndex + 1) % items.length;
+            if (newIndex === index) {
+                break;
+            }
+        } while (items[newIndex].disabled);
+        return this._valueForNode(items[newIndex]);
+    },
+
+    _previousNode: function() {
+        var items = this.items;
+        var index = this._selectedIndex;
+        var newIndex = index;
+        do {
+            newIndex = (newIndex || items.length) - 1;
+            if (newIndex === index) {
+                break;
+            }
+        } while (items[newIndex].disabled);
+        return this._valueForNode(items[newIndex]);
+    },
+
+    _valueForNode: function(node) {
+        return node["name"] || node.getAttribute("name");
+    },
+
+    // Finds an item with value == |value| and return its index.
+    _valueToIndex: function(items, value) {
+        for (var index = 0, node;
+            (node = items[index]); index++) {
+            if (this._valueForNode(node) == value) {
+                return index;
+            }
+        }
+        // If no item found, the value itself is probably the index.
+        return value;
+    },
+
+    validate: function() {
+        if (this.required && this.selectedValues.length == 0) {
+            this.classList.add('no-value');
+            return false;
+        }
+        this.classList.remove('no-value');
+        return true;
+    }
+
+});
+</script>

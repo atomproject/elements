@@ -1,0 +1,60 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html">
+<link rel="import" href="t-loader.html">
+<dom-module id="t-fullpage-loader">
+    <template>
+        <style>
+        :host{
+        	display: none;
+        }
+        :host[active]{
+        	display: block;
+        }
+        .modal.fit {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.4);
+            z-index: 99;
+            color: #000;
+            font-weight: 600;
+        }
+        .middle {
+            min-width: 150px;
+            min-height: 150px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 4px;
+            padding: 10px;
+            margin: 0 20%;
+        }
+        
+        #loader {
+            margin-bottom: 10px;
+        }
+        
+        .middle::content * {
+            color: #fff;
+            text-align: center;
+        }
+        </style>
+        <div class="fit modal layout horizontal center center-justified">
+            <div class="middle layout vertical center center-justified">
+                <t-loader id="loader" active></t-loader>
+                <content select="*"></content>
+            </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-fullpage-loader',
+
+    properties:{
+    	active:{
+    		type:Boolean,
+    		value:false,
+    		reflectToAttribute:true
+    	}
+    }
+
+});
+</script>

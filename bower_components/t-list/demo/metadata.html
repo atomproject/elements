@@ -1,0 +1,11 @@
+<t-list 
+    data-api="http://dev.atom-project.io/1.0/components/components/pageComponents/t-list/demo/results.json"
+    filter-api="http://dev.atom-project.io/1.0/components/components/pageComponents/t-list/demo/filter.json"
+    token-param="inventories"
+    with-sorting
+    with-filter
+    sort-params='[{"key":"Price","value":"$orderby=minFare%2FFare%2FAmount","default":true},{"key":"Stops","value":"$orderby=TotalStops"},{"key":"Duration","value":"$orderby=duration/journey"}]'>
+        <template>
+            <t-result-item itinerary="{{item}}"></t-result-item>
+        </template>
+</t-list>

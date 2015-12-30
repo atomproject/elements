@@ -1,0 +1,28 @@
+{
+    "name": "App header",
+    "properties": [{
+        "name": "Properties",
+            "fields": {
+            "email": {
+                "name":"Email",
+                "type": "string",
+                "value": "support@travelnxt.com"
+            },
+            "phone": {
+                "name":"Phone no.",
+                "type": "string",
+                "value": " 1-855-282-6507"
+            },
+            "src": {
+                "name":"Image Source",
+                "type": "string",
+                "value": "http://lorempixel.com/180/46"
+            },
+            "logoUrl": {
+                "name":"Logo url",
+                "type": "string",
+                "value": "http://lorempixel.com/180/46"
+            }
+        }
+    }]
+}

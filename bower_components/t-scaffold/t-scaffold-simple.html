@@ -1,0 +1,64 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../t-button/t-button.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+
+<!--
+Left Nav + View
+ -->
+<dom-module id="t-scaffold-simple">
+
+  <link rel="import" type="css" href="t-scaffold-simple.css">
+  <template>
+    <paper-drawer-panel id="drawerPanel" responsive-width="{{responsiveWidth}}">
+      <div class="nav" drawer>
+        <paper-toolbar>
+         <content select="nav-toolbar"></content>
+        </paper-toolbar>
+
+        <!-- Nav Content -->
+        <paper-menu class="list">        
+        <content select="nav-content"></content>
+        </paper-menu>
+      </div>
+
+      <paper-header-panel class="main" main mode="waterfall">
+
+        <!-- Main Toolbar -->
+        <paper-toolbar>
+           <t-button only-icon ico="menu" paper-drawer-toggle></t-button>
+          <content select="header-toolbar"></content>
+        </paper-toolbar>
+
+        <!-- Content goes here -->
+        <content select=".content"></content>
+
+      </paper-header-panel>
+
+    </paper-drawer-panel>
+
+  </template>
+
+  <script>
+    Polymer({
+      
+      is: 't-scaffold-simple',
+
+      properties:{
+        
+        /*
+         *Allows you to select width when it breaks
+         */
+        responsiveWidth: {
+          type: String,
+          value: '1280px'
+        }
+      }
+
+    });
+  </script>
+
+</dom-module>

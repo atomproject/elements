@@ -1,0 +1,54 @@
+
+    
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+   <link rel="import" href="../t-menu.html">
+   <link rel="import" href="../t-submenu.html">
+   <link rel="import" href="../t-item.html">
+
+        
+        <t-menu>
+            <t-submenu ico="folder" label="level1">
+                <t-item label="a"></t-item>
+                <t-submenu label="level2">
+                  <t-item label="awesome"></t-item>
+                  <t-item label="stuff"></t-item>
+                      <t-submenu label="level1">
+                <t-item label="a"></t-item>
+                <t-submenu label="level2">
+                  <t-item label="awesome"></t-item>
+                  <t-item label="stuff"></t-item>
+                </t-submenu>
+                <t-item label="c"></t-item>
+            </t-submenu>
+                </t-submenu>
+                <t-item label="c"></t-item>
+
+            </t-submenu>
+    				
+                <t-submenu ico="folder" label="level1">
+                <t-item label="a"></t-item>
+                <t-submenu label="level2">
+                  <t-item label="awesome"></t-item>
+                  <t-item label="stuff"></t-item>
+                </t-submenu>
+                <t-item label="c"></t-item>
+            </t-submenu>
+            <t-item ico label="sac"></t-item>
+    				<t-item label="c"></t-item>
+    				<t-item label="f"></t-item>
+        </t-menu>    
+
+
+        <!-- content t-submenu
+        
+        content t-item
+        
+        
+        
+        t-item - selected mark, active state
+        
+        t-submenu - active state, 
+        
+        
+        div  on-click == iron-collapse - toggle() -->

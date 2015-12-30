@@ -1,0 +1,166 @@
+:host {
+    font-size: 14px;
+    color: var(--primary-text-color);
+    --secondary-background-color: #eee;
+    --checkbox-check-sign-color: #fff;
+    --checkbox-unchecked-color: #eee;
+    --pill-radio-text-selected-color: var(--primary-text-color);
+    --checkbox-unchecked-bg: #eee;
+    --t-slider-active-color: var(--primary-text-color);
+    --t-slider-knob-color: var(--primary-text-color);
+    --t-slider-pin-color: var(--primary-text-color);
+    --paper-input-container-color: #eee;
+    --paper-input-container-focus-color: var(--primary-text-color);
+}
+
+:host t-input label {
+    color: var(--primary-text-color)!important;
+}
+
+:host t-checkbox {
+    display: block;
+}
+
+.panel {
+    width: 100%;
+    overflow: auto;
+}
+
+#controller .section {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+#controller .section p,
+#controller .section h2,
+#controller .section h3,
+#controller .section h4 {
+    padding: 0;
+    margin: 0;
+}
+
+#controller .section > .layout {
+    margin: 14px 0;
+}
+
+#controller .section:last-of-type {
+    border-bottom: 0px;
+}
+
+.section-header {
+    font-weight: 100;
+    text-transform: capitalize;
+    font-size: 18px;
+    line-height: 1;
+    color: var(--header-text-color);
+}
+
+:host #bindingModal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    background: white;
+}
+
+#bindingModal .close-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/*context menu*/
+#propertyMenu {
+    position: relative;
+}
+
+#propertyMenu .prop {
+    width: 300px;
+    background: #EC6603;
+    color: #fff;
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    font-family: 'lucida sans unicode', sans-serif;
+    font-size: 1em;
+    border: solid 1px #EC6603;
+    -webkit-transition: all .4s ease-in-out;
+    transition: all .4s ease-in-out;
+}
+
+#propertyMenu .prop:hover {
+    border: solid 1px #fff;
+    -moz-box-shadow: 0 0 5px #999;
+    -webkit-box-shadow: 0 0 5px #999;
+    box-shadow: 0 0 5px #999
+}
+
+#propertyMenu > .list {
+    display: none;
+    position: absolute;
+    left: 30px;
+    top: -30px;
+    z-index: 999;
+    width: 200px;
+    overflow-y: auto;
+    max-height: 400px;
+    margin: 0;
+    padding: 10px;
+    list-style: none;
+    background: #fff;
+    color: #333;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0 0 5px #999;
+    -webkit-box-shadow: 0 0 5px #999;
+    box-shadow: 0 0 5px #999
+}
+
+#propertyMenu > .list .item {
+    padding: 10px;
+    border-bottom: solid 1px #ccc;
+    cursor: pointer;
+}
+
+#propertyMenu > .list .item:hover {
+    background: #EC6603;
+    color: #fff;
+}
+
+#propertyMenu > .list .item:last-child {
+    border: none;
+}
+
+label.data-feeder {
+    margin-top: 10px;
+    color: #777777;
+    font-size: 16px;
+}
+
+t-data-feeder {
+    --placeholder-color: rgba(100, 100, 100, 0.5);
+}
+
+t-dropdown {
+    width: 100%;
+}
+
+t-checkbox {
+    --checkbox-check-sign-color: var(--primary-text-color);
+    --checkbox-checked-color: var(--gray-two);
+}
+
+/* Checked state colors. */
+t-radio-group {
+    --pill-border-color: var(--grey-two);
+    --pill-radio-text-unselected-color: var(--primary-text-color);
+    --form-label-color: var(--primary-text-color);
+}
+
+t-radio-button {
+    --radio-button-checked-color: var(--grey-two);
+    --radio-button-unchecked-color: var(--primary-text-color);
+}

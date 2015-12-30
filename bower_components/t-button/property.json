@@ -1,0 +1,46 @@
+{
+    "name": "Button",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "label": {
+                "name": "Label",
+                "type": "string",
+                "value": "label"
+            },
+            "ico": {
+                "name": "Icon",
+                "type": "iconset"
+            }
+        }
+    }, {
+        "name": "Properties",
+        "fields": {
+            "onlyIcon": {
+                "name": "Icon Only",
+                "type": "Boolean",
+                "value": false
+            },
+            "raised": {
+                "name": "Raised",
+                "type": "Boolean",
+                "value": true
+            },
+            "iconLeft": {
+                "name": "Left Align Icon",
+                "type": "Boolean",
+                "value": false
+            },
+            "noink": {
+                "name": "Remove Ink Effect",
+                "type": "Boolean",
+                "value": false
+            },
+            "toggles": {
+                "name": "Toggle",
+                "type": "Boolean",
+                "value": false
+            }
+        }
+    }]
+}

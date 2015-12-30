@@ -1,0 +1,347 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../t-input/t-input.html" />
+<link rel="import" href="../t-slider/t-slider.html" />
+<link rel="import" href="../t-checkbox-group/t-checkbox-group.html" />
+<link rel="import" href="../t-radio-group/t-radio-group.html" />
+<link rel="import" href="../t-autosuggest/t-autosuggest.html" />
+<link rel="import" href="../t-colorpicker/t-colorpicker.html" />
+<link rel="import" href="../t-calendar/t-calendar.html" />
+<link rel="import" href="../t-button/t-button.html" />
+<link rel="import" href="../t-dropdown/t-dropdown.html" />
+<link rel="import" href="../t-stepper/t-stepper.html" />
+<link rel="import" href="../t-notify/t-notify.html" />
+<link rel="import" href="../iron-ajax/iron-ajax.html" />
+<link rel="import" href="../paper-item/paper-item.html" />
+<!--
+    `<t-form>` is an HTML <form> element that can validate and submit any custom elements.
+
+
+    <t-form>
+        <t-input label="test" heading="test" required></t-input>
+        <t-calendar label="test" heading="test" required></t-calendar>
+                <t-dropdown required label="Select one">
+              
+              <paper-item>This is first</paper-item>
+              <paper-item>Second</paper-item>
+              <paper-item>Third</paper-item>
+              <paper-item>Fourth</paper-item>
+
+            </t-dropdown>   
+    </t-form>   
+-->
+<dom-module id="t-form">
+    <style is="custom-style">
+    :host {
+        padding: 15px 0;
+    }
+    
+    :host ::content #submit {
+        margin: 10px 0;
+    }
+    
+    #actionContainer{
+        position: relative;
+    }
+    
+    #actionContainer #loader{
+        position: absolute;
+        width:100%;
+    }
+
+    :host ::content .form > .layout > .flex {
+       /* padding: 5px; Commented to fix air app */
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+    :host ::content .grouped > .flex {
+       /* padding: 5px; Commented to fix air app */
+        margin-left: 5px;
+    }
+    :host ::content .grouped > .flex:first-child {
+       /* padding: 5px; Commented to fix air app */
+        margin-left: 0;
+    }
+    /* 
+    :host([error-block]) ::content .error {
+        display: none!important;
+    } */
+    </style>
+    <template>
+        <t-notify hidden$="{{!errorBlock}}" type="error" id="notify" message="{{errorMessage}}"></t-notify>
+        <content id="fields" select="*"></content>
+        <div id="actionContainer" hidden$="{{_fieldsNotPresent}}" class$="{{_positionButton()}}">
+            <t-button id="submit" raised on-click="submit" class="primary fieldset" label="{{submitButtonLabel}}"></t-button>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-form',
+
+    properties: {
+
+        /**
+         * heading of the form.
+         */
+        name: {
+            type: String,
+            value: 'untitled-form',
+            reflectToAttribute: true
+        },
+
+        /**
+         * NodeList of all fields present in the form.
+         */
+        fields: {
+            type: Array,
+            value: function() {
+                return [];
+            },
+            notify: true,
+
+        },
+
+        /**
+         * Response object of the form.
+         */
+        response: {
+            type: Object,
+            value: function() {
+                return {};
+            }
+        },
+
+        /**
+         * heading of the form.
+         */
+        heading: {
+            type: String,
+            value: 'Untitled Form',
+            reflectToAttribute: true
+        },
+
+        actionButton: {
+            type: String,
+            value: 'Left',
+            notify: true,
+            reflectToAttribute: true,
+            observer: '_positionButton'
+        },
+
+        submitButtonLabel: {
+            type: String,
+            value: 'Submit',
+            reflectToAttribute: true
+        },
+
+        secondaryActionLabel: {
+            type: String,
+            value: 'Cancel',
+            reflectToAttribute: true
+        },
+
+        labelPosition: {
+            type: String,
+            value: 'Top',
+            reflectToAttribute: true,
+            notify: true,
+            observer: '_labelTypeChanged'
+        },
+
+        _fieldsNotPresent: {
+            type: Boolean,
+            value: true,
+            computed: '_fieldsPresent(fields)'
+        },
+
+        errorMessage: {
+            type: String,
+            reflectToAttribute: true
+        },
+
+        errorBlock: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+
+        showLoader:{
+            type:Boolean,
+            value:false,
+            reflectToAttribute:true
+        }
+    },
+
+    ready: function() {
+        var component = this;
+        this.addEventListener('tab-next', function(event) {
+            var next =event.target.tabIndex + 1;
+            component.fields[next].focus();
+        });
+    },
+
+    attached: function(){
+        this.setFields();
+    },
+
+    _fieldsPresent: function() {
+        return this.fields == undefined || this.fields.length == 0;
+    },
+
+    _setResponse: function(field) {
+        var fieldName = field.getAttribute("name");
+        switch (field.is) {
+
+            case "t-checkbox-group":
+                this.response[fieldName] = field.selectedValues;
+                break;
+
+            case "t-checkbox":
+                this.response[fieldName] = field.checked;
+                break;
+
+            case "t-radio-group":
+                this.response[fieldName] = field.selectedItem;
+                break;
+
+            case "t-autosuggest":
+                this.response[fieldName] = field.selectedItem;
+                break;
+
+            case "t-calendar":
+                this.response[fieldName] = field.selectedDate;
+                break;
+
+            case "t-dropdown":
+                this.response[fieldName] = field.selectedItemLabel;
+                break;
+
+            case "t-colorpicker":
+                this.response[fieldName] = field.value;
+                break;
+
+            case "t-input":
+                this.response[fieldName] = field.value;
+                break;
+
+            case "t-stepper":
+                this.response[fieldName] = field.count;
+                break;
+
+            case "t-email-input":
+                this.response[fieldName] = field.value;
+                break;
+
+            case "t-phone-input":
+                this.response[fieldName] = field.formattedValue;
+                break;
+
+            default:
+                console.log('Add  switch case for ' + field.is + ' in t-form.html in t-components.')
+
+        }
+    },
+
+    _validate: function(field) {
+        var isValid = true;
+        /* var notifyEle = document.querySelector('#notify');*/
+        /*var data = [];*/
+        this.fields.forEach(function(field) {
+            if (field.validate() != undefined) {
+                isValid = isValid && field.validate();
+                /*if(!field.validate()){
+                    data.push(field.errorMessage);
+                }*/
+            }
+        });
+        /*notifyEle.active = !isValid;*/
+        /*notifyEle.data = data;*/
+        return isValid;
+    },
+
+    setFields: function() {
+        var content = Polymer.dom(this.$.fields).getDistributedNodes();
+        var component = this;
+        component.fields = [];
+        content.forEach(function(section) {
+            component._pushFields(section.querySelectorAll("[name]"));
+        });
+    },
+
+    _pushFields: function(components) {
+        var fields = [];
+        if (components.length > 0) {
+            for(var index=0; index< components.length ; index++)
+            {
+                components[index].setAttribute('tabIndex', index);
+                if(components[index].is != 't-radio-button')
+                    fields.push(components[index]);
+            }
+            this.fields = this.fields.concat(fields);
+        }
+    },
+
+    _labelTypeChanged: function() {
+        this.setFields(Polymer.dom(this.$.fields).getDistributedNodes());
+        switch (this.labelPosition) {
+            case 'Left':
+
+                break;
+
+            case 'Right':
+                break;
+
+            case 'Top':
+                this.fields.forEach(function(field) {
+                    field.noLabelFloat = false;
+                });
+                break;
+
+            case 'Inline':
+                this.fields.forEach(function(field) {
+                    field.noLabelFloat = true;
+                });
+                break;
+        }
+    },
+
+    _positionButton: function() {
+        var classes = "layout horizontal ";
+        switch (this.actionButton) {
+            case 'Full':
+                this.$.submit.classList.add('flex');
+                break;
+
+            case 'Right':
+                this.$.submit.classList.remove('flex');
+                this.$.actionContainer.classList.remove('justified');
+                this.$.actionContainer.classList.add('end-justified');
+                break;
+
+            case 'Left':
+                this.$.submit.classList.remove('flex');
+                this.$.actionContainer.classList.add('justified');
+                break;
+            
+            case 'Center':
+                this.$.submit.classList.remove('flex');
+                this.$.actionContainer.classList.add('center-justified');
+                break;
+        }
+        return classes;
+    },
+
+    submit: function() {
+        var component = this;
+        this.setFields(Polymer.dom(component.$.fields).getDistributedNodes());
+        if (component._validate()) {
+            component.fields.forEach(function(field) {
+                component._setResponse(field);
+            });
+
+            component.fire('on-form-submit', component.response);
+        }
+    }
+})
+</script>

@@ -1,0 +1,157 @@
+
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../iron-collapse/iron-collapse.html">
+<link rel="import" href="../iron-selector/iron-selector.html">
+<link rel="import" href="t-item.html">
+
+<!--
+`t-dropdown` is a dropdown to select an item from a list of dropdown. The default text if you don't pass any level is "Select value from items"
+
+or you can pass the default in label
+
+Example:
+
+    <t-dropdown label="Select one">
+          
+      <paper-tem>This is first</paper-item>
+      <paper-item>Second</paper-item>
+      <paper-item>Third</paper-item>
+      <paper-item>Fourth</paper-item>
+
+    </t-dropdown>
+-->
+
+
+<dom-module id="t-submenu">
+
+<style is="custom-style">
+:host:focus:after{
+  display: none;
+
+}
+:host{
+  display: block;
+
+}
+:host #submenu{
+  margin-left: 15px;
+}
+
+ :host ::content > paper-item,:host  ::content paper-item {
+  
+    cursor: pointer;
+ }
+ :host([aria-selected]) ::content paper-item paper-item:focus{
+  display: none;
+ }
+ :host([aria-selected]) ::content > paper-item,:host([aria-selected]) ::content paper-item.iron-selected{
+    background:#F5F5F5;
+    font-weight: bold;
+    cursor: pointer;
+ }
+ :host ::shadow  > paper-item > label{
+    -ms-flex: 1 1 0.000000001px;
+    -webkit-flex: 1;
+    flex: 1;
+    -webkit-flex-basis: 0.000000001px;
+    flex-basis: 0.000000001px;
+ }
+ :host ::shadow  > paper-item > span{
+    display: none;
+ }
+ :host ::shadow  > paper-item iron-icon{
+    -ms-transform: rotate(0deg); /* IE 9 */
+    -webkit-transform: rotate(0deg); /* Chrome, Safari, Opera */
+    transform: rotate(0deg);
+    transition:0.3s all ease;
+ }
+ :host([aria-selected]) ::shadow  > paper-item iron-icon{
+    -ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    transform: rotate(180deg);
+ }
+ 
+ :host([aria-selected]) > #label ::content label {
+    font-weight: bold;
+ }
+</style>
+<template>
+    <t-item class="flex-1" id="label" label$="{{label}}" on-click="_toggleCollapse"> </t-item>
+    <iron-collapse id="submenu" opened$="{{ariaSelected}}">
+    <div class="collapse-content">
+      <paper-menu>
+        <content></content>
+      </paper-menu>
+    </div>
+    </iron-collapse>
+  </template>
+</dom-module>
+<script>
+  Polymer({
+
+    is: 't-submenu',
+
+    behaviors: [
+      Polymer.IronMultiSelectableBehavior
+    ],
+
+    properties: {
+
+      /**
+       * The table has headerRow or not.
+       */
+      ico:{
+        type:String,
+        value: 'expand-more'
+      },
+      
+      /**
+       * The aria-selected true or not.
+       */
+      ariaSelected:{
+        type:Boolean,
+        value:false,
+        reflectToAttribute:true
+      },
+
+      /**
+       * The label of the row
+       */
+      label: {
+        type: String
+      }
+
+    },
+
+    ready:function(){
+      var submenu = this;
+      setTimeout(function(){
+        if(Polymer.dom(submenu).parentNode.tagName.toLowerCase() == 't-submenu'){
+            submenu.$.label.ico= submenu.ico;
+        }
+      },0);
+
+    },
+     
+    /**
+     *to put firstlevel first level
+     */
+    _toggleCollapse: function(){
+      if(this.ariaSelected === true) {
+        this.ariaSelected=false;
+        var x = Polymer.dom(this).querySelectorAll('t-submenu');
+        if(x.length){
+          for(z=0;z<x.length;z++){
+            x[z].ariaSelected = false; 
+          }
+        }
+      }else{
+        this.ariaSelected=true;
+      }
+    }
+    
+  });
+</script>

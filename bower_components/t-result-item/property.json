@@ -1,0 +1,13 @@
+{
+    "name": "App header",
+    "properties": [{
+        "name": "Properties",
+        "fields": {
+            "itinerary": {
+                "name": "Itinerary",
+                "type": "string",
+                "value": ""
+            }
+        }
+    }]
+}
