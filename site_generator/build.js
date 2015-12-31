@@ -40,36 +40,39 @@ engine.fileSystem = new Liquid.LocalFileSystem;
 engine.fileSystem.root = config.includesDir;
 
 function Context(el) {
-  var baseDir, u, dn;
   var loc, travisBaseUrl = config.travisBaseUrl;
+  var elTravisUrl, dir, elDir, elDirUrl;
 
   this.name = el.name;
   this.category = el.category;
   this.icon = el.icon;
-  this.displayName = dn = el.displayName;
+  this.displayName = el.displayName;
   this.location = loc = locationParser(el.location);
 
-  baseDir = loc.localPath || `_site/${dn}/bower_components/${el.name}`;
-
-  this.documentationFileUrl = `${baseDir}/`;
-  this.demoFileUrl = `${baseDir}/demo/index.html`;
-  this.propertiesFileUrl = `${baseDir}/property.json`;
-
   if (loc.githubUser && loc.githubRepo) {
-    u = `${travisBaseUrl}/${loc.githubUser}/${loc.githubRepo}`;
-    this.linkToTravis = `${u}/`;
-    this.buildStatusUrl = `${u}.svg?branch=master`;
+    elTravisUrl = `${travisBaseUrl}/${loc.githubUser}/${loc.githubRepo}`;
+    this.linkToTravis = `${elTravisUrl}/`;
+    this.buildStatusUrl = `${elTravisUrl}.svg?branch=master`;
   }
 
-  this.designDoc = '\n' + tryReadFile(`${baseDir}/design-doc.md`);
-  this.pageName = slug(el.displayName).toLowerCase();
-  this.pageUrl = `${config.baseurl}/${this.pageName}.html`;
-  this.innerHtml = extractInnerHtml(this.name, this.demoFileUrl);
+  this.pageDirName = slug(el.displayName).toLowerCase();
+  dir = loc.localPath || `${this.pageDirName}/bower_components/${el.name}`;
+  elDir = `_site/${dir}`;
+  elDirUrl = `${config.baseurl}/${dir}`;
+
+  this.pageUrl = `${config.baseurl}/${this.pageDirName}/`;
+  this.documentationFileUrl = `${elDirUrl}/`;
+  this.demoFileUrl = `${elDirUrl}/demo/index.html`;
+  this.propertiesFileUrl = `${elDirUrl}/property.json`;
+
+  this.designDoc = '\n' + tryReadFile(`${elDir}/design-doc.md`);
+  this.innerHtml = extractInnerHtml(this.name, `${elDir}/demo/index.html`);
 };
 
-function tryReadFile(path) {
+function tryReadFile(filePath) {
+  console.log(filePath);
   try {
-    return fs.readFileSync(path, 'utf-8');
+    return fs.readFileSync(filePath, 'utf-8');
   } catch(err) {
     return '';
   }
@@ -135,12 +138,15 @@ config.elements.forEach(elContext => {
 
   renderLayout(queue, fullContext)
     .then(page => {
-      var p = elContext.pageName;
+      var pagePath = elContext.pageDirName;
 
-      mkdirp.sync(path.join('_site', p));
-      p = path.join('_site', p ,'index.html');
-      fs.writeFileSync(p, page);
+      mkdirp.sync(path.join('_site', pagePath));
+      pagePath = path.join('_site', pagePath ,'index.html');
+
+      console.log(`Build: ${pagePath}`);
+      fs.writeFileSync(pagePath, page);
     })
+    .catch(err => console.log(err.stack));
 });
 
 glob(`${config.pagesDir}/**`)
@@ -165,10 +171,14 @@ glob(`${config.pagesDir}/**`)
           var pagesDir = path.resolve(config.pagesDir);
           var outDir = path.resolve(config.outDir);
           var pathObj = path.parse(filePath);
+          var pagePath;
 
           outDir = path.resolve(pathObj.dir).replace(pagesDir, outDir);
           mkdirp(outDir);
-          fs.writeFileSync(path.join(outDir, `${pathObj.name}.html`), page);
+          pagePath = path.join(outDir, `${pathObj.name}.html`);
+
+          console.log(`Build: ${pagePath}`);
+          fs.writeFileSync(pagePath, page);
         })
         .catch(err => console.log(err.stack));
     });

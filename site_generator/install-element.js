@@ -1,8 +1,6 @@
 var path = require('path');
 var fs = require('fs');
-var bower = require('bower');
 var slug = require('slug');
-var exec = require('child_process').exec;
 var metadata = fs.readFileSync('metadata.json');
 var locationParser = require('./parse-location');
 
@@ -17,7 +15,7 @@ metadata.elements.forEach(el => {
     return;
   }
 
-  dep = `${loc.githubUser}/${loc.githubRepo}#master`;
+  dep = `${loc.githubUser}/${loc.githubRepo}`;
 
-  console.log(`${dn}:${dep}`)
+  console.log(`${el.name}:${dn}:${dep}`)
 });

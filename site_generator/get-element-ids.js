@@ -61,6 +61,6 @@ Promise.all(elementUrls.map(function(entityApi) {
 
 	fs.writeFileSync(idFilePath, elementIds);
 }).then(function() {
-	console.log('Done creating element ids');
+	console.log('Done : creating element ids');
 });
 
