@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+
+# TODO: clean up the files and find a better way of logging things
+# TODO: document the requirements git >2.6.3, bash >4.3 and node >4.1
+# TODO: assure user that github passwords aren't stored
+# TODO: deduce the current repo don't ask for it
+# TODO: run the task for creating `metadata.json`
+
+get_val() {
+	value="$(grep "$1" "$2")"
+	value="${value%\"*}"
+	value="${value##*\"}"
+	echo "$value"
+}
+
+read -p "GitHub Username: " gh_uname
+read -p "GitHub Password: " gh_pass
+note="Atom Elements Travis - $(date "+%x")"
+data='{
+	"scopes": [
+		"read:org",
+		"user:email",
+		"repo_deployment",
+		"repo:status",
+		"write:repo_hook",
+		"public_repo"
+	],
+	"note": "'"$note"'"
+}'
+
+curl -s -u "$gh_uname:$gh_pass" -d "$data" https://api.github.com/authorizations >resp.txt
+token="$(get_val '"token"' resp.txt)"
+
+if [[ -z "$token" ]]
+then
+	echo ""
+	get_val '"message"' resp.txt
+	exit 1
+fi
+
+echo "GitHub Token: $token"
+
+data='{"github_token":"'"$token"'"}'
+
+curl -s -H "Accept: application/vnd.travis-ci.2+json" \
+	-H "Content-Type: application/json" \
+	-H "User-Agent: MyClient/1.0.0" \
+	-d "$data" https://api.travis-ci.org/auth/github >travis-resp.txt
+
+travis_token="$(get_val '"access_token"' travis-resp.txt)"
+
+if [[ -z "$travis_token" ]]
+then
+	echo ""
+	echo "Login to Travis atleast once from the web interface if you haven't."
+	cat travis-resp.txt
+	exit 1
+fi
+
+echo "Travis Token: $travis_token"
+
+read -p "Enter Repository: " repo
+
+curl -s -H "Accept: application/vnd.travis-ci.2+json" \
+	-H "User-Agent: MyClient/1.0.0" \
+	https://api.travis-ci.org/repos/"$repo" >travis-repo-resp.txt
+
+repo_id="$(grep -iEo '"id": ?[0-9]+' travis-repo-resp.txt)"
+repo_id="${repo_id#*:}"
+
+if [[ -z "$repo_id" ]]
+then
+	echo ""
+	cat travis-repo-resp.txt
+	exit 1
+fi
+
+echo "Repository Id: $repo_id"
+
+data='{
+	"env_var": {
+		"name": "GH_TOKEN",
+		"value": "'"$token"'",
+		"public": false
+	}
+}'
+
+curl -s -H "Accept: application/vnd.travis-ci.2+json" \
+	-H "Content-Type: application/json" \
+	-H "User-Agent: MyClient/1.0.0" \
+	-H "Authorization: token $travis_token" \
+	-d "$data" https://api.travis-ci.org/settings/env_vars?repository_id="$repo_id" >travis-env-token-resp.txt
+
+if ! grep '"id":' travis-env-token-resp.txt &>/dev/null
+then
+	echo ""
+	cat travis-env-token-resp.txt
+	exit 1
+fi
+
+data='{
+	"env_var": {
+		"name": "GH_REF",
+		"value": "github.com/'"$repo"'.git",
+		"public": false
+	}
+}'
+
+curl -s -H "Accept: application/vnd.travis-ci.2+json" \
+	-H "Content-Type: application/json" \
+	-H "User-Agent: MyClient/1.0.0" \
+	-H "Authorization: token $travis_token" \
+	-d "$data" https://api.travis-ci.org/settings/env_vars?repository_id="$repo_id" >travis-env-ref-resp.txt
+
+if ! grep '"id":' travis-env-ref-resp.txt &>/dev/null
+then
+	echo ""
+	cat travis-env-ref-resp.txt
+	exit 1
+fi
+
