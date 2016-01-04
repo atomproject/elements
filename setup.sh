@@ -14,6 +14,16 @@ get_val() {
 	echo "$value"
 }
 
+handle_logs_and_exit() {
+	cat github-*.log travis-*.log >setup.log
+	rm github-*.log travis-*.log
+}
+
+if ! git remote show upstream &>/dev/null
+then
+	git remote add upstream https://github.com/atomproject/elements.git
+fi
+
 read -p "GitHub Username: " gh_uname
 read -s -p "GitHub Password: " gh_pass
 echo ""
@@ -37,10 +47,10 @@ if [[ -z "$token" ]]
 then
 	echo ""
 	get_val '"message"' resp.log
-	exit 1
+	handle_logs_and_exit
 fi
 
-echo "GitHub Token: $token"
+echo "Received GitHub token"
 
 data='{"github_token":"'"$token"'"}'
 
@@ -56,10 +66,10 @@ then
 	echo ""
 	echo "Login to Travis atleast once from the web interface if you haven't."
 	cat travis-resp.log
-	exit 1
+	handle_logs_and_exit
 fi
 
-echo "Travis Token: $travis_token"
+echo "Received Travis token"
 
 read -p "Repository Url: " repo_url
 repo_url="${repo_url#*//}"
@@ -77,7 +87,7 @@ if [[ -z "$repo_id" ]]
 then
 	echo ""
 	cat travis-repo-resp.log
-	exit 1
+	handle_logs_and_exit
 fi
 
 echo "Repository Id: $repo_id"
@@ -100,8 +110,9 @@ if ! grep '"id":' travis-env-token-resp.log &>/dev/null
 then
 	echo ""
 	cat travis-env-token-resp.log
-	exit 1
+	handle_logs_and_exit
 fi
+echo "Added GH_TOKEN environment variable"
 
 data='{
 	"env_var": {
@@ -121,8 +132,9 @@ if ! grep '"id":' travis-env-ref-resp.log &>/dev/null
 then
 	echo ""
 	cat travis-env-ref-resp.log
-	exit 1
+	handle_logs_and_exit
 fi
+echo "Added GH_REF environment variable"
 
 read -p "Gist url for metadata.json file: " gist_url
 
@@ -130,10 +142,8 @@ if [[ -z "$gist_url" ]]
 then
 	echo ""
 	echo "You need to provide the url of metadata.json gist"
-	exit 1
+	handle_logs_and_exit
 fi
-
-bower install "config=$gist_url.git"
 
 data='{
 	"env_var": {
@@ -153,8 +163,9 @@ if ! grep '"id":' travis-env-gist-resp.log &>/dev/null
 then
 	echo ""
 	cat travis-env-gist-resp.log
-	exit 1
+	handle_logs_and_exit
 fi
+echo "Added CONFIG_GIST_URL environment variable"
 
 data='{
 	"settings": {
@@ -170,7 +181,11 @@ curl -s -X PATCH -H "Accept: application/vnd.travis-ci.2+json" \
 	-H "Authorization: token $travis_token" \
 	-d "$data" https://api.travis-ci.org/repos/"$repo_id"/settings >travis-settings-resp.log
 
-cat github-*.log travis-*.log >setup.log
-rm github-*.log travis-*.log
+if ! grep 'build_pull_requests' travis-settings-resp.log &>/dev/null
+then
+	echo ""
+	cat travis-settings-resp.log
+	handle_logs_and_exit
+fi
 
-npm install
+handle_logs_and_exit
