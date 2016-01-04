@@ -11,6 +11,16 @@ ifncp() {
 
 dirs=(assets bower_components components scripts styles)
 
+if ! [[ -f "bower_components/config/metadata.json" ]]
+then
+	if [[ -z "$CONFIG_GIST_URL" ]]
+	then
+		read -p "Gist url for metadata.json file: " CONFIG_GIST_URL
+	fi
+
+	bower install "config=$CONFIG_GIST_URL.git"
+fi
+
 node site_generator/build.js "$1"
 
 if ! [[ -f "_site/element-ids.json" ]]; then

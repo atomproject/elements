@@ -119,3 +119,33 @@ then
 	exit 1
 fi
 
+read -p "Gist url for metadata.json file: " gist_url
+
+if [[ -z "$gist_url" ]]
+	echo ""
+	echo "You need to provide the url of metadata.json gist"
+	exit 1
+then
+
+bower install "config=$gist_url.git"
+
+data='{
+	"env_var": {
+		"name": "CONFIG_GIST_URL",
+		"value": "'"$gist_url"'",
+		"public": true
+	}
+}'
+
+curl -s -H "Accept: application/vnd.travis-ci.2+json" \
+	-H "Content-Type: application/json" \
+	-H "User-Agent: MyClient/1.0.0" \
+	-H "Authorization: token $travis_token" \
+	-d "$data" https://api.travis-ci.org/settings/env_vars?repository_id="$repo_id" >travis-env-gist-resp.txt
+
+if ! grep '"id":' travis-env-gist-resp.txt &>/dev/null
+then
+	echo ""
+	cat travis-env-gist-resp.txt
+	exit 1
+fi
