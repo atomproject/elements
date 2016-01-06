@@ -65,6 +65,7 @@ function ElementContext(el, config) {
   this.demoFileUrl = `${elDirUrl}/demo/index.html`;
   this.propertiesFileUrl = `${elDirUrl}/property.json`;
 
+  this.propertyFile = `${elDir}/property.json`;
   this.designDoc = '\n' + tryReadFile(`${elDir}/design-doc.md`);
   this.innerHtml = extractInnerHtml(this.name, `${elDir}/demo/index.html`);
 };
