@@ -14,6 +14,14 @@ function getPropertyType(type) {
   return translate[type] || type;
 }
 
+function parseValue(type, value) {
+  if (type === 'list') {
+    value = [];
+  }
+
+  return value;
+}
+
 function createPropertyFile(componentBaseDir) {
   var name = path.basename(componentBaseDir);
   var filePath = path.resolve(componentBaseDir, `${name}.html`);
@@ -54,7 +62,7 @@ function createPropertyFile(componentBaseDir) {
         //display name
         propObj.name = prop.name;
         propObj.type = type;
-        propObj.value = prop.default;
+        propObj.value = parseValue(type, prop.default);
       });
 
       return {

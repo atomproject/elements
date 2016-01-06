@@ -15,6 +15,7 @@ get_val() {
 handle_logs_and_exit() {
 	cat github-*.log travis-*.log >setup.log
 	rm github-*.log travis-*.log
+	exit 1
 }
 
 if ! git remote show upstream &>/dev/null
