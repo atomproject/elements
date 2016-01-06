@@ -217,4 +217,7 @@ then
 	handle_logs_and_exit
 fi
 
+git commit -m "Build Travis" --allow-empty
+git push origin master
+
 handle_logs_and_exit
