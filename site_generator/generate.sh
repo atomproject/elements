@@ -58,12 +58,6 @@ do
 
 		popd &>/dev/null
 	fi
-
-	if ! [[ -f "$dir/bower_components/$name/property.json" ]]
-	then
-		echo "Create: property.json file for $name"
-		node site_generator/generate-property.js "$dir/bower_components/$name"
-	fi
 done
 
 # STEP 3: Generate the pages of site

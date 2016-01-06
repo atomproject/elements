@@ -1,4 +1,8 @@
 <script src="../../scripts/lodash.custom.js"></script>
+<!-- polyfill for promises -->
+<script type="text/javascript" src="../../bower_components/es6-promise/promise.js"></script>
+<script type="text/javascript" src="../../bower_components/fetch/fetch.js"></script>
+
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
 <link rel="import" href="../../bower_components/t-input/t-input.html">
@@ -118,8 +122,6 @@
                 </div>
             </div>
         </div>
-        <iron-ajax id="call" url="{{propertySource}}" handleAs="json" on-response="_handleResponse" on-error="_handleError">
-        </iron-ajax>
         <iron-ajax id="apiMetadata" handleAs="json" on-response="_handleApiResponse" on-error="_handleError"></iron-ajax>
     </template>
 </dom-module>
@@ -170,9 +172,41 @@ Polymer({
         }
     },
 
-    attached: function() {
-        if (this.propertySource !== '')
-            this.$.call.generateRequest();
+    getJson: function(url) {
+        return fetch(url).then(function(resp) {
+            //TODO: will other response status codes do for our task?
+            if (resp.status === 200) {
+                return resp.json();
+            }
+
+            return Promise.reject();
+        }.bind(this));
+    },
+
+    ready: function() {
+        var errorMessage = "Error occured while retrieving properties.";
+
+        if (this.propertySource !== '') {
+            this.getJson(this.propertySource)
+                //we did not find property.json file
+                //get it from the the element itself if possible
+                .catch(function() {
+                    return new Promise(function(resolve, reject) {
+                        var methodName = 'propertyJsonChanged';
+                        var eventName = 'generate-property-json';
+
+                        this[methodName] = function(event) {
+                            resolve(event.detail);
+                        };
+
+                        Polymer.Base.listen(this, eventName, methodName);
+                    }.bind(this));
+                }.bind(this))
+                //we did find property.json
+                .then(this._handleResponse.bind(this));
+                //we can't build the component panel
+                // .catch(this._handleError.bind(this));
+        }
     },
 
     _isTypeMatching: function(metadata, key, type) {
@@ -232,45 +266,38 @@ Polymer({
         return keys;
     },
 
-    _handleResponse: function(event) {
+    _handleResponse: function(propertyJson) {
         var metadata = {};
-        var errorMessage = "Error occured while retrieving properties.";
 
-        this.isDataComponent = false;
+        this.panelName = propertyJson.name;
+        this._sections = propertyJson.properties;
 
-        if (event.detail.response != null) {
-            this.panelName = event.detail.response.name;
-            this._sections = event.detail.response.properties;
+        //each property panel consists of multiple sections
+        this._sections.forEach(function(section) {
+            //sections contains an object `fields` which
+            //is a map of property names and it's metadata
+            var fieldKeys = Object.keys(section.fields);
 
-            //each property panel consists of multiple sections
-            this._sections.forEach(function(section) {
-                //sections contains an object `fields` which
-                //is a map of property names and it's metadata
-                var fieldKeys = Object.keys(section.fields);
+            //each value in fieldKeys is the name of
+            //the property to be displayed
+            fieldKeys.forEach(function(propertyKey) {
+                //property is the metadata associated with
+                //the current property
+                var property = section.fields[propertyKey];
+                var value = property.value;
 
-                //each value in fieldKeys is the name of
-                //the property to be displayed
-                fieldKeys.forEach(function(propertyKey) {
-                    //property is the metadata associated with
-                    //the current property
-                    var property = section.fields[propertyKey];
-                    var value = property.value;
+                metadata[propertyKey] = property;
 
-                    metadata[propertyKey] = property;
-
-                    if (value !== undefined) {
-                        //value is the initial value of the property
-                        this.fire('path-changed', {
-                            path: propertyKey, value: property.value
-                        });
-                    }
-                }.bind(this));
+                if (value !== undefined) {
+                    //value is the initial value of the property
+                    this.fire('path-changed', {
+                        path: propertyKey, value: property.value
+                    });
+                }
             }.bind(this));
+        }.bind(this));
 
-            this._metadata = metadata;
-        } else {
-            this.$.controller.textContent = errorMessage;
-        }
+        this._metadata = metadata;
     },
 
     _handleApiResponse: function(e, response) {

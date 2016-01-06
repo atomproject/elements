@@ -115,6 +115,7 @@
         filterWidth: String,
         propertiesFile: String,
         componentName: String,
+        componentDisplayName: String,
         componentHtml: String,
         demoFile: String,
         orgName: String,
@@ -180,6 +181,7 @@
         if (targetComponent) {
           this._demoComponent = targetComponent;
           this.applyProperties();
+          this.generatePropertyJson();
         }
       },
 
@@ -206,14 +208,15 @@
       },
 
       canBeChanged: function(propertyAttributes) {
-        var defaultValue, isComputed, isReadOnly;
+        var defaultValue, isComputed, isReadOnly, private;
 
         isComputed = propertyAttributes.computed;
         isReadOnly = propertyAttributes.readOnly;
+        private = propertyAttributes.private;
 
         //if the property is a computed or read only property then
         //don't touch it
-        if (isComputed || isReadOnly) {
+        if (isComputed || isReadOnly || private) {
           return false;
         }
 
@@ -283,6 +286,46 @@
             this.$.code.set('componentAttributes.' + propertyKey, value);
           }
         }.bind(this));
+      },
+
+      translateType: function(ctor) {
+        var type = ctor.name;
+
+        return type ? type.toLowerCase() : '';
+      },
+
+      generatePropertyJson: function() {
+        var properties = this._demoComponent.properties;
+        var propertyKeys = Object.keys(properties);
+        var propertyJson = {
+          name: this.componentDisplayName,
+          properties: [{
+            name: "Properties",
+            fields: {}
+          }]
+        };
+        var fields = propertyJson.properties[0].fields;
+
+        propertyKeys.forEach(function(propertyKey) {
+          var propertyAttributes = this._demoComponent.properties[propertyKey];
+          var propObj = {};
+
+          if (!this.canBeChanged(propertyAttributes)) {
+            return;
+          }
+
+          propObj.name = propertyKey;
+          propObj.type = this.translateType(propertyAttributes.type);
+          propObj.value = this._demoComponent[propertyKey];
+
+          if (!propObj.type) {
+            return;
+          }
+
+          fields[propertyKey] = propObj;
+        }.bind(this));
+
+        this.$.componentPanel.fire('generate-propery-json' , propertyJson);
       },
 
       //this callback is triggered on the `path-chaned` event
