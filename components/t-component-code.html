@@ -48,7 +48,7 @@
 				font-size: inherit;
 			}
 		</style>
-		
+
 		<h3>Element code</h3>
 		<highlightjs-element text="{{elementCode}}">
 		</highlightjs-element>
@@ -171,8 +171,8 @@
 				//we can't have either script start tag or script end tag inside
 				//the string literal because polymer html parser dies
 				imports.push('<' + 'script type="text/javascript" src="' + polyfillSrc + '"></' + 'script' + '>');
-				imports.push('<link rel="import" href="' + componentSrc + '">')
-				imports.push('<link rel="import" href="' + themeSrc + '">')
+				imports.push('<link rel="import" href="' + componentSrc + '">');
+				imports.push('<link rel="import" href="' + themeSrc + '">');
 
 				return imports.join('\n');
 			},

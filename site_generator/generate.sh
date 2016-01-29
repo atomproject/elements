@@ -42,21 +42,21 @@ do
 
 	if ! [[ -d "$dir/bower_components" ]]
 	then
-		pushd "$dir" &>/dev/null
+		pushd "$dir" >/dev/null
 
 		echo "Clone: $dep"
-		curl "$dep" -L &>/dev/null >archive.tar.gz
+		curl "$dep" -L 2>/dev/null >archive.tar.gz
 		echo "Extract: $name-master"
-		tar -xvf archive.tar.gz &>/dev/null
+		tar -xvf archive.tar.gz >/dev/null
 		ndir="$name-master"
 		bow="$(readlink -f "$ndir/bower.json")"
 		cp "$bow" ./
 		echo "Install: $name"
-		bower install &>/dev/null
+		bower install >/dev/null
 		rm bower.json
 		mv "$ndir" bower_components/"$name"
 
-		popd &>/dev/null
+		popd >/dev/null
 	fi
 
 	if ! [[ -f "$dir/bower_components/$name/property.json" ]]
