@@ -13,6 +13,6 @@ getConfig().then(config => {
 
     dep = `${loc.githubUser}/${loc.githubRepo}`;
 
-    console.log(`${el.name}:${el.pageDirName}:${dep}`)
-  });  
+    console.log(`${el.name}:${el.pageDirName}:${dep}`);
+  });
 });

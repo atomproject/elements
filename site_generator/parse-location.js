@@ -41,4 +41,4 @@ module.exports = function (location) {
   } else {
     return parseGit(location);
   }
-}
+};

@@ -104,8 +104,8 @@
 				});
 
 				if (Boolean(undefinedIds.length)) {
-					console.log("Some components don't have travis setup.");
-					console.log("No status will be shown");
+					console.log('Some components don\'t have travis setup.');
+					console.log('No status will be shown');
 
 					return;
 				}
@@ -128,7 +128,7 @@
 					//1. Travis hasn't been setup for some element
 					//2. Master branch hasn't been built for some element
 					//3. Network or some other error happened
-					console.warn("No status will be shown");
+					console.warn('No status will be shown');
 				});
 			},
 

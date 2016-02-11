@@ -12,7 +12,7 @@ var defaultConfig = {
   pagesDir: 'pages',
   baseurl: '',
   showDemoTester: true,
-  travisBaseUrl: "https://travis-ci.org",
+  travisBaseUrl: 'https://travis-ci.org',
   markdownExtensions: ['.md']
 };
 
@@ -37,7 +37,7 @@ function extractInnerHtml(name, fpath) {
   }).join('');
 
   return innerHTML;
-};
+}
 
 function ElementContext(el, config) {
   var loc, travisBaseUrl = config.travisBaseUrl;
@@ -68,7 +68,7 @@ function ElementContext(el, config) {
   this.propertyFile = `${elDir}/property.json`;
   this.designDoc = '\n' + tryReadFile(`${elDir}/design-doc.md`);
   this.innerHtml = extractInnerHtml(this.name, `${elDir}/demo/index.html`);
-};
+}
 
 function getConfig() {
   var filePath = 'bower_components/config/metadata.json';
