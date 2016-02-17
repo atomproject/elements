@@ -1,10 +1,14 @@
-﻿html, body {
+html, body {
     height: 100%;
     width: 100%;
     margin: 0;
     overflow: hidden;
     color:#333;
     font-family: "Open Sans";
+}
+
+paper-tab, paper-item {
+  font-family: inherit !important;
 }
 
 /*Styles for login page*/
@@ -87,7 +91,7 @@ t-button.btn-green  {
 }
 
 t-button.btn-white paper-button {
-    padding:5px 10px;
+    padding: 15px 18px;
 }
 
 t-button.btn-white  {
@@ -195,5 +199,35 @@ pre {
 
 build-status {
   padding: 0 16px;
+}
+
+.nav-panel {
+  padding: 0;
+}
+
+.nav-panel paper-menu.menu-content {
+  margin-left: 15px;
+}
+
+.nav-panel paper-item:focus:before,
+.nav-panel paper-item:focus:after {
+  background-color: transparent !important;
+}
+
+.nav-panel paper-item {
+  font-size: 13px;
+  color: #555555;
+}
+
+.nav-panel paper-item .label {
+  flex: 1 1 auto;
+}
+
+.nav-panel paper-item iron-icon {
+  flex: 0 0 auto;
+}
+
+.nav-panel .top {
+  border-top: 1px solid #bbbbbb;
 }
 /***********************/

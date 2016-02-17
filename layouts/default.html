@@ -2,96 +2,107 @@
 <html>
 <head>
 
-    {% include head.html %}
+  {% include head.html %}
 
 </head>
 <body class="layout horizontal center center-justified">
 
-    <div class="overlay"></div>
+  <div class="overlay"></div>
 
-    <t-scaffold id="scaff" scaffold-type="atom">
-        <nav-toolbar>
-            <div class="product-logo" >
-                <a href="{{ site.baseurl }}/">
-                    <img src="{{ site.baseurl }}/assets/logos/atom-grey.png" id="prod_brand" />
-                </a>
-            </div>
-        </nav-toolbar>
+  <t-scaffold id="scaff" scaffold-type="atom">
+    <nav-toolbar>
+      <div class="product-logo" >
+        <a href="{{ site.baseurl }}/">
+          <img src="{{ site.baseurl }}/assets/logos/atom-grey.png" id="prod_brand" />
+        </a>
+      </div>
+    </nav-toolbar>
 
-        <header-toolbar style="width:100%">
-            <div class="horizontal layout center">
-                {% if page.name %}
-                    <span id="selectedComponent">{{ page.displayName }}</span>
-                    {% if page.linkToTravis %}
-                        <a class="buildStatus" href="{{ page.linkToTravis }}">
-                            <img src="{{ page.buildStatusUrl }}" alt="Build Status">
-                        </a>
-                    {% endif %}
-                {% else %}
-                    <span id="selectedComponent">{{ page.title }}</span>
-                {% endif %}
-                <span class="flex"></span>
-                <span class="badge-alpha-testing">Alpha</span>
-            </div>
-        </header-toolbar>
+    <header-toolbar style="width:100%">
+      <div class="horizontal layout center">
+        {% if page.name %}
+          <span id="selectedComponent">{{ page.displayName }}</span>
+          {% if page.linkToTravis %}
+            <a class="buildStatus" href="{{ page.linkToTravis }}">
+              <img src="{{ page.buildStatusUrl }}" alt="Build Status">
+            </a>
+          {% endif %}
+        {% else %}
+          <span id="selectedComponent">{{ page.title }}</span>
+        {% endif %}
+        <span class="flex"></span>
+        <span class="badge-alpha-testing">Alpha</span>
+      </div>
+    </header-toolbar>
 
-        <nav-content>
-            <t-menu>
-                <t-item onClick="redirect('{{ site.baseurl }}/about')" label="About"></t-item>
-                <t-submenu aria-selected class="iron-selected" label="Elements" >
-                    {% for category in site.categories %}
-                        <t-submenu
-                            label="{{ category.displayName }}"
-                            {% if page.category == category.name %} aria-selected {% endif %}>
-                            {% for component in category.elements %}
-                                <t-item
-                                    class="component-link"
-                                    label="{{ component.displayName }}"
-                                    data-component="{{ component.name }}"
-                                    onclick="redirect('{{ component.pageUrl }}')"
-                                    data-category="{{ category.name }}"
-                                    {% if page.category == category.name and page.name == component.name %} aria-selected {% endif %}>
-                                </t-item>
-                            {% endfor %}
-                        </t-submenu>
-                    {% endfor %}
+    <nav-content>
+      <paper-menu class="nav-panel">
+        <paper-item class="top" onClick="redirect('{{ site.baseurl }}/about')">About</paper-item>
+        <paper-submenu aria-selected class="iron-selected">
+          <paper-item class="top menu-trigger">
+            <span class="label">Elements</span>
+            <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+          </paper-item>
+          <paper-menu class="menu-content">
+          {% for category in site.categories %}
+            <paper-submenu {% if page.category == category.name %} aria-selected {% endif %}>
+              <paper-item class="menu-trigger">
+                <span class="label">{{ category.displayName }}</span>
+                <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+              </paper-item>
+              <paper-menu class="menu-content">
+                {% for component in category.elements %}
+                  <paper-item
+                    class="component-link"
+                    data-component="{{ component.name }}"
+                    onclick="redirect('{{ component.pageUrl }}')"
+                    data-category="{{ category.name }}"
+                    {% if page.category == category.name and page.name == component.name %} aria-selected {% endif %}>
 
-                    {% for component in site.elements %}
-                        {% unless component.category %}
-                            <t-item
-                                class="component-link"
-                                label="{{ component.displayName }}"
-                                data-component="{{ component.name }}"
-                                onclick="redirect('{{ component.pageUrl }}')"
-                                {% if page.name == component.name %} aria-selected {% endif %}>
-                            </t-item>
-                        {% endunless %}
-                    {% endfor %}
-                </t-submenu>
-                <t-item onClick="redirect('{{ site.baseurl }}/settings')" label="Settings"></t-item>
-            </t-menu>
-        </nav-content>
+                    {{ component.displayName }}
+                  </paper-item>
+                {% endfor %}
+              </paper-menu>
+            </paper-submenu>
+          {% endfor %}
 
-        <build-status element-ids-file-path="{{ site.baseurl }}/element-ids.json"></build-status>
+          {% for component in site.elements %}
+            {% unless component.category %}
+              <paper-item
+                class="component-link"
+                data-component="{{ component.name }}"
+                onclick="redirect('{{ component.pageUrl }}')"
+                {% if page.name == component.name %} aria-selected {% endif %}>
+                {{ component.displayName }}
+              </paper-item>
+            {% endunless %}
+          {% endfor %}
+          </paper-menu>
+        </paper-submenu>
+        <paper-item class="top" onClick="redirect('{{ site.baseurl }}/settings')">Settings</paper-item>
+      </paper-menu>
+    </nav-content>
 
-        {{ content }}
-    </t-scaffold>
+    <build-status element-ids-file-path="{{ site.baseurl }}/element-ids.json"></build-status>
 
-    <script>
-        window.addEventListener('WebComponentsReady', function (e) {
-            var overlay = document.querySelector('.overlay');
+    {{ content }}
+  </t-scaffold>
 
-            if (overlay) {
-                overlay.style.display = 'none';
-            }
-        });
+  <script>
+    window.addEventListener('WebComponentsReady', function (e) {
+      var overlay = document.querySelector('.overlay');
 
-        //this is __BAD__, first of all it shouldn't be global function
-        //second if this function doesn't do much apart from simple plain
-        //redirection then it should be handled using anchor tags
-        function redirect(url) {
-            window.location = url;
-        }
-    </script>
+      if (overlay) {
+        overlay.style.display = 'none';
+      }
+    });
+
+    //this is __BAD__, first of all it shouldn't be global function
+    //second if this function doesn't do much apart from simple plain
+    //redirection then it should be handled using anchor tags
+    function redirect(url) {
+      window.location = url;
+    }
+  </script>
 </body>
 </html>
