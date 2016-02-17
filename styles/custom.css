@@ -1,10 +1,14 @@
-﻿html, body {
+html, body {
     height: 100%;
     width: 100%;
     margin: 0;
     overflow: hidden;
     color:#333;
     font-family: "Open Sans";
+}
+
+paper-tab {
+  font-family: inherit !important;
 }
 
 /*Styles for login page*/
@@ -87,7 +91,7 @@ t-button.btn-green  {
 }
 
 t-button.btn-white paper-button {
-    padding:5px 10px;
+    padding: 15px 18px;
 }
 
 t-button.btn-white  {

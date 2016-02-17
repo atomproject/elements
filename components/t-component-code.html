@@ -66,7 +66,7 @@
 			</p>
 
 			<h4>Option 1: CDN (Recommended for quick and simple usage)</h4>
-			<highlightjs-element text="{{cdnImports(componentName, orgName)}}">
+			<highlightjs-element text="{{cdnImports(componentName, componentDisplayName)}}">
 			</highlightjs-element>
 
 			<h4>Option 2: Bower (Recommended for production usage)</h4>
@@ -78,7 +78,7 @@
 				</highlightjs-element>
 
 				<h5>Include the files</h5>
-				<highlightjs-element text="{{bowerImports(componentName, orgName)}}">
+				<highlightjs-element text="{{bowerImports(componentName)}}">
 				</highlightjs-element>
 			</div>
 		</div>
@@ -108,6 +108,10 @@
 					observer: 'nameChanged'
 				},
 
+        componentDisplayName: {
+          type: String,
+        },
+
 				componentHtml: {
 					type: String
 				},
@@ -136,14 +140,15 @@
 				return installs;
 			},
 
-			cdnImports: function(name, orgName) {
-				var baseDomain = 'https://atomproject.github.io/elements/bower_components';
+			cdnImports: function(name, displayName) {
+				var baseDomain = 'https://atomproject.github.io/elements/';
 				var polyfillSrc = 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.18/webcomponents-lite.min.js';
 				//TODO: the component repo name can be different, handle it.
 				var componentRepoName = name;
 				var componentSrc = '/' + componentRepoName + '/' + name + '.html';
 				var themeSrc = '/t-shared-components/theme.html';
 
+        baseDomain = displayName + '/bower_components';
 				componentSrc = baseDomain + componentSrc;
 				themeSrc = baseDomain + themeSrc;
 
