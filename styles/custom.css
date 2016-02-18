@@ -100,6 +100,10 @@ t-button.btn-white  {
   margin:0 25px;
 }
 
+t-menu paper-item[focused]:before {
+  background-color: rgba(0, 0, 0, 0);
+}
+
 .signin-box t-button.btn-white.btn-white,
 .signin-box t-button.btn-white.btn-white paper-button {
   display:block;
