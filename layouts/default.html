@@ -36,28 +36,28 @@
     </header-toolbar>
 
     <nav-content>
-      <paper-menu class="nav-panel">
+      <paper-menu class="nav-panel" selected="1">
         <paper-item class="top" onClick="redirect('{{ site.baseurl }}/about/')">About</paper-item>
-        <paper-submenu aria-selected class="iron-selected">
-          <paper-item class="top menu-trigger">
+        <paper-submenu opened>
+          <paper-item class="top menu-trigger iron-selected">
             <span class="label">Elements</span>
             <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
           </paper-item>
           <paper-menu class="menu-content">
           {% for category in site.categories %}
-            <paper-submenu {% if page.category == category.name %} aria-selected {% endif %}>
-              <paper-item class="menu-trigger">
+            <paper-submenu {% if page.category == category.name %} opened {% endif %}>
+              <paper-item class="menu-trigger {% if page.category == category.name %} iron-selected {% endif %}">
                 <span class="label">{{ category.displayName }}</span>
                 <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
               </paper-item>
-              <paper-menu class="menu-content">
+              <paper-menu class="menu-content" selected="{{ page.indexInCategory }}">
                 {% for component in category.elements %}
                   <paper-item
-                    class="component-link"
+                    class="component-link {% if page.name == component.name %} iron-selected {% endif %}"
+                    {% if page.name == component.name %} active {% endif %}
                     data-component="{{ component.name }}"
                     onclick="redirect('{{ component.pageUrl }}')"
-                    data-category="{{ category.name }}"
-                    {% if page.category == category.name and page.name == component.name %} aria-selected {% endif %}>
+                    data-category="{{ category.name }}">
 
                     {{ component.displayName }}
                   </paper-item>
@@ -69,10 +69,10 @@
           {% for component in site.elements %}
             {% unless component.category %}
               <paper-item
-                class="component-link"
+                class="component-link {% if page.name == component.name %} iron-selected {% endif %}"
+                {% if page.name == component.name %} active {% endif %}
                 data-component="{{ component.name }}"
-                onclick="redirect('{{ component.pageUrl }}')"
-                {% if page.name == component.name %} aria-selected {% endif %}>
+                onclick="redirect('{{ component.pageUrl }}')">
                 {{ component.displayName }}
               </paper-item>
             {% endunless %}

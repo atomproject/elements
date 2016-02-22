@@ -68,6 +68,9 @@ function ElementContext(el, config) {
   this.propertyFile = `${elDir}/property.json`;
   this.designDoc = '\n' + tryReadFile(`${elDir}/design-doc.md`);
   this.innerHtml = extractInnerHtml(this.name, `${elDir}/demo/index.html`);
+
+  // this will be set later in `getConfig`
+  this.indexInCategory = 0;
 };
 
 function getConfig() {
@@ -80,10 +83,13 @@ function getConfig() {
   return readFile(filePath, 'utf-8').then(config => {
     config = JSON.parse(config);
     config = Object.assign({}, defaultConfig, config);
+
     config.elements = config.elements.map(el => new ElementContext(el, config));
     config.categories = config.categories.map(cat => {
       var elements = config.elements.filter(el => el.category === cat.name);
+      elements.forEach((el, index) => el.indexInCategory = index);
       cat.elements = elements;
+
       return cat;
     });
 
