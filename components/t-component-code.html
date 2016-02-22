@@ -108,9 +108,9 @@
 					observer: 'nameChanged'
 				},
 
-        componentDisplayName: {
-          type: String,
-        },
+		        componentDisplayName: {
+		          type: String,
+		        },
 
 				componentHtml: {
 					type: String
@@ -148,7 +148,7 @@
 				var componentSrc = '/' + componentRepoName + '/' + name + '.html';
 				var themeSrc = '/t-shared-components/theme.html';
 
-        baseDomain += displayName + '/bower_components';
+		        baseDomain += displayName + '/bower_components';
 				componentSrc = baseDomain + componentSrc;
 				themeSrc = baseDomain + themeSrc;
 
@@ -176,8 +176,8 @@
 				//we can't have either script start tag or script end tag inside
 				//the string literal because polymer html parser dies
 				imports.push('<' + 'script type="text/javascript" src="' + polyfillSrc + '"></' + 'script' + '>');
-				imports.push('<link rel="import" href="' + componentSrc + '">')
-				imports.push('<link rel="import" href="' + themeSrc + '">')
+				imports.push('<link rel="import" href="' + componentSrc + '">');
+				imports.push('<link rel="import" href="' + themeSrc + '">');
 
 				return imports.join('\n');
 			},
