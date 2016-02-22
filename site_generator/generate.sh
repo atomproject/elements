@@ -9,7 +9,7 @@ ifncp() {
 	fi
 }
 
-dirs=(assets bower_components components scripts styles)
+dirs=(assets bower_components components scripts styles favicon.ico)
 
 # STEP 1: Install the data
 if ! [[ -f "bower_components/config/metadata.json" ]]

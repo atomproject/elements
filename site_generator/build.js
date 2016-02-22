@@ -89,8 +89,13 @@ function createPage(filePath, config) {
       var pagePath;
 
       outDir = path.resolve(pathObj.dir).replace(pagesDir, outDir);
-      mkdirp(outDir);
-      pagePath = path.join(outDir, `${pathObj.name}.html`);
+
+      if (pathObj.name !== 'index') {
+        outDir = path.join(outDir, pathObj.name);
+      }
+
+      mkdirp.sync(outDir);
+      pagePath = path.join(outDir, `index.html`);
 
       console.log(`Build: ${pagePath}`);
       fs.writeFileSync(pagePath, page);

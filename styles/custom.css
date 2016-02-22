@@ -201,7 +201,8 @@ build-status {
   padding: 0 16px;
 }
 
-.nav-panel {
+.nav-panel,
+.nav-panel paper-menu {
   padding: 0;
 }
 
