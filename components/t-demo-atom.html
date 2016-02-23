@@ -5,7 +5,7 @@
 <link rel="import" href="../bower_components/t-device-view/t-device-view.html">
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../bower_components/t-button/t-button.html">
-<link rel="import" href="t-component-panel/t-component-panel.html">
+<link rel="import" href="../bower_components/t-component-panel/t-component-panel.html">
 <link rel="import" href="t-component-code.html">
 <link rel="import" href="t-device-toggle.html">
 
@@ -247,6 +247,21 @@
           !_.isEqual(defaultValue, currentValue);
       },
 
+      getPanelProperties: function() {
+        var sections = this.$.componentPanel.sections || [];
+        var properties = {};
+
+        sections.forEach(function(section) {
+          section.attributes.forEach(function(attrib) {
+            if (!attrib.valueUndefined) {
+              properties[attrib.key] = attrib;
+            }
+          });
+        });
+
+        return properties;
+      },
+
       //Call this method when component to be demoed is available in DOM.
       //Get default property values of the element and show them as attributes
       //in the HTML code
@@ -256,7 +271,7 @@
         var propertyKeys = Object.keys(properties);
 
         propertyKeys.forEach(function(propertyKey) {
-          var panelProperties = this.$.componentPanel._metadata || {};
+          var panelProperties = this.getPanelProperties();
           //get the attributes of the property, this is kind of _reflection_
           var propertyAttributes = this._demoComponent.properties[propertyKey];
           var value, defaultValue, currentValue, applyCurrentValue;

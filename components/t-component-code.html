@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="highlightjs-element/highlightjs-element.html">
+<link rel="import" href="../bower_components/code-generator-behavior/code-generator-behavior.html">
 
 <script type="text/javascript" src="../bower_components/js-beautify/js/lib/beautify-html.js"></script>
 
@@ -96,6 +97,10 @@
 		Polymer({
 			is: 't-component-code',
 
+			behaviors: [
+				Polymer.CodeGeneratorBehavior,
+			],
+
 			properties: {
 				elementCode: {
 					type: String,
@@ -188,78 +193,12 @@
 			},
 
 			updateCode: function() {
-				var attributes = Object.keys(this.componentAttributes || {});
-				var startTag, endTag, innerHTML, code;
-
-				if (!this.componentName) {
-					return;
-				}
-
-				endTag = '</' + this.componentName + '>';
-				innerHTML = this.componentHtml || '';
-				//iterate over all the attributes and create
-				//the attribute list for use in start tag
-				attributes = this.serializeAttributes(attributes);
-
-				attributes = attributes ? (' ' + attributes) : '';
-				startTag = '<' + this.componentName + attributes + '>';
-
-				code = startTag + innerHTML + endTag;
-
+				var name = this.componentName;
+				var attribs = this.componentAttributes;
+				var innerHTML = this.componentHtml;
+				var code = this.getComponentCode(name, attribs, innerHTML);
+				
 				return window.html_beautify(code, this.beautifyOpts);
-			},
-
-			serializeAttributes: function(attributes) {
-				return attributes.map(function(attr) {
-					var attrVal = this.componentAttributes[attr];
-					var quoteChar = '"';
-					var serializedAttr = [];
-
-					attr = Polymer.CaseMap.camelToDashCase(attr);
-
-					//attribute values can be of only two types
-					//Boolean or String
-					if (this.isBoolean(attrVal)) {
-						if (attrVal) {
-							//only output the attribute
-							return attr;
-						} else {
-							return;
-						}
-					}
-
-					//so the value is not Boolean then it is of type String
-					attrVal = this.serialize(attrVal);
-					attrVal = attrVal.toString();
-
-					//properly escape the attribute value
-					if (attrVal.indexOf('"') !== -1) {
-						if (attrVal.indexOf("'") !== -1) {
-							attrVal = attrVal.replace(/"/g, '&quot;');
-						} else {
-							quoteChar = "'";
-						}
-					}
-
-					//output the attribute and value pair
-					serializedAttr.push(attr);
-					serializedAttr.push('=');
-					serializedAttr.push(quoteChar);
-					serializedAttr.push(attrVal);
-					serializedAttr.push(quoteChar);
-
-					return serializedAttr.join('');
-				}.bind(this)).filter(function(item) {
-					//remove the falsy items from the list
-					return Boolean(item);
-				}).join(' ');
-			},
-
-			isBoolean: function(value) {
-				var toString = Object.prototype.toString;
-
-				//better than `typeof`
-				return toString.call(value) === '[object Boolean]';
 			}
 		});
 	</script>
