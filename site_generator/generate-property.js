@@ -25,9 +25,9 @@ function createPropertyFile(componentBaseDir) {
       var config = values.shift();
       var parsedElement = values.shift();
       var data = {
-        name: "",
+        name: '',
         properties: [{
-          name: "Properties",
+          name: 'Properties',
           fields: {}
         }]
       };

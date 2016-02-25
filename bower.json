@@ -40,7 +40,6 @@
     "paper-dialog": "polymerelements/paper-dialog#^1.0.3",
     "paper-dialog-scrollable": "polymerelements/paper-dialog-scrollable#^1.1.0",
     "paper-drawer-panel": "polymerelements/paper-drawer-panel#^1.0.5",
-    "highlightjs": "*",
     "fetch": "^0.10.1",
     "iframe-resizer": "^3.5.1",
     "particles.js": "^2.0.0",
@@ -57,6 +56,7 @@
     "es6-promise": "^3.0.2",
     "paper-menu": "polymerelements/paper-menu#^1.2.2",
     "code-generator-behavior": "atomproject/code-generator-behavior#^1.0.0",
-    "t-component-panel": "atomproject/t-component-panel#^1.0.0"
+    "t-component-panel": "atomproject/t-component-panel#^1.0.0",
+    "highlightjs-element": "atomproject/highlightjs-element#^1.0.0"
   }
 }
