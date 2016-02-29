@@ -69,6 +69,13 @@ function ElementContext(el, config) {
   this.designDoc = '\n' + tryReadFile(`${elDir}/design-doc.md`);
   this.innerHtml = extractInnerHtml(this.name, `${elDir}/demo/index.html`);
 
+  // TODO: This was not thought properly. Think it through.
+  // default value overrides
+  if (el.propertyFile) {
+    this.propertyFile = `_site/${el.propertyFile}`;
+    this.propertiesFileUrl = `${config.baseurl}/${el.propertyFile}`;
+  }
+
   // this will be set later in `getConfig`
   this.indexInCategory = 0;
 };

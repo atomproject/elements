@@ -21,7 +21,7 @@ function createPropertyFile(componentBaseDir) {
 
   return Promise.all([getConfig(), hydroPromise])
     .then(values => {
-      var displayName, element, filePath;
+      var displayName, element, filePath, fields;
       var config = values.shift();
       var parsedElement = values.shift();
       var data = {
@@ -32,6 +32,7 @@ function createPropertyFile(componentBaseDir) {
         }]
       };
 
+      fields = data.properties[0].fields;
       element = config.elements.find(el => el.name === name);
       data.name = element.displayName || name;
       filePath = element.propertyFile;
@@ -44,12 +45,12 @@ function createPropertyFile(componentBaseDir) {
       element.properties.forEach(prop => {
         var propObj, type = getPropertyType(prop.type);
 
-        if (type === 'function' || type === 'object' || prop.private) {
+        if (type === 'function' || prop.private) {
           return;
         }
 
         //property name
-        propObj = data.properties[0].fields[prop.name] = {};
+        propObj = fields[prop.name] = {};
 
         //display name
         propObj.name = prop.name;

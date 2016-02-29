@@ -52,9 +52,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <h4>Icon Value: <code>{{icon}}</code></h4>
     </div>
 
-
     <div class="section">
       <h4>List Values: <code>{{serialize(list)}}</code></h4>
+    </div>
+
+    <div class="section">
+      <h4>Object Value: <code>{{serialize(object)}}</code></h4>
     </div>
   </template>
   <script>
@@ -91,6 +94,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         range: {
           type: Number
+        },
+
+        object: {
+          type: Object
         }
       }
     });

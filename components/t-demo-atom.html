@@ -288,7 +288,7 @@
           if (propertyKey in panelProperties) {
             value = panelProperties[propertyKey].value;
 
-            if (value !== undefined) {
+            if (value !== undefined && value !== null) {
               this.updateTargets(propertyKey, value);
             }
           } else if (this.applyCurrentValue(defaultValue, currentValue,
