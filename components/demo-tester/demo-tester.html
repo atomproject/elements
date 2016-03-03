@@ -59,6 +59,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="section">
       <h4>Object Value: <code>{{serialize(object)}}</code></h4>
     </div>
+
+    <div class="section">
+      <h4>Array Value: <code>{{serialize(array)}}</code></h4>
+    </div>
   </template>
   <script>
   (function() {
@@ -98,6 +102,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         object: {
           type: Object
+        },
+
+        array: {
+          type: Array
         }
       }
     });
