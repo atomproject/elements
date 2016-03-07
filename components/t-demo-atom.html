@@ -243,7 +243,7 @@
         return currentValue !== undefined &&
           currentValue !== null &&
           !isNaN(currentValue) &&
-          currentValue.constructor === propertyAttributes.type &&
+          currentValue.constructor.name === propertyAttributes.type.name &&
           !_.isEqual(defaultValue, currentValue);
       },
 
