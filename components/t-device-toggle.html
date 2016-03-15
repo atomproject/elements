@@ -18,8 +18,9 @@
 
 			paper-button {
 			    color: #bbb;
-			    margin-left: 0;
-			    margin-right: 0;
+			    margin: 0;
+			    min-width: 0;
+			    padding: 8px 0;
 			}
 
 			paper-button[active],
@@ -42,24 +43,30 @@
 				-ms-transform: rotate(-90deg);
 				transform: rotate(-90deg);
 			}
+
+			tri-state-switch {
+				text-align: center;
+			}
 		</style>
 
 		<div class="layout horizontal">
-			<paper-button id="laptop" active on-tap="activateLaptop">
+			<paper-button class="flex" id="laptop" active on-tap="activateLaptop">
 				<iron-icon icon="hardware:laptop"></iron-icon>
 			</paper-button>
 
-			<tri-state-switch id="tablet" on-state-changed="activateTablet">
+			<tri-state-switch class="flex" id="tablet" on-state-changed="activateTablet">
 				<paper-button>
 					<iron-icon icon="hardware:tablet-mac"></iron-icon>
 				</paper-button>
 			</tri-state-switch>
 
-			<tri-state-switch id="phone" on-state-changed="activatePhone">
+			<tri-state-switch class="flex" id="phone" on-state-changed="activatePhone">
 				<paper-button>
 					<iron-icon icon="hardware:smartphone"></iron-icon>
 				</paper-button>
 			</tri-state-switch>
+
+			<content></content>
 		</div>	
 	</template>
 	<script>
@@ -99,7 +106,6 @@
 
 				this.changeLandscape(change);
 			},
-
 
 			activatePhone: function(event, change) {
 				if (change.value > -1) {
