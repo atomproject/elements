@@ -28,13 +28,6 @@ canvas {
     opacity: 1;
 }
 
-#particles-js {
-    background-color: #07c5f2;
-    background-size: cover;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-}
-
 .signin-box {
   text-align: center;
   top: 50%;
@@ -50,6 +43,11 @@ canvas {
     margin-bottom: 50px;
     color: white;
 }
+
+.signin-box .heading img {
+  height: 50px;
+}
+
 /*End style for login page*/
 
 .badge-alpha-testing {
@@ -95,8 +93,8 @@ t-button.btn-white paper-button {
 }
 
 t-button.btn-white  {
-  background: #fff;
-  color: #07c5f2;
+  background: #07c5f2;
+  color: #fff;
   margin:0 25px;
 }
 
@@ -230,5 +228,9 @@ build-status {
 
 .nav-panel .top {
   border-top: 1px solid #bbbbbb;
+}
+
+.product-logo img {
+  height: 25px;
 }
 /***********************/
