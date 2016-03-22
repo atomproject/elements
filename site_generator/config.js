@@ -1,5 +1,4 @@
 var fs = require('fs');
-var path = require('path');
 var slug = require('slug');
 var cheerio = require('cheerio');
 var locationParser = require('./parse-location');
@@ -12,7 +11,7 @@ var defaultConfig = {
   pagesDir: 'pages',
   baseurl: '',
   showDemoTester: true,
-  travisBaseUrl: "https://travis-ci.org",
+  travisBaseUrl: 'https://travis-ci.org',
   markdownExtensions: ['.md']
 };
 
@@ -25,8 +24,9 @@ function tryReadFile(filePath) {
 }
 
 function extractInnerHtml(name, fpath) {
-  text = tryReadFile(fpath);
+  var text, $, innerHTML;
 
+  text = tryReadFile(fpath);
   $ = cheerio.load(text);
   innerHTML = $(name).html() || '';
 
@@ -37,7 +37,7 @@ function extractInnerHtml(name, fpath) {
   }).join('');
 
   return innerHTML;
-};
+}
 
 function ElementContext(el, config) {
   var loc, travisBaseUrl = config.travisBaseUrl;
@@ -78,7 +78,7 @@ function ElementContext(el, config) {
 
   // this will be set later in `getConfig`
   this.indexInCategory = 0;
-};
+}
 
 function getConfig() {
   var filePath = 'bower_components/config/metadata.json';

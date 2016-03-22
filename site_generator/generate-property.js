@@ -21,7 +21,7 @@ function createPropertyFile(componentBaseDir) {
 
   return Promise.all([getConfig(), hydroPromise])
     .then(values => {
-      var displayName, element, filePath, fields;
+      var element, filePath, fields;
       var config = values.shift();
       var parsedElement = values.shift();
       var data = {

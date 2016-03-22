@@ -49,7 +49,7 @@
 				font-size: inherit;
 			}
 		</style>
-		
+
 		<h3>Element code</h3>
 		<highlightjs-element text="{{elementCode}}">
 		</highlightjs-element>
@@ -187,7 +187,7 @@
 				return imports.join('\n');
 			},
 
-			nameChanged: function(newName) {
+			nameChanged: function() {
 				this.componentAttributes = {};
 				this.componentHtml = '';
 			},
@@ -197,7 +197,7 @@
 				var attribs = this.componentAttributes;
 				var innerHTML = this.componentHtml;
 				var code = this.getComponentCode(name, attribs, innerHTML);
-				
+
 				return window.html_beautify(code, this.beautifyOpts);
 			}
 		});

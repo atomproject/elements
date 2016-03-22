@@ -27,7 +27,7 @@ function parseHttp(location) {
   };
 }
 
-function parseGit(location) {
+function parseGit() {
   throw new Error('Not implemented');
 }
 
@@ -41,4 +41,4 @@ module.exports = function (location) {
   } else {
     return parseGit(location);
   }
-}
+};

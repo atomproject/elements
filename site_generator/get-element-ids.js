@@ -1,8 +1,8 @@
 var fs = require('fs');
-var fetch = require('node-fetch');
+var nodeFetch = require('node-fetch');
 var baseApiEndPoint = 'https://api.travis-ci.org/repos';
 var getConfig = require('./config');
-var idFilePath = '_site/element-ids.json'
+var idFilePath = '_site/element-ids.json';
 
 
 function handleError(err) {
@@ -11,7 +11,7 @@ function handleError(err) {
 }
 
 function getJson(url) {
-	return fetch(url).then(function(resp) {
+	return nodeFetch(url).then(function(resp) {
 		//TODO: will other response status codes do for our task?
 		if (resp.status === 200) {
 			return resp.json();

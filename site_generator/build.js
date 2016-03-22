@@ -47,7 +47,7 @@ function renderLayout(queue, context) {
 }
 
 function createElementPage(elContext, config) {
-  var queue = resolveLayout('templates/github.html')
+  var queue = resolveLayout('templates/github.html');
   var fullContext = {
     site: config,
     page: elContext
@@ -105,7 +105,7 @@ function createPage(filePath, config) {
 
 getConfig().then(config => {
   //setup yaml parser engine
-  engine.fileSystem = new Liquid.LocalFileSystem;
+  engine.fileSystem = new Liquid.LocalFileSystem();
   engine.fileSystem.root = config.includesDir;
 
   //create the out dir

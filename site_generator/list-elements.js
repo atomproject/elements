@@ -1,6 +1,3 @@
-var path = require('path');
-var fs = require('fs');
-var slug = require('slug');
 var getConfig = require('./config');
 
 getConfig().then(config => {
@@ -13,6 +10,6 @@ getConfig().then(config => {
 
     dep = `${loc.githubUser}/${loc.githubRepo}`;
 
-    console.log(`${el.name}:${el.pageDirName}:${dep}`)
-  });  
+    console.log(`${el.name}:${el.pageDirName}:${dep}`);
+  });
 });
