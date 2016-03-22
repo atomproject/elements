@@ -7,7 +7,7 @@ layout: text-page
 Web Components are a set of standards that allow for the creation of custom HTML elements. With this, people can easily create elements which 
 
 * encapsulate functionality & style 
-* aid reusabiliy
+* aid reusability
 * provide semantic structure to their code
 * can update automatically across pages
 * and run wherever HTML does - with any framework, language or platform of choice
@@ -26,4 +26,4 @@ The ability to style these elements centrally using an interface is being worked
 
 Further documentation for the project can be found [here](https://github.com/atomproject/docs).
 
-To use this element browser interface for your elements, please see the setup guide. 
+To use this element browser interface for your elements, please see the [setup guide](https://github.com/atomproject/elements/blob/master/README.md). 
