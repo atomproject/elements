@@ -83,11 +83,8 @@ done
 # STEP 6: If in prod environment then vulcanize components
 if [[ "$1" == "--prod" ]]
 then
-	vulcanize --inline-script --strip-comments components/elements.html | \
-	crisper --script-in-head=false --html _site/components/elements.html --js _site/scripts/build.js
-
-  babel _site/scripts/build.js -o _site/scripts/temp.js -s
-  mv _site/scripts/temp.js _site/scripts/build.js
+	node_modules/vulcanize/bin/vulcanize --inline-script --strip-comments components/elements.html | \
+	node_modules/crisper/bin/crisper --script-in-head=false --html _site/components/elements.html --js _site/scripts/build.js
 fi
 
 echo ""
