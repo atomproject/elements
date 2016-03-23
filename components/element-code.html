@@ -5,201 +5,201 @@
 <script type="text/javascript" src="../bower_components/js-beautify/js/lib/beautify-html.js"></script>
 
 <dom-module id="element-code">
-	<template>
-		<style>
-			:host {
-				display: block;
-				font-size: 14px;
-				margin: 10px 0;
-			}
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-size: 14px;
+        margin: 10px 0;
+      }
 
-			[hidden] {
-				display: none;
-			}
+      [hidden] {
+        display: none;
+      }
 
-			highlightjs-element {
-				padding: 5px 0;
-				border: 1px solid;
-		        border-color: var(--grey-two);
-				border-radius: 5px;
-			}
+      highlightjs-element {
+        padding: 5px 0;
+        border: 1px solid;
+        border-color: var(--grey-two);
+        border-radius: 5px;
+      }
 
-			:host > * {
-				padding-left: 0.5em;
-			}
+      :host > * {
+        padding-left: 0.5em;
+      }
 
-			.step-1, .step-2 {
-				padding-left: 1em;
-			}
+      .step-1, .step-2 {
+        padding-left: 1em;
+      }
 
-			.substep {
-				padding-left: 1em;
-			}
+      .substep {
+        padding-left: 1em;
+      }
 
-			h3 {
-				font-weight: 600;
-				padding-top: 25px;
-			}
+      h3 {
+        font-weight: 600;
+        padding-top: 25px;
+      }
 
-			h4, h5 {
-				font-weight: normal;
-			}
+      h4, h5 {
+        font-weight: normal;
+      }
 
-			h5 {
-				font-size: inherit;
-			}
-		</style>
+      h5 {
+        font-size: inherit;
+      }
+    </style>
 
-		<h3>Element code</h3>
-		<highlightjs-element text="{{elCode}}">
-		</highlightjs-element>
+    <h3>Element code</h3>
+    <highlightjs-element text="{{elCode}}">
+    </highlightjs-element>
 
-		<h3>To use this element on a web page</h3>
+    <h3>To use this element on a web page</h3>
 
-		<h4>Step 1: Get the dependencies</h4>
-		<div class="step-1">
-			<p>
-				You need two files for using this element, the polyfill library
-				<code>webcomponentsjs</code> and <code><span>{{elName}}</span>.html</code> file,
-				the third file <code>theme.html</code> contains styles so that your element looks good.<br>
-				You can either use a package manager like <b>bower</b> to install the files and then
-				use them or a <b>CDN</b> to include the files directly on your web page.
-			</p>
+    <h4>Step 1: Get the dependencies</h4>
+    <div class="step-1">
+      <p>
+        You need two files for using this element, the polyfill library
+        <code>webcomponentsjs</code> and <code><span>{{elName}}</span>.html</code> file,
+        the third file <code>theme.html</code> contains styles so that your element looks good.<br>
+        You can either use a package manager like <b>bower</b> to install the files and then
+        use them or a <b>CDN</b> to include the files directly on your web page.
+      </p>
 
-			<h4>Option 1: CDN (Recommended for quick and simple usage)</h4>
-			<highlightjs-element text="{{cdnImports(elName, elDispName)}}">
-			</highlightjs-element>
+      <h4>Option 1: CDN (Recommended for quick and simple usage)</h4>
+      <highlightjs-element text="{{cdnImports(elName, elDispName)}}">
+      </highlightjs-element>
 
-			<h4>Option 2: Bower (Recommended for production usage)</h4>
+      <h4>Option 2: Bower (Recommended for production usage)</h4>
 
-			<div class="substep">
-				<h5>Install the libraries</h5>
-				<highlightjs-element lang="bash"
-					text="{{bowerInstalls(elName, elOrgName)}}">
-				</highlightjs-element>
+      <div class="substep">
+        <h5>Install the libraries</h5>
+        <highlightjs-element lang="bash"
+          text="{{bowerInstalls(elName, elOrgName)}}">
+        </highlightjs-element>
 
-				<h5>Include the files</h5>
-				<highlightjs-element text="{{bowerImports(elName)}}">
-				</highlightjs-element>
-			</div>
-		</div>
+        <h5>Include the files</h5>
+        <highlightjs-element text="{{bowerImports(elName)}}">
+        </highlightjs-element>
+      </div>
+    </div>
 
-		<h4>Step 2: Add the element code</h4>
-		<div class="step-2">
-			<p>
-				Once you've got the requisite depenedencies on your web page, all you need
-				to do is <b>copy</b> the code in <b>Element Code</b> section and paste it in
-				your web page.
-			</p>
-		</div>
-	</template>
-	<script>
-		Polymer({
-			is: 'element-code',
+    <h4>Step 2: Add the element code</h4>
+    <div class="step-2">
+      <p>
+        Once you've got the requisite depenedencies on your web page, all you need
+        to do is <b>copy</b> the code in <b>Element Code</b> section and paste it in
+        your web page.
+      </p>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'element-code',
 
-			behaviors: [
-				Polymer.CodeGeneratorBehavior,
-			],
+      behaviors: [
+        Polymer.CodeGeneratorBehavior,
+      ],
 
-			properties: {
-				elCode: {
-					type: String,
-					notify: true,
-					computed: 'updateCode(elName, elHtml, elAttribs.*)'
-				},
+      properties: {
+        elCode: {
+          type: String,
+          notify: true,
+          computed: 'updateCode(elName, elHtml, elAttribs.*)'
+        },
 
-				elName: {
-					type: String,
-					observer: 'nameChanged'
-				},
+        elName: {
+          type: String,
+          observer: 'nameChanged'
+        },
 
         elDispName: {
           type: String,
         },
 
-				elHtml: {
-					type: String
-				},
+        elHtml: {
+          type: String
+        },
 
-				elAttribs: {
-					type: Object
-				},
+        elAttribs: {
+          type: Object
+        },
 
-				elOrgName: {
-					type: String
-				}
-			},
+        elOrgName: {
+          type: String
+        }
+      },
 
-			//TODO: this will be set on prototype of the element, allow this?
-			beautifyOpts: {
-				wrap_line_length: 80,
-			},
+      //TODO: this will be set on prototype of the element, allow this?
+      beautifyOpts: {
+        wrap_line_length: 80,
+      },
 
-			bowerInstalls: function(elName, elOrgName) {
-				var installs = 'bower install --save ';
+      bowerInstalls: function(elName, elOrgName) {
+        var installs = 'bower install --save ';
 
-				installs += 'webcomponentsjs ';
-				installs += elOrgName + '/' + elName + ' ';
-				installs += elOrgName + '/t-shared-components ';
+        installs += 'webcomponentsjs ';
+        installs += elOrgName + '/' + elName + ' ';
+        installs += elOrgName + '/t-shared-components ';
 
-				return installs;
-			},
+        return installs;
+      },
 
-			cdnImports: function(elName, elDispName) {
-				var baseDomain = 'https://atomproject.github.io/elements/';
-				var polyfillSrc = 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.18/webcomponents-lite.min.js';
-				//TODO: the element repo name can be different, handle it.
-				var elRepoName = elName;
-				var elSrc = '/' + elRepoName + '/' + elName + '.html';
-				var themeSrc = '/t-shared-components/theme.html';
+      cdnImports: function(elName, elDispName) {
+        var baseDomain = 'https://atomproject.github.io/elements/';
+        var polyfillSrc = 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.18/webcomponents-lite.min.js';
+        //TODO: the element repo name can be different, handle it.
+        var elRepoName = elName;
+        var elSrc = '/' + elRepoName + '/' + elName + '.html';
+        var themeSrc = '/t-shared-components/theme.html';
 
         baseDomain += elDispName + '/bower_components';
-				elSrc = baseDomain + elSrc;
-				themeSrc = baseDomain + themeSrc;
+        elSrc = baseDomain + elSrc;
+        themeSrc = baseDomain + themeSrc;
 
-				return this.serializeImports(polyfillSrc, elSrc, themeSrc);
-			},
+        return this.serializeImports(polyfillSrc, elSrc, themeSrc);
+      },
 
-			bowerImports: function(elName) {
-				var baseDomain = '{{ path to bower_components dir }}';
-				var polyfillSrc = '/webcomponentsjs/webcomponents-lite.js';
-				//TODO: the element repo name can be different, handle it.
-				var elRepoName = elName;
-				var elSrc = '/' + elRepoName + '/' + elName + '.html';
-				var themeSrc = '/t-shared-components/theme.html';
+      bowerImports: function(elName) {
+        var baseDomain = '{{ path to bower_components dir }}';
+        var polyfillSrc = '/webcomponentsjs/webcomponents-lite.js';
+        //TODO: the element repo name can be different, handle it.
+        var elRepoName = elName;
+        var elSrc = '/' + elRepoName + '/' + elName + '.html';
+        var themeSrc = '/t-shared-components/theme.html';
 
-				polyfillSrc = baseDomain + polyfillSrc;
-				elSrc = baseDomain + elSrc;
-				themeSrc = baseDomain + themeSrc;
+        polyfillSrc = baseDomain + polyfillSrc;
+        elSrc = baseDomain + elSrc;
+        themeSrc = baseDomain + themeSrc;
 
-				return this.serializeImports(polyfillSrc, elSrc, themeSrc);
-			},
+        return this.serializeImports(polyfillSrc, elSrc, themeSrc);
+      },
 
-			serializeImports: function(polyfillSrc, elSrc, themeSrc) {
-				var imports = [];
+      serializeImports: function(polyfillSrc, elSrc, themeSrc) {
+        var imports = [];
 
-				//we can't have either script start tag or script end tag inside
-				//the string literal because polymer html parser dies
-				imports.push('<' + 'script type="text/javascript" src="' + polyfillSrc + '"></' + 'script' + '>');
-				imports.push('<link rel="import" href="' + elSrc + '">');
-				imports.push('<link rel="import" href="' + themeSrc + '">');
+        //we can't have either script start tag or script end tag inside
+        //the string literal because polymer html parser dies
+        imports.push('<' + 'script type="text/javascript" src="' + polyfillSrc + '"></' + 'script' + '>');
+        imports.push('<link rel="import" href="' + elSrc + '">');
+        imports.push('<link rel="import" href="' + themeSrc + '">');
 
-				return imports.join('\n');
-			},
+        return imports.join('\n');
+      },
 
-			nameChanged: function() {
-				this.elAttribs = {};
-				this.elHtml = '';
-			},
+      nameChanged: function() {
+        this.elAttribs = {};
+        this.elHtml = '';
+      },
 
-			updateCode: function() {
-				var name = this.elName;
-				var attribs = this.elAttribs;
-				var innerHTML = this.elHtml;
-				var code = this.getComponentCode(name, attribs, innerHTML);
+      updateCode: function() {
+        var name = this.elName;
+        var attribs = this.elAttribs;
+        var innerHTML = this.elHtml;
+        var code = this.getComponentCode(name, attribs, innerHTML);
 
-				return window.html_beautify(code, this.beautifyOpts);
-			}
-		});
-	</script>
+        return window.html_beautify(code, this.beautifyOpts);
+      }
+    });
+  </script>
 </dom-module>
