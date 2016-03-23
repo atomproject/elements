@@ -4,7 +4,7 @@
 
 <script type="text/javascript" src="../bower_components/js-beautify/js/lib/beautify-html.js"></script>
 
-<dom-module id="t-component-code">
+<dom-module id="element-code">
 	<template>
 		<style>
 			:host {
@@ -51,7 +51,7 @@
 		</style>
 
 		<h3>Element code</h3>
-		<highlightjs-element text="{{elementCode}}">
+		<highlightjs-element text="{{elCode}}">
 		</highlightjs-element>
 
 		<h3>To use this element on a web page</h3>
@@ -60,14 +60,14 @@
 		<div class="step-1">
 			<p>
 				You need two files for using this element, the polyfill library
-				<code>webcomponentsjs</code> and <code><span>{{componentName}}</span>.html</code> file,
-				the third file <code>theme.html</code> contains styles so that your component looks good.<br>
+				<code>webcomponentsjs</code> and <code><span>{{elName}}</span>.html</code> file,
+				the third file <code>theme.html</code> contains styles so that your element looks good.<br>
 				You can either use a package manager like <b>bower</b> to install the files and then
 				use them or a <b>CDN</b> to include the files directly on your web page.
 			</p>
 
 			<h4>Option 1: CDN (Recommended for quick and simple usage)</h4>
-			<highlightjs-element text="{{cdnImports(componentName, componentDisplayName)}}">
+			<highlightjs-element text="{{cdnImports(elName, elDispName)}}">
 			</highlightjs-element>
 
 			<h4>Option 2: Bower (Recommended for production usage)</h4>
@@ -75,11 +75,11 @@
 			<div class="substep">
 				<h5>Install the libraries</h5>
 				<highlightjs-element lang="bash"
-					text="{{bowerInstalls(componentName, orgName)}}">
+					text="{{bowerInstalls(elName, elOrgName)}}">
 				</highlightjs-element>
 
 				<h5>Include the files</h5>
-				<highlightjs-element text="{{bowerImports(componentName)}}">
+				<highlightjs-element text="{{bowerImports(elName)}}">
 				</highlightjs-element>
 			</div>
 		</div>
@@ -95,37 +95,37 @@
 	</template>
 	<script>
 		Polymer({
-			is: 't-component-code',
+			is: 'element-code',
 
 			behaviors: [
 				Polymer.CodeGeneratorBehavior,
 			],
 
 			properties: {
-				elementCode: {
+				elCode: {
 					type: String,
 					notify: true,
-					computed: 'updateCode(componentName, componentHtml, componentAttributes.*)'
+					computed: 'updateCode(elName, elHtml, elAttribs.*)'
 				},
 
-				componentName: {
+				elName: {
 					type: String,
 					observer: 'nameChanged'
 				},
 
-		        componentDisplayName: {
-		          type: String,
-		        },
+        elDispName: {
+          type: String,
+        },
 
-				componentHtml: {
+				elHtml: {
 					type: String
 				},
 
-				componentAttributes: {
+				elAttribs: {
 					type: Object
 				},
 
-				orgName: {
+				elOrgName: {
 					type: String
 				}
 			},
@@ -135,67 +135,67 @@
 				wrap_line_length: 80,
 			},
 
-			bowerInstalls: function(name, orgName) {
+			bowerInstalls: function(elName, elOrgName) {
 				var installs = 'bower install --save ';
 
 				installs += 'webcomponentsjs ';
-				installs += orgName + '/' + name + ' ';
-				installs += orgName + '/t-shared-components ';
+				installs += elOrgName + '/' + elName + ' ';
+				installs += elOrgName + '/t-shared-components ';
 
 				return installs;
 			},
 
-			cdnImports: function(name, displayName) {
+			cdnImports: function(elName, elDispName) {
 				var baseDomain = 'https://atomproject.github.io/elements/';
 				var polyfillSrc = 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.18/webcomponents-lite.min.js';
-				//TODO: the component repo name can be different, handle it.
-				var componentRepoName = name;
-				var componentSrc = '/' + componentRepoName + '/' + name + '.html';
+				//TODO: the element repo name can be different, handle it.
+				var elRepoName = elName;
+				var elSrc = '/' + elRepoName + '/' + elName + '.html';
 				var themeSrc = '/t-shared-components/theme.html';
 
-		        baseDomain += displayName + '/bower_components';
-				componentSrc = baseDomain + componentSrc;
+        baseDomain += elDispName + '/bower_components';
+				elSrc = baseDomain + elSrc;
 				themeSrc = baseDomain + themeSrc;
 
-				return this.serializeImports(polyfillSrc, componentSrc, themeSrc);
+				return this.serializeImports(polyfillSrc, elSrc, themeSrc);
 			},
 
-			bowerImports: function(name) {
+			bowerImports: function(elName) {
 				var baseDomain = '{{ path to bower_components dir }}';
 				var polyfillSrc = '/webcomponentsjs/webcomponents-lite.js';
-				//TODO: the component repo name can be different, handle it.
-				var componentRepoName = name;
-				var componentSrc = '/' + componentRepoName + '/' + name + '.html';
+				//TODO: the element repo name can be different, handle it.
+				var elRepoName = elName;
+				var elSrc = '/' + elRepoName + '/' + elName + '.html';
 				var themeSrc = '/t-shared-components/theme.html';
 
 				polyfillSrc = baseDomain + polyfillSrc;
-				componentSrc = baseDomain + componentSrc;
+				elSrc = baseDomain + elSrc;
 				themeSrc = baseDomain + themeSrc;
 
-				return this.serializeImports(polyfillSrc, componentSrc, themeSrc);
+				return this.serializeImports(polyfillSrc, elSrc, themeSrc);
 			},
 
-			serializeImports: function(polyfillSrc, componentSrc, themeSrc) {
+			serializeImports: function(polyfillSrc, elSrc, themeSrc) {
 				var imports = [];
 
 				//we can't have either script start tag or script end tag inside
 				//the string literal because polymer html parser dies
 				imports.push('<' + 'script type="text/javascript" src="' + polyfillSrc + '"></' + 'script' + '>');
-				imports.push('<link rel="import" href="' + componentSrc + '">');
+				imports.push('<link rel="import" href="' + elSrc + '">');
 				imports.push('<link rel="import" href="' + themeSrc + '">');
 
 				return imports.join('\n');
 			},
 
 			nameChanged: function() {
-				this.componentAttributes = {};
-				this.componentHtml = '';
+				this.elAttribs = {};
+				this.elHtml = '';
 			},
 
 			updateCode: function() {
-				var name = this.componentName;
-				var attribs = this.componentAttributes;
-				var innerHTML = this.componentHtml;
+				var name = this.elName;
+				var attribs = this.elAttribs;
+				var innerHTML = this.elHtml;
 				var code = this.getComponentCode(name, attribs, innerHTML);
 
 				return window.html_beautify(code, this.beautifyOpts);

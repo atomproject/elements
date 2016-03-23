@@ -6,7 +6,7 @@
 <link rel="import" href="../bower_components/paper-drawer-panel/paper-drawer-panel.html">
 <link rel="import" href="../bower_components/t-button/t-button.html">
 <link rel="import" href="../bower_components/t-component-panel/t-component-panel.html">
-<link rel="import" href="t-component-code.html">
+<link rel="import" href="element-code.html">
 <link rel="import" href="t-device-toggle.html">
 
 <dom-module id="t-demo-atom">
@@ -50,7 +50,7 @@
         border-color: var(--grey-two);
       }
 
-      t-component-code {
+      element-code {
         margin-top: 20px;
       }
 
@@ -87,12 +87,12 @@
               <iframe id="demo" src="{{demoFile}}" frameborder="0"></iframe>
             </device-view>
             <hr>
-            <t-component-code id="code"
-              org-name="[[orgName]]"
-              component-name="[[componentName]]"
-              component-display-name="[[componentDisplayName]]"
-              component-html="[[componentHtml]]">
-            </t-component-code>
+            <element-code id="code"
+              el-org-name="[[elOrgName]]"
+              el-name="[[elName]]"
+              el-disp-name="[[elDispName]]"
+              el-html="[[elHtml]]">
+            </element-code>
           </div>
         </div>
         <div drawer>
@@ -124,11 +124,11 @@
         /*filter width for handling responsive*/
         filterWidth: String,
         propertiesFile: String,
-        componentName: String,
-        componentDisplayName: String,
-        componentHtml: String,
+        elName: String,
+        elDispName: String,
+        elHtml: String,
+        elOrgName: String,
         demoFile: String,
-        orgName: String,
 
         landscape: {
           type: Boolean,
@@ -161,14 +161,14 @@
         var template = Polymer.dom(this).querySelector('template');
 
         //if the load event of iframe triggers earlier than the
-        //ready callback then `this.componentName` won't be available
+        //ready callback then `this.elName` won't be available
         //so we trigger the `setDemoComponent` callback here
         if (!this._demoComponent) {
           this.setDemoComponent();
         }
 
         if (template) {
-          this.componentHtml = template.innerHTML;
+          this.elHtml = template.innerHTML;
         }
       },
 
@@ -179,12 +179,12 @@
 
         //the name of the component to find is not available.
         //current method is also called in the `ready` hook
-        if (!this.componentName) {
+        if (!this.elName) {
           return;
         }
 
         iframeDoc = this.$.demo.contentWindow.document;
-        targetComponent = iframeDoc.querySelector(this.componentName);
+        targetComponent = iframeDoc.querySelector(this.elName);
 
         this.initIframe(this.$.demo);
 
@@ -312,7 +312,7 @@
             //since initial value is not provided and the current value
             //differs from the default value, update the values in html code
             value = currentValue;
-            this.$.code.set('componentAttributes.' + propertyKey, value);
+            this.$.code.set('elAttribs.' + propertyKey, value);
           }
         }.bind(this));
       },
@@ -330,7 +330,7 @@
 
         this.updateTargets(path, value);
       },
-      
+
       //update the changes to properties
       updateTargets: function(key, value) {
         value = _.cloneDeep(value);
@@ -339,7 +339,7 @@
 
         value = _.cloneDeep(value);
         //update the html attributes in code
-        this.$.code.set('componentAttributes.' + key, value);
+        this.$.code.set('elAttribs.' + key, value);
       },
 
       //calculate the width and put value
