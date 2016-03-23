@@ -7,6 +7,7 @@
 <link rel="import" href="../bower_components/t-button/t-button.html">
 <link rel="import" href="../bower_components/t-component-panel/t-component-panel.html">
 <link rel="import" href="element-code.html">
+<link rel="import" href="../bower_components/dynamic-data-source/dynamic-data-source.html">
 <link rel="import" href="t-device-toggle.html">
 
 <dom-module id="t-demo-atom">
@@ -105,6 +106,7 @@
             <div style="overflow:auto;">
               <t-component-panel id="componentPanel"
                 on-path-changed="updatePath"
+                on-update-data-source="updateDataSource"
                 property-source="{{propertiesFile}}">
               </t-component-panel>
             </div>
@@ -174,7 +176,7 @@
 
       //the load event is triggered twice, it shouldn't be a problem
       //but why the heck is it triggered twice?.
-      setDemoComponent: function(event) {
+      setDemoComponent: function() {
         var iframeDoc, targetComponent;
 
         //the name of the component to find is not available.
@@ -217,13 +219,15 @@
       },
 
       refresh: function() {
-        if (!this._demoComponent || !this.$.demo) return;
+        if (!this._demoComponent || !this.$.demo) {
+          return;
+        }
 
         this.$.demo.src = this.$.demo.src;
       },
 
       canBeChanged: function(propertyAttributes) {
-        var defaultValue, isComputed, isReadOnly;
+        var isComputed, isReadOnly;
 
         isComputed = propertyAttributes.computed;
         isReadOnly = propertyAttributes.readOnly;
@@ -263,13 +267,15 @@
           !_.isEqual(defaultValue, currentValue);
       },
 
+      //converts arrays of sections to a hash map based on attribute key
       getPanelProperties: function() {
         var sections = this.$.componentPanel.sections || [];
         var properties = {};
 
         sections.forEach(function(section) {
           section.attributes.forEach(function(attrib) {
-            if (!attrib.valueUndefined) {
+            //don't take attributes that don't have a value
+            if (!attrib.valueUndefined || attrib.dataSource) {
               properties[attrib.key] = attrib;
             }
           });
@@ -285,12 +291,12 @@
         //get the custom properties of the element
         var properties = this._demoComponent.properties;
         var propertyKeys = Object.keys(properties);
+        var panelProperties = this.getPanelProperties();
 
         propertyKeys.forEach(function(propertyKey) {
-          var panelProperties = this.getPanelProperties();
           //get the attributes of the property, this is kind of _reflection_
           var propertyAttributes = this._demoComponent.properties[propertyKey];
-          var value, defaultValue, currentValue, applyCurrentValue;
+          var value, defaultValue, currentValue, dataSource;
 
           if (!this.canBeChanged(propertyAttributes)) {
             return;
@@ -303,9 +309,13 @@
           //see if an initial value is provided in the properties panel
           if (propertyKey in panelProperties) {
             value = panelProperties[propertyKey].value;
+            dataSource = panelProperties[propertyKey].dataSource;
 
             if (value !== undefined && value !== null) {
               this.updateTargets(propertyKey, value);
+            }
+            else if (dataSource) {
+              this.updateDataSource(propertyKey, dataSource);
             }
           } else if (this.applyCurrentValue(defaultValue, currentValue,
               propertyAttributes)) {
@@ -331,6 +341,44 @@
         this.updateTargets(path, value);
       },
 
+      updateDataSource: function(key, dataSource) {
+        var dsTarget, event, attribsPath;
+        var url = dataSource.url;
+        var transform = dataSource.transform;
+
+        if (key instanceof Event) {
+          event = key;
+          key = event.detail.path;
+          url = event.detail.dataSource.url;
+          transform = event.detail.dataSource.transform;
+        }
+
+        if (!key || !url || !transform || !this._demoComponent){
+          return;
+        }
+
+        this._dsTargets = this._dsTargets || {};
+        dsTarget = this._dsTargets[key];
+
+        if (!dsTarget ||
+            !this.$.demo.contentWindow.document.contains(dsTarget)) {
+
+          dsTarget = this._dsTargets[key] = this.createDataSource(key);
+        }
+
+        dsTarget.url = url;
+        dsTarget.transform = transform;
+
+        attribsPath = 'dataSources.' + key + '.attribs';
+
+        // don't trigger the observers just yet
+        this.$.code.dataSources[key].showDs = true;
+        this.$.code.dataSources[key].attribs.url = url;
+
+        // trigger the observer now
+        this.$.code.set(attribsPath + '.transform', transform);
+      },
+
       //update the changes to properties
       updateTargets: function(key, value) {
         value = _.cloneDeep(value);
@@ -338,15 +386,36 @@
         this._demoComponent.set(key, value);
 
         value = _.cloneDeep(value);
+        this.$.code.set('dataSources.' + key + '.showDs', false);
+
         //update the html attributes in code
         this.$.code.set('elAttribs.' + key, value);
       },
 
       //calculate the width and put value
-      _setWidth:function(){
+      _setWidth: function() {
         var winWid =  window.innerWidth;
 
         this.filterWidth = (winWid < 600 ? '75%' : '300px');
+      },
+
+      createDataSource: function(key) {
+        var dsElement = document.createElement('dynamic-data-source');
+
+        dsElement.propertyName = key;
+        dsElement.auto = true;
+        dsElement.target = this._demoComponent.tagName;
+        this._demoComponent.parentElement.appendChild(dsElement);
+
+        this.$.code.set('dataSources.' + key, {
+          name: 'dynamic-data-source',
+          attribs: {
+            target: dsElement.target,
+            propertyName: key
+          }
+        });
+
+        return dsElement;
       }
     });
   </script>

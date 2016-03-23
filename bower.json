@@ -57,6 +57,7 @@
     "paper-menu": "polymerelements/paper-menu#^1.2.2",
     "code-generator-behavior": "atomproject/code-generator-behavior#^1.0.0",
     "t-component-panel": "atomproject/t-component-panel#^1.0.0",
-    "highlightjs-element": "atomproject/highlightjs-element#^1.0.0"
+    "highlightjs-element": "atomproject/highlightjs-element#^1.0.0",
+    "dynamic-data-source": "atomproject/dynamic-data-source#^1.0.0"
   }
 }
