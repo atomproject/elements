@@ -26,7 +26,7 @@ function tryReadFile(filePath) {
 function extractInnerHtml(name, fpath) {
   var text, $, innerHTML;
 
-  text = tryReadFile(fpath);
+  text = fs.readFileSync(fpath, 'utf-8');
   $ = cheerio.load(text);
   innerHTML = $(name).html() || '';
 
@@ -39,45 +39,47 @@ function extractInnerHtml(name, fpath) {
   return innerHTML;
 }
 
-function ElementContext(el, config) {
+function getElementContext(el, config) {
   var loc, travisBaseUrl = config.travisBaseUrl;
-  var elTravisUrl, dir, elDir, elDirUrl;
+  var elTravisUrl, dir, elDir, elDirUrl, elContext = {};
 
-  this.name = el.name;
-  this.category = el.category;
-  this.icon = el.icon;
-  this.displayName = el.displayName;
-  this.location = loc = locationParser(el.location);
+  elContext.name = el.name;
+  elContext.category = el.category;
+  elContext.icon = el.icon;
+  elContext.displayName = el.displayName;
+  elContext.location = loc = locationParser(el.location);
 
   if (loc.githubUser && loc.githubRepo) {
     elTravisUrl = `${travisBaseUrl}/${loc.githubUser}/${loc.githubRepo}`;
-    this.linkToTravis = `${elTravisUrl}/`;
-    this.buildStatusUrl = `${elTravisUrl}.svg?branch=master`;
+    elContext.linkToTravis = `${elTravisUrl}/`;
+    elContext.buildStatusUrl = `${elTravisUrl}.svg?branch=master`;
   }
 
-  this.pageDirName = slug(el.displayName).toLowerCase();
-  dir = loc.localPath || `${this.pageDirName}/bower_components/${el.name}`;
+  elContext.pageDirName = slug(el.displayName).toLowerCase();
+  dir = loc.localPath || `${elContext.pageDirName}/bower_components/${el.name}`;
   elDir = `_site/${dir}`;
   elDirUrl = `${config.baseurl}/${dir}`;
 
-  this.pageUrl = `${config.baseurl}/${this.pageDirName}/`;
-  this.documentationFileUrl = `${elDirUrl}/`;
-  this.demoFileUrl = `${elDirUrl}/demo/index.html`;
-  this.propertiesFileUrl = `${elDirUrl}/property.json`;
+  elContext.pageUrl = `${config.baseurl}/${elContext.pageDirName}/`;
+  elContext.documentationFileUrl = `${elDirUrl}/`;
+  elContext.demoFileUrl = `${elDirUrl}/demo/index.html`;
+  elContext.propertiesFileUrl = `${elDirUrl}/property.json`;
 
-  this.propertyFile = `${elDir}/property.json`;
-  this.designDoc = '\n' + tryReadFile(`${elDir}/design-doc.md`);
-  this.innerHtml = extractInnerHtml(this.name, `${elDir}/demo/index.html`);
+  elContext.propertyFile = `${elDir}/property.json`;
+  elContext.designDoc = '\n' + tryReadFile(`${elDir}/design-doc.md`);
+  elContext.innerHtml = extractInnerHtml(el.name, `${elDir}/demo/index.html`);
 
   // TODO: This was not thought properly. Think it through.
   // default value overrides
   if (el.propertyFile) {
-    this.propertyFile = `_site/${el.propertyFile}`;
-    this.propertiesFileUrl = `${config.baseurl}/${el.propertyFile}`;
+    elContext.propertyFile = `_site/${el.propertyFile}`;
+    elContext.propertiesFileUrl = `${config.baseurl}/${el.propertyFile}`;
   }
 
   // this will be set later in `getConfig`
-  this.indexInCategory = 0;
+  elContext.indexInCategory = 0;
+
+  return elContext;
 }
 
 function getConfig() {
@@ -88,19 +90,26 @@ function getConfig() {
   }
 
   return readFile(filePath, 'utf-8').then(config => {
+    var elPromises;
+
     config = JSON.parse(config);
     config = Object.assign({}, defaultConfig, config);
+    elPromises = config.elements.map(el => getElementContext(el, config));
 
-    config.elements = config.elements.map(el => new ElementContext(el, config));
-    config.categories = config.categories.map(cat => {
-      var elements = config.elements.filter(el => el.category === cat.name);
-      elements.forEach((el, index) => el.indexInCategory = index);
-      cat.elements = elements;
+    return Promise.all(elPromises)
+      .then(elements => {
+        config.elements = elements;
 
-      return cat;
-    });
+        config.categories = config.categories.map(cat => {
+          var catElements = elements.filter(el => el.category === cat.name);
+          catElements.forEach((el, index) => el.indexInCategory = index);
+          cat.elements = catElements;
 
-    return Promise.resolve(config);
+          return cat;
+        });
+
+        return config;
+      });
   });
 }
 
