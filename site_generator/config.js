@@ -4,6 +4,7 @@ var cheerio = require('cheerio');
 var locationParser = require('./parse-location');
 var promisify = require('promisify-node');
 var readFile = promisify(fs.readFile);
+var analyze = require('hydrolysis').Analyzer.analyze;
 
 var defaultConfig = {
   includesDir: 'includes',
@@ -37,6 +38,58 @@ function extractInnerHtml(name, fpath) {
   }).join('');
 
   return innerHTML;
+}
+
+function extractDeps(baseDir, elName) {
+  var hydroPromise, bower, bowerDeps;
+
+  bower = tryReadFile(`${baseDir}/bower.json`);
+  bower = JSON.parse(bower || '{}');
+  bowerDeps = Object.assign({}, bower.dependencies, bower.devDependencies);
+  baseDir = baseDir.replace(new RegExp(`/${elName}$`), '');
+  hydroPromise = analyze(`${baseDir}/${elName}/demo/index.html`);
+
+  return hydroPromise.then(res => {
+    var docs = res.parsedDocuments || {};
+    var scripts = res.parsedScripts || {};
+
+    function parse(type, relPath) {
+      var package, install;
+
+      relPath = relPath.replace(`${baseDir}/`, '');
+      package = relPath.match(/^[^\/]+/);
+      install = bowerDeps[package];
+
+      if (install && !/[/#]/.test(install)) {
+        install = `${package}#${install}`;
+      }
+
+      if (!package) {
+        return Promise.reject(`Bad path in demo file: ${relPath}`);
+      }
+
+      return {
+        package: package[0],
+        relPath: relPath,
+        install: install,
+        type: type
+      };
+    }
+
+    function filter(dep) {
+      return !(new RegExp(`(${elName}.html)|(index.html)`).test(dep.relPath));
+    }
+
+    docs = Object.keys(docs)
+      .map(parse.bind(null, 'link'))
+      .filter(filter);
+
+    scripts = Object.keys(scripts)
+      .map(parse.bind(null, 'script'))
+      .filter(filter);
+
+    return [].concat(scripts, docs);
+  });
 }
 
 function getElementContext(el, config) {
@@ -79,7 +132,12 @@ function getElementContext(el, config) {
   // this will be set later in `getConfig`
   elContext.indexInCategory = 0;
 
-  return elContext;
+  return extractDeps(elDir, el.name)
+    .then(dependencies => {
+      elContext.dependencies = JSON.stringify(dependencies);
+
+      return elContext;
+    });
 }
 
 function getConfig() {

@@ -92,7 +92,8 @@
               el-org-name="[[elOrgName]]"
               el-name="[[elName]]"
               el-disp-name="[[elDispName]]"
-              el-html="[[elHtml]]">
+              el-html="[[elHtml]]"
+              el-dependencies="[[elDependencies]]">
             </element-code>
           </div>
         </div>
@@ -130,6 +131,7 @@
         elDispName: String,
         elHtml: String,
         elOrgName: String,
+        elDependencies: Array,
         demoFile: String,
 
         landscape: {
@@ -411,7 +413,8 @@
           name: 'dynamic-data-source',
           attribs: {
             target: dsElement.target,
-            propertyName: key
+            propertyName: key,
+            auto: true
           }
         });
 

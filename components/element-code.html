@@ -17,11 +17,16 @@
         display: none;
       }
 
-      highlightjs-element {
+      highlightjs-element,
+      pre {
         padding: 5px 0;
         border: 1px solid;
         border-color: var(--grey-two);
         border-radius: 5px;
+      }
+
+      pre {
+        overflow: auto;
       }
 
       :host > * {
@@ -68,20 +73,18 @@
 
       <h4>Option 1: CDN (Recommended for quick and simple usage)</h4>
       <highlightjs-element
-        text="{{cdnImports(elName, elDispName, showDs)}}">
+        text="{{cdnImports(elName, elDispName, elDependencies, showDs)}}">
       </highlightjs-element>
 
       <h4>Option 2: Bower (Recommended for production usage)</h4>
 
       <div class="substep">
         <h5>Install the libraries</h5>
-        <highlightjs-element lang="bash"
-          text="{{bowerInstalls(elName, elOrgName, showDs)}}">
-        </highlightjs-element>
+        <pre><code>{{bowerInstalls(elName, elOrgName, elDependencies, showDs)}}</code></pre>
 
         <h5>Include the files</h5>
         <highlightjs-element
-          text="{{bowerImports(elName, showDs)}}">
+          text="{{bowerImports(elName, elDependencies, showDs)}}">
         </highlightjs-element>
       </div>
     </div>
@@ -131,6 +134,10 @@
           type: String
         },
 
+        elDependencies: {
+          type: Array
+        },
+
         showDs: {
           type: Boolean,
           computed: 'getShowDs(dataSources.*)'
@@ -153,12 +160,21 @@
         }.bind(this), false);
       },
 
-      bowerInstalls: function(elName, elOrgName, showDs) {
+      bowerInstalls: function(elName, elOrgName, elDependencies, showDs) {
         var installs = 'bower install --save ';
 
-        installs += 'webcomponentsjs ';
-        installs += elOrgName + '/' + elName + ' ';
-        installs += elOrgName + '/t-shared-components ';
+        installs += elOrgName + '/' + elName + '#master ';
+
+        installs += elDependencies
+          .map(function(dep) {
+            return dep.install;
+          })
+          .filter(function(dep, i, deps) {
+            return dep && deps.indexOf(dep) === i;
+          })
+          .reduce(function(total, dep) {
+            return total + dep + ' ';
+          }, '');
 
         if (showDs) {
           installs += 'atomproject/dynamic-data-source ';
@@ -167,61 +183,58 @@
         return installs;
       },
 
-      cdnImports: function(elName, elDispName, showDs) {
+      cdnImports: function(elName, elDispName, elDependencies, showDs) {
+        // TODO: this url will different for each project
         var baseDomain = 'https://atomproject.github.io/elements/';
-        var polyfillSrc = 'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/0.7.18/webcomponents-lite.min.js';
-        //TODO: the element repo name can be different, handle it.
-        var elRepoName = elName;
-        var elSrc = '/' + elRepoName + '/' + elName + '.html';
-        var themeSrc = '/t-shared-components/theme.html';
-        var ds = '';
-
-        if (showDs) {
-          ds += baseDomain + 'bower_components/';
-          ds += 'dynamic-data-source/dynamic-data-source.html';
-        }
 
         baseDomain += elDispName + '/bower_components';
-        elSrc = baseDomain + elSrc;
-        themeSrc = baseDomain + themeSrc;
 
-        return this.serializeImports(polyfillSrc, elSrc, themeSrc, ds);
+        return this.getDeps(elName, elDependencies, showDs, baseDomain);
       },
 
-      bowerImports: function(elName, showDs) {
+      bowerImports: function(elName, elDependencies, showDs) {
         var baseDomain = '{{ path to bower_components dir }}';
-        var polyfillSrc = '/webcomponentsjs/webcomponents-lite.js';
-        //TODO: the element repo name can be different, handle it.
-        var elRepoName = elName;
-        var elSrc = '/' + elRepoName + '/' + elName + '.html';
-        var themeSrc = '/t-shared-components/theme.html';
-        var ds;
 
-        polyfillSrc = baseDomain + polyfillSrc;
-        elSrc = baseDomain + elSrc;
-        themeSrc = baseDomain + themeSrc;
+        return this.getDeps(elName, elDependencies, showDs, baseDomain);
+      },
+
+      getDeps: function(elName, elDependencies, showDs, baseDomain) {
+        var elSrc = elName + '/' + elName + '.html';
+        var ds = '/dynamic-data-source/dynamic-data-source.html';
+
+        elDependencies = elDependencies.slice();
+        elDependencies.push({relPath: elSrc, type: 'link'});
 
         if (showDs) {
-          ds = baseDomain + '/dynamic-data-source/dynamic-data-source.html';
+          elDependencies.push({relPath: ds, type: 'link'});
         }
 
-        return this.serializeImports(polyfillSrc, elSrc, themeSrc, ds);
+        return elDependencies
+          .map(function(dep) {
+            var url = baseDomain + '/' + dep.relPath;
+
+            if (dep.type === 'script') {
+              return this.scriptTemplate(url);
+            }
+            else if (dep.type === 'link') {
+              return this.linkTemplate(url);
+            }
+            else {
+              return '';
+            }
+          }.bind(this))
+          .join('\n');
       },
 
-      serializeImports: function(polyfillSrc, elSrc, themeSrc, ds) {
-        var imports = [];
-
+      scriptTemplate: function(src) {
         //we can't have either script start tag or script end tag inside
         //the string literal because polymer html parser dies
-        imports.push('<' + 'script type="text/javascript" src="' + polyfillSrc + '"></' + 'script' + '>');
-        imports.push('<link rel="import" href="' + elSrc + '">');
-        imports.push('<link rel="import" href="' + themeSrc + '">');
+        return '<' + 'script type="text/javascript" src="' + src + '">' +
+               '</' + 'script' + '>';
+      },
 
-        if (ds) {
-          imports.push('<link rel="import" href="' + ds + '">');
-        }
-
-        return imports.join('\n');
+      linkTemplate: function(href) {
+        return '<link rel="import" href="' + href + '">';
       },
 
       nameChanged: function() {

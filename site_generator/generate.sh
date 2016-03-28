@@ -53,6 +53,7 @@ do
     cp "$bow" ./
     echo "Install: $name"
     bower install &>/dev/null
+    bower install atomproject/dynamic-data-source
     rm bower.json
     mv "$ndir" bower_components/"$name"
 
