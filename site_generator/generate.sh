@@ -24,12 +24,6 @@ then
   bower install "config=$CONFIG_GIST_URL.git"
 fi
 
-# STEP: Copy the necessary things
-for item in "${dirs[@]}"
-do
-  ifncp "$item"
-done
-
 # STEP: Dowload the latest version of component on github.
 #       Extract it and install its dependencies.
 #       Generate the necessary files if absent.
@@ -83,6 +77,12 @@ node site_generator/build.js "$1"
 if ! [[ -f "_site/element-ids.json" ]]; then
   node site_generator/get-element-ids.js
 fi
+
+# STEP: Copy the necessary things
+for item in "${dirs[@]}"
+do
+  ifncp "$item"
+done
 
 # STEP: If in prod environment then vulcanize components
 if [[ "$1" == "--prod" ]]
