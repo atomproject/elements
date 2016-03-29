@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var hydrolysis = require('hydrolysis');
-var getConfig = require('./config');
+var getConfig = require('./config').getConfig;
 var baseDir;
 
 function getPropertyType(type) {

@@ -7,7 +7,7 @@ var marked = require('marked');
 var promisify = require('promisify-node');
 var glob = promisify(require('glob'));
 var engine = new Liquid.Engine();
-var getConfig = require('./config');
+var getFullConfig = require('./config').getFullConfig;
 
 function handleError(err) {
   console.log(err.stack || err);
@@ -103,7 +103,7 @@ function createPage(filePath, config) {
     .catch(handleError);
 }
 
-getConfig().then(config => {
+getFullConfig().then(config => {
   //setup yaml parser engine
   engine.fileSystem = new Liquid.LocalFileSystem();
   engine.fileSystem.root = config.includesDir;

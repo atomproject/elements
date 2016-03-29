@@ -9,9 +9,11 @@ ifncp() {
   fi
 }
 
+# `bower_components` are needed since it is used like cdn.
+# `components` and `scripts` aren't needed. Confirm that.
 dirs=(assets bower_components components scripts styles favicon.ico)
 
-# STEP 1: Install the data
+# STEP: Install the data
 if ! [[ -f "bower_components/config/metadata.json" ]]
 then
   if [[ -z "$CONFIG_GIST_URL" ]]
@@ -22,9 +24,15 @@ then
   bower install "config=$CONFIG_GIST_URL.git"
 fi
 
-# STEP 2: Dowload the latest version of component on github.
+# STEP: Copy the necessary things
+for item in "${dirs[@]}"
+do
+  ifncp "$item"
+done
+
+# STEP: Dowload the latest version of component on github.
 #       Extract it and install its dependencies.
-#     Generate the necessary files if absent.
+#       Generate the necessary files if absent.
 node site_generator/list-elements.js | while read -r line
 do
   name="${line%%:*}"
@@ -53,7 +61,8 @@ do
     cp "$bow" ./
     echo "Install: $name"
     bower install &>/dev/null
-    bower install atomproject/dynamic-data-source
+    echo "Install: dynamic-data-source"
+    bower install atomproject/dynamic-data-source &>/dev/null
     rm bower.json
     mv "$ndir" bower_components/"$name"
 
@@ -67,21 +76,15 @@ do
   fi
 done
 
-# STEP 3: Generate the pages of site
+# STEP: Generate the pages of site
 node site_generator/build.js "$1"
 
-# STEP 4: Generate the travis repo ids of the elements
+# STEP: Generate the travis repo ids of the elements
 if ! [[ -f "_site/element-ids.json" ]]; then
   node site_generator/get-element-ids.js
 fi
 
-# STEP 5: Copy the necessary things
-for item in "${dirs[@]}"
-do
-  ifncp "$item"
-done
-
-# STEP 6: If in prod environment then vulcanize components
+# STEP: If in prod environment then vulcanize components
 if [[ "$1" == "--prod" ]]
 then
   node_modules/vulcanize/bin/vulcanize --inline-script --strip-comments components/elements.html | \

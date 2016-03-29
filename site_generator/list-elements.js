@@ -1,4 +1,4 @@
-var getConfig = require('./config');
+var getConfig = require('./config').getConfig;
 
 getConfig().then(config => {
   config.elements.forEach(el => {

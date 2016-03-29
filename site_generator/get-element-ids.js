@@ -1,7 +1,7 @@
 var fs = require('fs');
 var nodeFetch = require('node-fetch');
 var baseApiEndPoint = 'https://api.travis-ci.org/repos';
-var getConfig = require('./config');
+var getConfig = require('./config').getConfig;
 var idFilePath = '_site/element-ids.json';
 
 
