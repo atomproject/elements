@@ -1,10 +1,10 @@
 html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    overflow: hidden;
-    color:#333;
-    font-family: "Open Sans";
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  color:#333;
+  font-family: "Open Sans";
 }
 
 paper-tab, paper-item {
@@ -13,19 +13,19 @@ paper-tab, paper-item {
 
 /*Styles for login page*/
 canvas {
-    display: block;
-    vertical-align: bottom;
+  display: block;
+  vertical-align: bottom;
 }
 
 .overlay {
-    position: absolute;
-    left: 0;
-    top: 0;
-    background: #eee;
-    width: 100%;
-    height: 100%;
-    z-index: 99;
-    opacity: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #eee;
+  width: 100%;
+  height: 100%;
+  z-index: 99;
+  opacity: 1;
 }
 
 .signin-box {
@@ -40,8 +40,8 @@ canvas {
 }
 
 .signin-box .heading {
-    margin-bottom: 50px;
-    color: white;
+  margin-bottom: 50px;
+  color: white;
 }
 
 .signin-box .heading img {
@@ -61,26 +61,26 @@ canvas {
 }
 
 #particles-js {
-    width:100%;
-    height:100%;
+  width:100%;
+  height:100%;
 }
 
 #idIframe {
-    border: 0px;
-    width: 100%;
-    height: 100%;
-    margin: 0;
+  border: 0px;
+  width: 100%;
+  height: 100%;
+  margin: 0;
 }
 
 #spinner {
-    z-index:100;
+  z-index:100;
 }
 
 #mainContainer #main .main {
-    background-color:#fff;
-    padding:10px 20px;
-    box-sizing: border-box;
-    overflow:auto;
+  background-color:#fff;
+  padding:10px 20px;
+  box-sizing: border-box;
+  overflow:auto;
 }
 
 t-button.btn-green  {
@@ -89,7 +89,7 @@ t-button.btn-green  {
 }
 
 t-button.btn-white paper-button {
-    padding: 15px 18px;
+  padding: 15px 18px;
 }
 
 t-button.btn-white  {
@@ -104,42 +104,42 @@ t-button.btn-white  {
 }
 
 ul {
-    margin:0;
-    padding:0;
-    list-style-type:none;
+  margin:0;
+  padding:0;
+  list-style-type:none;
 }
 
 .margin-20 {
-    margin:20px;
+  margin:20px;
 }
 
 #error {
-    margin-top: 20px;
-    color: white;
+  margin-top: 20px;
+  color: white;
 }
 
 .standardPadding {
-    padding: 0 16px;
+  padding: 0 16px;
 }
 
 #subPanel > .content {
-    height: 100%;
-    position: absolute;
-    background-color: #fff;
-    width: 100%;
-    overflow: auto;
-    box-sizing: border-box;
+  height: 100%;
+  position: absolute;
+  background-color: #fff;
+  width: 100%;
+  overflow: auto;
+  box-sizing: border-box;
 }
 
 #subPanel #elementContent.content {
-    overflow:hidden;
-    padding:0;
+  overflow:hidden;
+  padding:0;
 }
 
 /*New scaffold css*/
 
 #mainPanel #mainContainer {
-    overflow:hidden;
+  overflow:hidden;
 }
 
 .designTab {
@@ -154,21 +154,21 @@ ul {
 }
 
 .property-panel-Header {
-    border-bottom:1px solid #eee;
+  border-bottom:1px solid #eee;
 }
 
 .property-panel-Header t-button {
-    border-right:1px solid #eee;
-    color:#07c5f2;
+  border-right:1px solid #eee;
+  color:#07c5f2;
 }
 
 .property-panel-Header t-button:last-child {
-    border-right:0;
+  border-right:0;
 }
 
 #themeForm {
-    max-width:440px;
-    margin:0 auto;
+  max-width:440px;
+  margin:0 auto;
 }
 
 /* authored by Ajinkya */
@@ -179,7 +179,7 @@ ul {
 }
 
 .designTabWrapper {
-    overflow: auto;
+  overflow: auto;
 }
 
 .designTab ul {

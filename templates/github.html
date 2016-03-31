@@ -3,48 +3,48 @@ layout: default
 ---
 
 <div id="elementContent" class="content layout vertical fit content-component">
-    <div id="tabBar" class="layout horizontal center-justified">
-        <paper-tabs noink selected="2">
-            <paper-tab>Design Considerations</paper-tab>
-            <paper-tab>Dev Zone</paper-tab>
-            <paper-tab>Demo</paper-tab>
-        </paper-tabs>
-    </div>
-    <iron-pages selected="2" class="flex" style="position:relative">
-        <div class="fit designTabWrapper">
-            <div class="designTab">
-                <marked-element>
-                    <div class="markdown-html"></div>
-                    <script type="text/markdown">
+  <div id="tabBar" class="layout horizontal center-justified">
+    <paper-tabs noink selected="2">
+      <paper-tab>Design Considerations</paper-tab>
+      <paper-tab>Dev Zone</paper-tab>
+      <paper-tab>Demo</paper-tab>
+    </paper-tabs>
+  </div>
+  <iron-pages selected="2" class="flex" style="position:relative">
+    <div class="fit designTabWrapper">
+      <div class="designTab">
+        <marked-element>
+          <div class="markdown-html"></div>
+          <script type="text/markdown">
 						{{ page.designDoc }}
-                    </script>
-                </marked-element>
-            </div>
-        </div>
-        <div class="fit">
-            <iframe id="idIframe" src="{{ page.documentationFileUrl }}" width="100%"></iframe>
-        </div>
-        <div class="fit">
-            <t-demo-atom
-                demo-file="{{ page.demoFileUrl }}"
-                properties-file="{{ page.propertiesFileUrl }}"
-                el-name="{{ page.name }}"
-                el-disp-name="{{ page.pageDirName }}"
-                el-org-name="{{ page.location.githubUser }}"
-                el-dependencies='{{ page.dependencies }}'>
-                <template>{{ page.innerHTML }}</template>
-            </t-demo-atom>
-        </div>
-    </iron-pages>
+          </script>
+        </marked-element>
+      </div>
+    </div>
+    <div class="fit">
+      <iframe id="idIframe" src="{{ page.documentationFileUrl }}" width="100%"></iframe>
+    </div>
+    <div class="fit">
+      <t-demo-atom
+        demo-file="{{ page.demoFileUrl }}"
+        properties-file="{{ page.propertiesFileUrl }}"
+        el-name="{{ page.name }}"
+        el-disp-name="{{ page.pageDirName }}"
+        el-org-name="{{ page.location.githubUser }}"
+        el-dependencies='{{ page.dependencies }}'>
+        <template>{{ page.innerHTML }}</template>
+      </t-demo-atom>
+    </div>
+  </iron-pages>
 </div>
 
 <script type="text/javascript">
-    (function() {
-        var pages = document.querySelector('iron-pages');
-        var tabs = document.querySelector('paper-tabs');
+  (function() {
+    var pages = document.querySelector('iron-pages');
+    var tabs = document.querySelector('paper-tabs');
 
-        tabs.addEventListener('iron-select', function () {
-            pages.selected = tabs.selected;
-        });
-    })();
+    tabs.addEventListener('iron-select', function () {
+      pages.selected = tabs.selected;
+    });
+  })();
 </script>

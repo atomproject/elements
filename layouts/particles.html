@@ -2,19 +2,19 @@
 <html>
 <head>
 
-    {% include head.html %}
+  {% include head.html %}
 
-    <script src="{{ site.baseurl }}/bower_components/particles.js/particles.js"></script>
+  <script src="{{ site.baseurl }}/bower_components/particles.js/particles.js"></script>
 
 </head>
 <body>
 
-    <div id="particles-js">
-    	{{ content }}
-    </div>
+  <div id="particles-js">
+  	{{ content }}
+  </div>
 
-    <script>
-        particlesJS.load('particles-js', '{{ site.baseurl }}/assets/particles.json');
-    </script>
+  <script>
+    particlesJS.load('particles-js', '{{ site.baseurl }}/assets/particles.json');
+  </script>
 </body>
 </html>
