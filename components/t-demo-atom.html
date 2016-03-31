@@ -298,7 +298,7 @@
         propertyKeys.forEach(function(propertyKey) {
           //get the attributes of the property, this is kind of _reflection_
           var propertyAttributes = this._demoComponent.properties[propertyKey];
-          var value, defaultValue, currentValue, dataSource;
+          var value, defaultValue, currentValue, dataSource, useDs;
 
           if (!this.canBeChanged(propertyAttributes)) {
             return;
@@ -312,12 +312,13 @@
           if (propertyKey in panelProperties) {
             value = panelProperties[propertyKey].value;
             dataSource = panelProperties[propertyKey].dataSource;
+            useDs = panelProperties[propertyKey].useDs;
 
-            if (value !== undefined && value !== null) {
-              this.updateTargets(propertyKey, value);
-            }
-            else if (dataSource) {
+            if (dataSource && useDs) {
               this.updateDataSource(propertyKey, dataSource);
+            }
+            else if (value !== undefined && value !== null) {
+              this.updateTargets(propertyKey, value);
             }
           } else if (this.applyCurrentValue(defaultValue, currentValue,
               propertyAttributes)) {
@@ -371,14 +372,11 @@
         dsTarget.url = url;
         dsTarget.transform = transform;
 
-        attribsPath = 'dataSources.' + key + '.attribs';
+        attribsPath = 'dataSources.' + key;
 
-        // don't trigger the observers just yet
-        this.$.code.dataSources[key].showDs = true;
-        this.$.code.dataSources[key].attribs.url = url;
-
-        // trigger the observer now
-        this.$.code.set(attribsPath + '.transform', transform);
+        this.$.code.set(attribsPath + '.showDs', true);
+        this.$.code.set(attribsPath + '.attribs.url', url);
+        this.$.code.set(attribsPath + '.attribs.transform', transform);
       },
 
       //update the changes to properties

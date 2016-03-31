@@ -43,7 +43,6 @@
     "fetch": "^0.10.1",
     "iframe-resizer": "^3.5.1",
     "particles.js": "^2.0.0",
-    "js-beautify": "beautify-web/js-beautify#^1.5.10",
     "webcomponentsjs": "^0.7.19",
     "iron-icon": "PolymerElements/iron-icon#^1.0.7",
     "iron-icons": "PolymerElements/iron-icons#^1.0.6",
