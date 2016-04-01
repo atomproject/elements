@@ -9,7 +9,7 @@ ifncp() {
   fi
 }
 
-# `bower_components` are needed since it is used like cdn.
+# `bower_components` are needed since it is used like cdn. (exceptions `ace` see vulcanize step)
 # `components` and `scripts` aren't needed. Confirm that.
 dirs=(assets bower_components components scripts styles favicon.ico)
 
@@ -87,7 +87,9 @@ done
 # STEP: If in prod environment then vulcanize components
 if [[ "$1" == "--prod" ]]
 then
-  node_modules/vulcanize/bin/vulcanize --inline-script --strip-comments components/elements.html | \
+  # we have to exclude the ace js library from vulcanization since it loads
+  # service workers using urls relative to itself
+  node_modules/vulcanize/bin/vulcanize --exclude "bower_components/t-component-panel/ace-element/ace/" --inline-script --strip-comments components/elements.html | \
   node_modules/crisper/bin/crisper --script-in-head=false --html _site/components/elements.html --js _site/scripts/build.js
 fi
 
