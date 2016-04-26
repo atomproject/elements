@@ -5,3 +5,4 @@ node_modules
 
 # following file is used to test individual components
 components/index.html
+.notes
