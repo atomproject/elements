@@ -1,13 +1,15 @@
-var fs = require('fs');
-var path = require('path');
-var fm = require('front-matter');
-var Liquid = require('liquid-node');
-var mkdirp = require('mkdirp');
-var marked = require('marked');
-var promisify = require('promisify-node');
-var glob = promisify(require('glob'));
-var engine = new Liquid.Engine();
-var getFullConfig = require('./config').getFullConfig;
+'use strict';
+
+let fs = require('fs');
+let path = require('path');
+let fm = require('front-matter');
+let Liquid = require('liquid-node');
+let mkdirp = require('mkdirp');
+let marked = require('marked');
+let promisify = require('promisify-node');
+let glob = promisify(require('glob'));
+let engine = new Liquid.Engine();
+let getFullConfig = require('./config').getFullConfig;
 
 function handleError(err) {
   console.log(err.stack || err);
@@ -15,8 +17,8 @@ function handleError(err) {
 }
 
 function resolveLayout(filePath, queue) {
-  var file = fs.readFileSync(path.resolve(filePath), 'utf-8');
-  var layout;
+  let file = fs.readFileSync(path.resolve(filePath), 'utf-8');
+  let layout;
 
   file = fm(file);
   queue = queue || [];
@@ -31,7 +33,7 @@ function resolveLayout(filePath, queue) {
 }
 
 function renderLayout(queue, context) {
-  var p = Promise.resolve('');
+  let p = Promise.resolve('');
 
   queue.forEach(item => {
     Object.assign(context.page, item.attributes);
@@ -47,15 +49,15 @@ function renderLayout(queue, context) {
 }
 
 function createElementPage(elContext, config) {
-  var queue = resolveLayout('templates/github.html');
-  var fullContext = {
+  let queue = resolveLayout('templates/github.html');
+  let fullContext = {
     site: config,
     page: elContext
   };
 
   renderLayout(queue, fullContext)
     .then(page => {
-      var pagePath = elContext.pageDirName;
+      let pagePath = elContext.pageDirName;
 
       mkdirp.sync(path.join('_site', pagePath));
       pagePath = path.join('_site', pagePath ,'index.html');
@@ -67,15 +69,13 @@ function createElementPage(elContext, config) {
 }
 
 function createPage(filePath, config) {
-  var context = {site: config, page: {}};
-  var pathObj = path.parse(filePath);
-  var queue;
-
   if (!fs.statSync(filePath).isFile()) {
     return;
   }
 
-  queue = resolveLayout(filePath);
+  let queue = resolveLayout(filePath);
+  let pathObj = path.parse(filePath);
+  let context = {site: config, page: {}};
 
   if (config.markdownExtensions.indexOf(pathObj.ext) !== -1) {
     queue[0].body = marked(queue[0].body || '');
@@ -83,10 +83,9 @@ function createPage(filePath, config) {
 
   renderLayout(queue, context)
     .then(page => {
-      var pagesDir = path.resolve(config.pagesDir);
-      var outDir = path.resolve('_site');
-      var pathObj = path.parse(filePath);
-      var pagePath;
+      let pagesDir = path.resolve(config.pagesDir);
+      let outDir = path.resolve('_site');
+      let pathObj = path.parse(filePath);
 
       outDir = path.resolve(pathObj.dir).replace(pagesDir, outDir);
 
@@ -95,7 +94,7 @@ function createPage(filePath, config) {
       }
 
       mkdirp.sync(outDir);
-      pagePath = path.join(outDir, `index.html`);
+      let pagePath = path.join(outDir, `index.html`);
 
       console.log(`Build: ${pagePath}`);
       fs.writeFileSync(pagePath, page);

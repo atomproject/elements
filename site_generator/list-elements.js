@@ -1,14 +1,16 @@
-var getConfig = require('./config').getConfig;
+'use strict';
+
+let getConfig = require('./config').getConfig;
 
 getConfig().then(config => {
   config.elements.forEach(el => {
-    var loc = el.location, dep;
+    let loc = el.location;
 
     if (!loc.githubUser || !loc.githubRepo) {
       return;
     }
 
-    dep = `${loc.githubUser}/${loc.githubRepo}`;
+    let dep = `${loc.githubUser}/${loc.githubRepo}`;
 
     console.log(`${el.name}:${el.pageDirName}:${dep}`);
   });

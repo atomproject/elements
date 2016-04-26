@@ -1,25 +1,26 @@
-var url = require('url');
+'use strict';
 
-function parseHttp(location) {
-  var parts, origLoc;
+let url = require('url');
 
-  location = url.parse(origLoc = location);
+function parseHttp(loc) {
+  let origLoc;
+  loc = url.parse(origLoc = loc);
 
-  if (!location.path) {
+  if (!loc.path) {
     throw new Error(`Path undefined for location: ${origLoc}`);
   }
 
-  if (location.hostname && location.hostname.indexOf('github') === -1) {
+  if (loc.hostname && loc.hostname.indexOf('github') === -1) {
     throw new Error(`Only local and github components supported: ${origLoc}`);
   }
 
-  if (!location.hostname) {
+  if (!loc.hostname) {
     return {
-      localPath: location.path
+      localPath: loc.path
     };
   }
 
-  parts = location.path.split('/');
+  let parts = loc.path.split('/');
 
   return {
     githubUser: parts[1],
@@ -31,14 +32,10 @@ function parseGit() {
   throw new Error('Not implemented');
 }
 
-module.exports = function (location) {
-  if (!location) {
+module.exports = function(loc) {
+  if (!loc) {
     throw new Error('Location is undefined');
   }
 
-  if (location.indexOf('@') === -1) {
-    return parseHttp(location);
-  } else {
-    return parseGit(location);
-  }
+  return loc.indexOf('@') === -1 ? parseHttp(loc) : parseGit(loc);
 };

@@ -1,12 +1,14 @@
-var fs = require('fs');
-var slug = require('slug');
-var cheerio = require('cheerio');
-var locationParser = require('./parse-location');
-var promisify = require('promisify-node');
-var readFile = promisify(fs.readFile);
-var hydrolysis = require('hydrolysis');
+'use strict';
 
-var defaultConfig = {
+let fs = require('fs');
+let slug = require('slug');
+let cheerio = require('cheerio');
+let locationParser = require('./parse-location');
+let promisify = require('promisify-node');
+let readFile = promisify(fs.readFile);
+let hydrolysis = require('hydrolysis');
+
+let defaultConfig = {
   includesDir: 'includes',
   layoutsDir: 'layouts',
   pagesDir: 'pages',
@@ -24,15 +26,13 @@ function tryReadFile(filePath) {
 function extractInnerHtml(name, fpath) {
   return readFile(fpath, 'utf-8')
     .then(text => {
-      var $, innerHTML;
-      $ = cheerio.load(text);
-      innerHTML = $(name).html() || '';
+      let $ = cheerio.load(text);
+      let innerHTML = $(name).html() || '';
 
-      innerHTML = innerHTML.split('\r\n').map(function(line) {
-        return line.replace(/^\s+/, '').replace(/\s+$/, '');
-      }).filter(function(line) {
-        return Boolean(line);
-      }).join('');
+      innerHTML = innerHTML.split('\r\n')
+        .map(line => line.replace(/^\s+/, '').replace(/\s+$/, ''))
+        .filter(line => Boolean(line))
+        .join('');
 
       return innerHTML;
     })
@@ -40,43 +40,37 @@ function extractInnerHtml(name, fpath) {
 }
 
 function extractDeps(baseDir, elName) {
-  var hydroPromise, bowerDepsPromise, demoFilePath;
-
-  bowerDepsPromise = readFile(`${baseDir}/bower.json`).then(bower => {
+  let bowerDepsPromise = readFile(`${baseDir}/bower.json`).then(bower => {
     bower = JSON.parse(bower || '{}');
 
     return Object.assign({}, bower.dependencies, bower.devDependencies);
   });
 
   baseDir = baseDir.replace(new RegExp(`/${elName}$`), '');
-  demoFilePath = `${baseDir}/${elName}/demo/index.html`;
-  hydroPromise = hydrolysis.Analyzer.analyze(demoFilePath);
+  let demoFilePath = `${baseDir}/${elName}/demo/index.html`;
+  let hydroPromise = hydrolysis.Analyzer.analyze(demoFilePath);
 
   return Promise
     .all([hydroPromise, bowerDepsPromise])
     .then(values => {
-      var hydro = values.shift();
-      var bowerDeps = values.shift();
-      var docs = hydro.parsedDocuments || {};
-      var scripts = hydro.parsedScripts || {};
+      let hydro = values.shift();
+      let bowerDeps = values.shift();
 
       function parse(type, relPath) {
-        var package, install;
-
         relPath = relPath.replace(`${baseDir}/`, '');
-        package = relPath.match(/^[^\/]+/);
-        install = bowerDeps[package];
+        let pkg = relPath.match(/^[^\/]+/);
+        let install = bowerDeps[pkg];
 
         if (install && !/[/#]/.test(install)) {
-          install = `${package}#${install}`;
+          install = `${pkg}#${install}`;
         }
 
-        if (!package) {
+        if (!pkg) {
           return Promise.reject(`Bad path in demo file: ${relPath}`);
         }
 
         return {
-          package: package[0],
+          pkg: pkg[0],
           relPath: relPath,
           install: install,
           type: type
@@ -86,6 +80,9 @@ function extractDeps(baseDir, elName) {
       function filter(dep) {
         return !(new RegExp(`(${elName}.html)|(index.html)`).test(dep.relPath));
       }
+
+      let docs = hydro.parsedDocuments || {};
+      let scripts = hydro.parsedScripts || {};
 
       docs = Object.keys(docs)
         .map(parse.bind(null, 'link'))
@@ -101,8 +98,9 @@ function extractDeps(baseDir, elName) {
 }
 
 function getElementContext(el, config) {
-  var loc, travisBaseUrl = config.travisBaseUrl;
-  var elTravisUrl, dir, elDir, elDirUrl, elContext = {};
+  let travisBaseUrl = config.travisBaseUrl;
+  let elContext = {};
+  let loc, elDir, elDirUrl, elTravisUrl, dir;
 
   elContext.name = el.name;
   elContext.category = el.category;
@@ -142,23 +140,21 @@ function getElementContext(el, config) {
 }
 
 function getConfig() {
-  var filePath = 'bower_components/config/metadata.json';
-
   if (process.argv[2] === '--prod') {
     defaultConfig.baseurl = '/elements';
   }
 
-  return readFile(filePath, 'utf-8').then(config => {
-    var elements;
+  let filePath = 'bower_components/config/metadata.json';
 
+  return readFile(filePath, 'utf-8').then(config => {
     config = JSON.parse(config);
     config = Object.assign({}, defaultConfig, config);
 
-    elements = config.elements.map(el => getElementContext(el, config));
+    let elements = config.elements.map(el => getElementContext(el, config));
 
     config.elements = elements;
     config.categories = config.categories.map(cat => {
-      var catElements = elements.filter(el => el.category === cat.name);
+      let catElements = elements.filter(el => el.category === cat.name);
       catElements.forEach((el, index) => el.indexInCategory = index);
       cat.elements = catElements;
 
@@ -174,9 +170,9 @@ function getFullConfig() {
     .then(config => {
       return Promise
         .all(config.elements.map(el => {
-          var doc = tryReadFile(`${el.dir}/design-doc.md`);
-          var html = extractInnerHtml(el.name, `${el.dir}/demo/index.html`);
-          var deps = extractDeps(el.dir, el.name);
+          let doc = tryReadFile(`${el.dir}/design-doc.md`);
+          let html = extractInnerHtml(el.name, `${el.dir}/demo/index.html`);
+          let deps = extractDeps(el.dir, el.name);
 
           return Promise
             .all([doc, html, deps])

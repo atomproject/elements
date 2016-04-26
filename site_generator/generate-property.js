@@ -1,11 +1,13 @@
-var fs = require('fs');
-var path = require('path');
-var hydrolysis = require('hydrolysis');
-var getConfig = require('./config').getConfig;
-var baseDir;
+'use strict';
+
+let fs = require('fs');
+let path = require('path');
+let hydrolysis = require('hydrolysis');
+let getConfig = require('./config').getConfig;
+let baseDir;
 
 function getPropertyType(type) {
-  var translate = {
+  let translate = {
     array: 'list'
   };
 
@@ -15,16 +17,15 @@ function getPropertyType(type) {
 }
 
 function createPropertyFile(componentBaseDir) {
-  var name = path.basename(componentBaseDir);
-  var filePath = path.resolve(componentBaseDir, `${name}.html`);
-  var hydroPromise = hydrolysis.Analyzer.analyze(filePath);
+  let name = path.basename(componentBaseDir);
+  let filePath = path.resolve(componentBaseDir, `${name}.html`);
+  let hydroPromise = hydrolysis.Analyzer.analyze(filePath);
 
   return Promise.all([getConfig(), hydroPromise])
     .then(values => {
-      var element, filePath, fields;
-      var config = values.shift();
-      var parsedElement = values.shift();
-      var data = {
+      let config = values.shift();
+      let parsedElement = values.shift();
+      let data = {
         name: '',
         properties: [{
           name: 'Properties',
@@ -32,10 +33,10 @@ function createPropertyFile(componentBaseDir) {
         }]
       };
 
-      fields = data.properties[0].fields;
-      element = config.elements.find(el => el.name === name);
+      let fields = data.properties[0].fields;
+      let element = config.elements.find(el => el.name === name);
       data.name = element.displayName || name;
-      filePath = element.propertyFile;
+      let filePath = element.propertyFile;
       element = parsedElement.elementsByTagName[name];
 
       if (!element) {
@@ -43,14 +44,14 @@ function createPropertyFile(componentBaseDir) {
       }
 
       element.properties.forEach(prop => {
-        var propObj, type = getPropertyType(prop.type);
+        let type = getPropertyType(prop.type);
 
         if (type === 'function' || prop.private) {
           return;
         }
 
         //property name
-        propObj = fields[prop.name] = {};
+        let propObj = fields[prop.name] = {};
 
         //display name
         propObj.name = prop.name;
@@ -70,8 +71,8 @@ if (process.argv.length > 2) {
 
   createPropertyFile(baseDir)
     .then(obj => {
-      var filePath = obj.filePath;
-      var data = obj.data;
+      let filePath = obj.filePath;
+      let data = obj.data;
 
       data =  JSON.stringify(data, null, 4);
 
