@@ -27,48 +27,7 @@ fi
 # STEP: Dowload the latest version of component on github.
 #       Extract it and install its dependencies.
 #       Generate the necessary files if absent.
-node site_generator/list-elements.js | while read -r line
-do
-  name="${line%%:*}"
-  line="${line#*:}"
-  dir="${line%%:*}"
-  dep="${line##*:}"
-  dep="https://github.com/$dep/archive/master.tar.gz"
-
-  dir="_site/$dir"
-
-  if ! [[ -d "$dir" ]]
-  then
-    mkdir -p "$dir"
-  fi
-
-  if ! [[ -d "$dir/bower_components" ]]
-  then
-    pushd "$dir" &>/dev/null
-
-    echo "Clone: $dep"
-    curl "$dep" -L &>/dev/null >archive.tar.gz
-    echo "Extract: $name-master"
-    tar -xvf archive.tar.gz &>/dev/null
-    ndir="$name-master"
-    bow="$(readlink -f "$ndir/bower.json")"
-    cp "$bow" ./
-    echo "Install: $name"
-    bower install &>/dev/null
-    echo "Install: dynamic-data-source"
-    bower install atomproject/dynamic-data-source &>/dev/null
-    rm bower.json
-    mv "$ndir" bower_components/"$name"
-
-    popd &>/dev/null
-  fi
-
-  if ! [[ -f "$dir/bower_components/$name/property.json" ]]
-  then
-    echo "Create: property.json file for $name"
-    node site_generator/generate-property.js "$dir/bower_components/$name"
-  fi
-done
+node site_generator/install-elements.js
 
 # STEP: Generate the pages of site
 node site_generator/build.js "$1"
