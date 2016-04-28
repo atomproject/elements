@@ -1,7 +1,6 @@
 'use strict';
 
 let fs = require('fs');
-let slug = require('slug');
 let cheerio = require('cheerio');
 let locationParser = require('./parse-location');
 let promisify = require('promisify-node');
@@ -17,6 +16,10 @@ let defaultConfig = {
   travisBaseUrl: 'https://travis-ci.org',
   markdownExtensions: ['.md']
 };
+
+function slug(str) {
+  return str.toLowerCase().replace(/[ _]+/, '-');
+}
 
 function tryReadFile(filePath) {
   return readFile(filePath, 'utf-8')
@@ -114,7 +117,7 @@ function getElementContext(el, config) {
     elContext.buildStatusUrl = `${elTravisUrl}.svg?branch=master`;
   }
 
-  elContext.pageDirName = slug(el.displayName).toLowerCase();
+  elContext.pageDirName = slug(el.displayName);
   dir = loc.localPath || `${elContext.pageDirName}/bower_components/${el.name}`;
   elContext.dir = elDir = `_site/${dir}`;
   elContext.dirUrl = elDirUrl = `${config.baseurl}/${dir}`;
