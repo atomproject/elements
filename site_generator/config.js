@@ -20,13 +20,13 @@ function slug(str) {
   return str.toLowerCase().replace(/[ _]+/, '-');
 }
 
-function tryReadFile(filePath) {
-  return fs.read(filePath)
-    .catch(() => '');
+function tryRead(p) {
+  return fs.exists(p)
+    .then(exists => exists ? fs.read(p) : Promise.resolve(''));
 }
 
 function extractInnerHtml(name, fpath) {
-  return fs.read(fpath)
+  return tryRead(fpath)
     .then(text => {
       let $ = cheerio.load(text);
       let innerHTML = $(name).html() || '';
@@ -37,12 +37,11 @@ function extractInnerHtml(name, fpath) {
         .join('');
 
       return innerHTML;
-    })
-    .catch(() => '');
+    });
 }
 
 function extractDeps(baseDir, elName) {
-  let bowerDepsP = fs.read(`${baseDir}/bower.json`).then(bower => {
+  let bowerDepsP = tryRead(`${baseDir}/bower.json`).then(bower => {
     bower = JSON.parse(bower || '{}');
 
     return Object.assign({}, bower.dependencies, bower.devDependencies);
@@ -170,7 +169,7 @@ exports.getFullConfig = Q.async(function* () {
   let elements = config.elements;
 
   elements = yield Promise.all(elements.map(Q.async(function* (el) {
-    let docP = tryReadFile(`${el.dir}/design-doc.md`);
+    let docP = tryRead(`${el.dir}/design-doc.md`);
     let htmlP = extractInnerHtml(el.name, `${el.dir}/demo/index.html`);
     let depsP = extractDeps(el.dir, el.name);
 
