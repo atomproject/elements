@@ -48,10 +48,7 @@ done
 # STEP: If in prod environment then vulcanize components
 if [[ "$1" == "--prod" ]]
 then
-  # we have to exclude the ace js library from vulcanization since it loads
-  # service workers using urls relative to itself
-  node_modules/vulcanize/bin/vulcanize --exclude "bower_components/t-component-panel/ace-element/ace/" --inline-script --strip-comments components/elements.html | \
-  node_modules/crisper/bin/crisper --script-in-head=false --html _site/components/elements.html --js _site/scripts/build.js
+  node site_generator/vulcan-crisp.js
 fi
 
 echo ""
