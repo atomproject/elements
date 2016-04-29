@@ -25,8 +25,14 @@ function tryRead(p) {
     .then(exists => exists ? fs.read(p) : Promise.resolve(''));
 }
 
-function extractInnerHtml(name, fpath) {
-  return tryRead(fpath)
+let extractInnerHtml = Q.async(function* (name, fpath) {
+  let exists = yield fs.exists(fpath);
+
+  if (!exists) {
+    return Promise.resolve('');
+  }
+
+  return fs.read(fpath)
     .then(text => {
       let $ = cheerio.load(text);
       let innerHTML = $(name).html() || '';
@@ -38,63 +44,68 @@ function extractInnerHtml(name, fpath) {
 
       return innerHTML;
     });
-}
+});
 
-function extractDeps(baseDir, elName) {
-  let bowerDepsP = tryRead(`${baseDir}/bower.json`).then(bower => {
+let extractDeps = Q.async(function* (baseDir, elName) {
+  let bowerPath = `${baseDir}/bower.json`;
+  let demoFilePath = `${baseDir}/${elName}/demo/index.html`;
+  let exists = yield Promise.all([
+    fs.exists(bowerPath),
+    fs.exists(demoFilePath)
+  ]);
+
+  if (!exists[0] || !exists[1]) {
+    return Promise.resolve([]);
+  }
+
+  let bowerDepsP = fs.read(bowerPath).then(bower => {
     bower = JSON.parse(bower || '{}');
 
     return Object.assign({}, bower.dependencies, bower.devDependencies);
   });
 
   baseDir = baseDir.replace(new RegExp(`/${elName}$`), '');
-  let demoFilePath = `${baseDir}/${elName}/demo/index.html`;
   let hydroP = hydrolysis.Analyzer.analyze(demoFilePath);
+  let [ hydro, bowerDeps ] = yield Promise.all([hydroP, bowerDepsP]);
 
-  return Promise.all([hydroP, bowerDepsP])
-    .then(values => {
-      let [ hydro, bowerDeps ] = values;
+  function parse(type, relPath) {
+    relPath = relPath.replace(`${baseDir}/`, '');
+    let pkg = relPath.match(/^[^\/]+/);
+    let install = bowerDeps[pkg];
 
-      function parse(type, relPath) {
-        relPath = relPath.replace(`${baseDir}/`, '');
-        let pkg = relPath.match(/^[^\/]+/);
-        let install = bowerDeps[pkg];
+    if (install && !/[/#]/.test(install)) {
+      install = `${pkg}#${install}`;
+    }
 
-        if (install && !/[/#]/.test(install)) {
-          install = `${pkg}#${install}`;
-        }
+    if (!pkg) {
+      return Promise.reject(`Bad path in demo file: ${relPath}`);
+    }
 
-        if (!pkg) {
-          return Promise.reject(`Bad path in demo file: ${relPath}`);
-        }
+    return {
+      pkg: pkg[0],
+      relPath: relPath,
+      install: install,
+      type: type
+    };
+  }
 
-        return {
-          pkg: pkg[0],
-          relPath: relPath,
-          install: install,
-          type: type
-        };
-      }
+  function filter(dep) {
+    return !(new RegExp(`(${elName}.html)|(index.html)`).test(dep.relPath));
+  }
 
-      function filter(dep) {
-        return !(new RegExp(`(${elName}.html)|(index.html)`).test(dep.relPath));
-      }
+  let docs = hydro.parsedDocuments || {};
+  let scripts = hydro.parsedScripts || {};
 
-      let docs = hydro.parsedDocuments || {};
-      let scripts = hydro.parsedScripts || {};
+  docs = Object.keys(docs)
+    .map(parse.bind(null, 'link'))
+    .filter(filter);
 
-      docs = Object.keys(docs)
-        .map(parse.bind(null, 'link'))
-        .filter(filter);
+  scripts = Object.keys(scripts)
+    .map(parse.bind(null, 'script'))
+    .filter(filter);
 
-      scripts = Object.keys(scripts)
-        .map(parse.bind(null, 'script'))
-        .filter(filter);
-
-      return [].concat(scripts, docs);
-    })
-    .catch(() => []);
-}
+  return [].concat(scripts, docs);
+});
 
 function getElementContext(el, config) {
   let travisBaseUrl = config.travisBaseUrl;

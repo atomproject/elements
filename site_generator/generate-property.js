@@ -16,53 +16,55 @@ function getPropertyType(type) {
   return translate[type] || type;
 }
 
-function createPropertyFile(componentBaseDir, config) {
+let createPropertyFile = Q.async(function* (componentBaseDir, config) {
   let name = path.basename(componentBaseDir);
   let filePath = path.resolve(componentBaseDir, `${name}.html`);
-  let hydroPromise = hydrolysis.Analyzer.analyze(filePath);
+  let exists = yield fs.exists(filePath);
 
-  return hydroPromise
-    .then(parsedElement => {
-      let data = {
-        name: '',
-        properties: [{
-          name: 'Properties',
-          fields: {}
-        }]
-      };
+  if (!exists) {
+    return;
+  }
 
-      let fields = data.properties[0].fields;
-      let element = config.elements.find(el => el.name === name);
-      data.name = element.displayName || name;
-      let filePath = element.propertyFile;
-      element = parsedElement.elementsByTagName[name];
+  let parsedElement = yield hydrolysis.Analyzer.analyze(filePath);
+  let data = {
+    name: '',
+    properties: [{
+      name: 'Properties',
+      fields: {}
+    }]
+  };
 
-      if (!element) {
-        throw new Error(`${name}.html doesn't contain any element with name ${name}`);
-      }
+  let fields = data.properties[0].fields;
+  let element = config.elements.find(el => el.name === name);
+  data.name = element.displayName || name;
+  filePath = element.propertyFile;
+  element = parsedElement.elementsByTagName[name];
 
-      element.properties.forEach(prop => {
-        let type = getPropertyType(prop.type);
+  if (!element) {
+    throw new Error(`${name}.html has no element with name ${name}`);
+  }
 
-        if (type === 'function' || prop.private) {
-          return;
-        }
+  element.properties.forEach(prop => {
+    let type = getPropertyType(prop.type);
 
-        //property name
-        let propObj = fields[prop.name] = {};
+    if (type === 'function' || prop.private) {
+      return;
+    }
 
-        //display name
-        propObj.name = prop.name;
-        propObj.type = type;
-        propObj.value = prop.default;
-      });
+    //property name
+    let propObj = fields[prop.name] = {};
 
-      return {
-        filePath: filePath,
-        data: data
-      };
-    });
-}
+    //display name
+    propObj.name = prop.name;
+    propObj.type = type;
+    propObj.value = prop.default;
+  });
+
+  return {
+    filePath: filePath,
+    data: data
+  };
+});
 
 Q.spawn(function* () {
   let config = yield getConfig();
@@ -81,6 +83,11 @@ Q.spawn(function* () {
 
     if (!exists) {
       let property = yield createPropertyFile(p.baseDir, config);
+
+      if (!property) {
+        return;
+      }
+
       let filePath = property.filePath;
       let data = property.data;
 
