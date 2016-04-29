@@ -1,15 +1,11 @@
 'use strict';
 
-let fs = require('fs');
+let fs = require('q-io/fs');
 let nodeFetch = require('node-fetch');
 let baseApiEndPoint = 'https://api.travis-ci.org/repos';
 let getConfig = require('./config').getConfig;
 let idFilePath = '_site/element-ids.json';
-
-function handleError(err) {
-  console.log(err.stack || err);
-  process.exit(1);
-}
+let Q = require('q');
 
 function getJson(url) {
   return nodeFetch(url).then(resp => {
@@ -18,30 +14,28 @@ function getJson(url) {
   });
 }
 
-getConfig()
-  .then(config => {
-    let elementUrls = config.elements
-      .filter(el => el.name !== 'demo-tester')
-      .map(el => {
-        return baseApiEndPoint +
-          '/' + el.location.githubUser +
-          '/' + el.location.githubRepo;
-      });
-
-    let getJsonPromises = elementUrls.map(entityApi => {
-      return entityApi ? getJson(entityApi) : Promise.resolve({});
+Q.spawn(function* () {
+  let config = yield getConfig();
+  let elementUrls = config.elements
+    .filter(el => el.name !== 'demo-tester')
+    .map(el => {
+      return baseApiEndPoint +
+        '/' + el.location.githubUser +
+        '/' + el.location.githubRepo;
     });
+  let results, elementIds;
 
-    Promise.all(getJsonPromises)
-      .then(results => results.map(result => result.id))
-      // we need to retain the number of elements to show it on UI
-      .catch(() => elementUrls.map(() => {}))
-      .then(elementIds => {
-        elementIds = JSON.stringify(elementIds);
-        fs.writeFileSync(idFilePath, elementIds);
-      })
-      .then(function() {
-        console.log('Done : creating element ids');
-      });
-  })
-  .catch(handleError);
+  try {
+    results = yield Promise.all(elementUrls.map(entityApi => {
+        return entityApi ? getJson(entityApi) : Promise.resolve({});
+    }));
+    elementIds = results.map(result => result.id);
+  }
+  catch (ex) {
+    elementIds = elementUrls.map(() => {});
+  }
+  finally {
+    elementIds = JSON.stringify(elementIds);
+    fs.write(idFilePath, elementIds);
+  }
+});

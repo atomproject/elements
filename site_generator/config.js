@@ -1,11 +1,10 @@
 'use strict';
 
-let fs = require('fs');
+let fs = require('q-io/fs');
 let cheerio = require('cheerio');
 let locationParser = require('./parse-location');
-let promisify = require('promisify-node');
-let readFile = promisify(fs.readFile);
 let hydrolysis = require('hydrolysis');
+let Q = require('q');
 
 let defaultConfig = {
   includesDir: 'includes',
@@ -22,12 +21,12 @@ function slug(str) {
 }
 
 function tryReadFile(filePath) {
-  return readFile(filePath, 'utf-8')
+  return fs.read(filePath)
     .catch(() => '');
 }
 
 function extractInnerHtml(name, fpath) {
-  return readFile(fpath, 'utf-8')
+  return fs.read(fpath)
     .then(text => {
       let $ = cheerio.load(text);
       let innerHTML = $(name).html() || '';
@@ -43,7 +42,7 @@ function extractInnerHtml(name, fpath) {
 }
 
 function extractDeps(baseDir, elName) {
-  let bowerDepsPromise = readFile(`${baseDir}/bower.json`).then(bower => {
+  let bowerDepsP = fs.read(`${baseDir}/bower.json`).then(bower => {
     bower = JSON.parse(bower || '{}');
 
     return Object.assign({}, bower.dependencies, bower.devDependencies);
@@ -51,13 +50,11 @@ function extractDeps(baseDir, elName) {
 
   baseDir = baseDir.replace(new RegExp(`/${elName}$`), '');
   let demoFilePath = `${baseDir}/${elName}/demo/index.html`;
-  let hydroPromise = hydrolysis.Analyzer.analyze(demoFilePath);
+  let hydroP = hydrolysis.Analyzer.analyze(demoFilePath);
 
-  return Promise
-    .all([hydroPromise, bowerDepsPromise])
+  return Promise.all([hydroP, bowerDepsP])
     .then(values => {
-      let hydro = values.shift();
-      let bowerDeps = values.shift();
+      let [ hydro, bowerDeps ] = values;
 
       function parse(type, relPath) {
         relPath = relPath.replace(`${baseDir}/`, '');
@@ -149,7 +146,7 @@ function getConfig() {
 
   let filePath = 'bower_components/config/metadata.json';
 
-  return readFile(filePath, 'utf-8').then(config => {
+  return fs.read(filePath).then(config => {
     config = JSON.parse(config);
     config = Object.assign({}, defaultConfig, config);
 
@@ -168,32 +165,27 @@ function getConfig() {
   });
 }
 
-function getFullConfig() {
-  return getConfig()
-    .then(config => {
-      return Promise
-        .all(config.elements.map(el => {
-          let doc = tryReadFile(`${el.dir}/design-doc.md`);
-          let html = extractInnerHtml(el.name, `${el.dir}/demo/index.html`);
-          let deps = extractDeps(el.dir, el.name);
+exports.getFullConfig = Q.async(function* () {
+  let config = yield getConfig();
+  let elements = config.elements;
 
-          return Promise
-            .all([doc, html, deps])
-            .then(values => {
-              el.designDoc = '\n' + values.shift();
-              el.innerHTML = values.shift();
-              el.dependencies = JSON.stringify(values.shift());
+  elements = yield Promise.all(elements.map(Q.async(function* (el) {
+    let docP = tryReadFile(`${el.dir}/design-doc.md`);
+    let htmlP = extractInnerHtml(el.name, `${el.dir}/demo/index.html`);
+    let depsP = extractDeps(el.dir, el.name);
 
-              return el;
-            });
-        }))
-        .then(elements => {
-          config.elements = elements;
+    let [ doc, html, deps ] = yield Promise.all([docP, htmlP, depsP]);
 
-          return config;
-        });
-    });
-}
+    el.designDoc = '\n' + doc;
+    el.innerHTML = html;
+    el.dependencies = JSON.stringify(deps);
+
+    return el;
+  })));
+
+  config.elements = elements;
+
+  return config;
+});
 
 exports.getConfig = getConfig;
-exports.getFullConfig = getFullConfig;
