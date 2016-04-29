@@ -1,10 +1,10 @@
 'use strict';
 
-let fs = require('fs');
+let fs = require('q-io/fs');
 let path = require('path');
 let hydrolysis = require('hydrolysis');
 let getConfig = require('./config').getConfig;
-let baseDir;
+let Q = require('q');
 
 function getPropertyType(type) {
   let translate = {
@@ -16,15 +16,13 @@ function getPropertyType(type) {
   return translate[type] || type;
 }
 
-function createPropertyFile(componentBaseDir) {
+function createPropertyFile(componentBaseDir, config) {
   let name = path.basename(componentBaseDir);
   let filePath = path.resolve(componentBaseDir, `${name}.html`);
   let hydroPromise = hydrolysis.Analyzer.analyze(filePath);
 
-  return Promise.all([getConfig(), hydroPromise])
-    .then(values => {
-      let config = values.shift();
-      let parsedElement = values.shift();
+  return hydroPromise
+    .then(parsedElement => {
       let data = {
         name: '',
         properties: [{
@@ -66,21 +64,28 @@ function createPropertyFile(componentBaseDir) {
     });
 }
 
-if (process.argv.length > 2) {
-  baseDir = process.argv[2];
+Q.spawn(function* () {
+  let config = yield getConfig();
+  let paths = config.elements
+    .map(el => {
+      let dir = `_site/${el.pageDirName}/bower_components/${el.name}`;
 
-  createPropertyFile(baseDir)
-    .then(obj => {
-      let filePath = obj.filePath;
-      let data = obj.data;
+      return {
+        baseDir: dir,
+        propertyFile: `${dir}/property.json`
+      };
+    });
+
+  yield Promise.all(paths.map(Q.async(function* (p) {
+    let exists = yield fs.exists(p.propertyFile);
+
+    if (!exists) {
+      let property = yield createPropertyFile(p.baseDir, config);
+      let filePath = property.filePath;
+      let data = property.data;
 
       data =  JSON.stringify(data, null, 4);
-
-      fs.writeFileSync(filePath, data);
-    })
-    .catch(err => {
-      console.log(err.stack || err);
-    });
-} else {
-  console.log('Provide the base directory of a component');
-}
+      yield fs.write(filePath, data);
+    }
+  })));
+});

@@ -29,6 +29,8 @@ fi
 #       Generate the necessary files if absent.
 node site_generator/install-elements.js
 
+node site_generator/generate-property.js
+
 # STEP: Generate the pages of site
 node site_generator/build.js "$1"
 
