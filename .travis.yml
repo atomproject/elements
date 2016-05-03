@@ -5,8 +5,8 @@ branches:
   only:
   - master
 install:
-- npm i -g ap-io
-script: ap-io --prod
+- npm i ap-io
+script: node_modules/ap-io/bin/ap-io --prod
 after_success:
 - chmod +x ./deploy.sh
 - ./deploy.sh
