@@ -6,7 +6,7 @@ branches:
   - master
 install:
 - npm i ap-io
-script: node_modules/ap-io/bin/ap-io --prod
+script: node_modules/ap-io/bin/ap-io -g --verbose --baseurl '/elements'
 after_success:
 - chmod +x ./deploy.sh
 - ./deploy.sh

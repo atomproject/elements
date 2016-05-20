@@ -1,142 +1,151 @@
 {
+  "absoluteBaseurl": "https://atomproject.github.io/elements/",
+  "footerText": "atom-elements.io",
     "elements": [{
         "name": "t-autosuggest",
         "category": "form",
-        "icon": "Autosuggest",
         "displayName": "Auto Suggest",
-        "location": "https://github.com/atomelements/t-autosuggest"
+        "githubUrl": "https://github.com/atomelements/t-autosuggest",
+        "install": "atomelements/t-autosuggest"
     }, {
         "name": "t-button",
         "category": "form",
-        "icon": "Button",
         "displayName": "Button",
-        "location": "https://github.com/atomelements/t-button"
+        "githubUrl": "https://github.com/atomelements/t-button",
+        "install": "atomelements/t-button"
     }, {
         "name": "t-calendar",
         "category": "form",
-        "icon": "Calendar",
         "displayName": "Calendar",
-        "location": "https://github.com/atomelements/t-calendar"
+        "githubUrl": "https://github.com/atomelements/t-calendar",
+        "install": "atomelements/t-calendar"
     }, {
         "name": "t-checkbox-group",
         "category": "form",
-        "icon": "Checkbox",
         "displayName": "Checkbox List",
-        "location": "https://github.com/atomelements/t-checkbox-group"
+        "githubUrl": "https://github.com/atomelements/t-checkbox-group",
+        "install": "atomelements/t-checkbox-group"
     }, {
         "name": "t-colorpicker",
         "category": "form",
-        "icon": "Color_Palette",
         "displayName": "Color Picker",
-        "location": "https://github.com/atomelements/t-colorpicker"
+        "githubUrl": "https://github.com/atomelements/t-colorpicker",
+        "install": "atomelements/t-colorpicker"
     }, {
         "name": "t-dropdown",
         "category": "form",
-        "icon": "Dropdown",
         "displayName": "Dropdown",
-        "location": "https://github.com/atomelements/t-dropdown"
+        "githubUrl": "https://github.com/atomelements/t-dropdown",
+        "install": "atomelements/t-dropdown"
     }, {
         "name": "t-error-block",
         "category": "page",
         "displayName": "Error Block",
-        "location": "https://github.com/atomelements/t-error-block"
+        "githubUrl": "https://github.com/atomelements/t-error-block",
+        "install": "atomelements/t-error-block"
     }, {
         "name": "t-google-map",
         "category": "page",
-        "icon": "Map",
         "displayName": "Google Map",
-        "location": "https://github.com/atomelements/t-google-map"
-    }, {
-        "name": "t-icon-selector",
-        "category": "form",
-        "displayName": "Icon Selector",
-        "location": "https://github.com/atomelements/t-icon-selector"
+        "githubUrl": "https://github.com/atomelements/t-google-map",
+        "install": "atomelements/t-google-map"
     }, {
         "name": "t-image",
         "category": "page",
-        "icon": "Image",
         "displayName": "Image",
-        "location": "https://github.com/atomelements/t-image"
+        "githubUrl": "https://github.com/atomelements/t-image",
+        "install": "atomelements/t-image"
     }, {
         "name": "t-input",
         "category": "form",
-        "icon": "Input_Field",
         "displayName": "Input Field",
-        "location": "https://github.com/atomelements/t-input"
+        "githubUrl": "https://github.com/atomelements/t-input",
+        "install": "atomelements/t-input"
+    }, {
+        "name": "t-keepalive",
+        "category": "general",
+        "displayName": "Keep Alive",
+        "install": "travelnxtelements/t-keepalive",
+        "githubUrl": "https://github.com/travelnxtelements/t-keepalive"
     }, {
         "name": "t-list",
         "category": "page",
         "displayName": "List",
-        "location": "https://github.com/atomelements/t-list"
+        "githubUrl": "https://github.com/atomelements/t-list",
+        "install": "atomelements/t-list"
     }, {
         "name": "t-loader",
         "category": "page",
-        "icon": "Loader",
         "displayName": "Loader",
-        "location": "https://github.com/atomelements/t-loader"
+        "githubUrl": "https://github.com/atomelements/t-loader",
+        "install": "atomelements/t-loader"
     }, {
         "name": "t-notify",
         "category": "page",
         "displayName": "Notification",
-        "location": "https://github.com/atomelements/t-notify"
+        "githubUrl": "https://github.com/atomelements/t-notify",
+        "install": "atomelements/t-notify"
     }, {
         "name": "t-progress",
         "category": "page",
-        "icon": "Progress_bar",
         "displayName": "Progress Bar",
-        "location": "https://github.com/atomelements/t-progress"
+        "githubUrl": "https://github.com/atomelements/t-progress",
+        "install": "atomelements/t-progress"
     }, {
         "name": "t-radio-group",
         "category": "form",
-        "icon": "Radio_List",
         "displayName": "Radio List",
-        "location": "https://github.com/atomelements/t-radio-group"
+        "githubUrl": "https://github.com/atomelements/t-radio-group",
+        "install": "atomelements/t-radio-group"
     }, {
         "name": "t-range",
         "category": "form",
         "displayName": "Range",
-        "location": "https://github.com/atomelements/t-range"
+        "githubUrl": "https://github.com/atomelements/t-range",
+        "install": "atomelements/t-range"
     }, {
         "name": "t-section-header",
         "category": "form",
-        "icon": "Section_Header",
         "displayName": "Section Header",
-        "location": "https://github.com/atomelements/t-section-header"
+        "githubUrl": "https://github.com/atomelements/t-section-header",
+        "install": "atomelements/t-section-header"
+    }, {
+        "name": "t-sessionstorage",
+        "category": "general",
+        "displayName": "Session Storage",
+        "install": "travelnxtelements/t-sessionstorage",
+        "githubUrl": "https://github.com/travelnxtelements/t-sessionstorage"
     }, {
         "name": "t-slider",
         "category": "form",
-        "icon": "Slider",
         "displayName": "Slider",
-        "location": "https://github.com/atomelements/t-slider"
+        "githubUrl": "https://github.com/atomelements/t-slider",
+        "install": "atomelements/t-slider"
     }, {
         "name": "t-stepper",
         "category": "form",
-        "icon": "Calendar",
         "displayName": "Stepper",
-        "location": "https://github.com/atomelements/t-stepper"
+        "githubUrl": "https://github.com/atomelements/t-stepper",
+        "install": "atomelements/t-stepper"
     }, {
         "name": "t-table",
         "category": "data",
-        "icon": "Table",
         "displayName": "Table",
-        "location": "https://github.com/atomelements/t-table"
+        "githubUrl": "https://github.com/atomelements/t-table",
+        "install": "atomelements/t-table"
     }, {
         "name": "t-tabs",
         "category": "page",
-        "icon": "Map",
         "displayName": "Tabs",
-        "location": "https://github.com/atomelements/t-tabs"
+        "githubUrl": "https://github.com/atomelements/t-tabs",
+        "install": "atomelements/t-tabs"
     }, {
         "name": "t-google-youtube",
         "category": "page",
-        "icon": "Video",
         "displayName": "Youtube Video",
-        "location": "https://github.com/atomelements/t-google-youtube"
-    }, {
-        "name": "demo-tester",
-        "displayName": "Demo Tester",
-        "location": "components/demo-tester",
-        "propertyFile": "bower_components/t-component-panel/demo/property.json"
+        "githubUrl": "https://github.com/atomelements/t-google-youtube",
+        "install": "atomelements/t-google-youtube"
+
     }],
     "categories": [{
         "name": "data",
