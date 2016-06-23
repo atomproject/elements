@@ -1,0 +1,30 @@
+{
+    "name": "Search Overlay",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "hide": {
+                    "name": "hide",
+                    "type": "boolean",
+                    "value": false
+                },
+                "icon": {
+                    "name": "icon",
+                    "type": "string",
+                    "value": "maps:flight"
+                },
+                "timer": {
+                    "name": "timer",
+                    "type": "number",
+                    "value": 500
+                },
+                "value": {
+                    "name": "value",
+                    "type": "number",
+                    "value": 0
+                }
+            }
+        }
+    ]
+}

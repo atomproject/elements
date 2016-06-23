@@ -1,5 +1,6 @@
 {
     "siteName": "Atom Elements",
+    "showBuildStatus": false,
     "absoluteBaseurl": "https://atomproject.github.io/elements/",
     "footerText": "atom-elements.io",
     "elements": [{
@@ -61,10 +62,10 @@
         "category": "form",
         "displayName": "Input Field",
         "githubUrl": "https://github.com/atomelements/t-input",
-        "install": "atomelements/t-input#master"
+        "install": "atomelements/t-input"
     }, {
         "name": "t-keepalive",
-        "category": "",
+        "category": "utilities",
         "displayName": "Keep Alive",
         "githubUrl": "https://github.com/travelnxtelements/t-keepalive",
         "install": "travelnxtelements/t-keepalive#master"
@@ -112,7 +113,7 @@
         "install": "atomelements/t-section-header#master"
     }, {
         "name": "t-sessionstorage",
-        "category": "",
+        "category": "utilities",
         "displayName": "Session Storage",
         "install": "travelnxtelements/t-sessionstorage#master",
         "githubUrl": "https://github.com/travelnxtelements/t-sessionstorage"
@@ -154,7 +155,7 @@
         "githubUrl": "https://github.com/travelnxtelements/t-address"
     }, {
         "name": "t-app-footer",
-        "category": "",
+        "category": "page",
         "displayName": "App Footer",
         "install": "travelnxtelements/t-app-footer#master",
         "githubUrl": "https://github.com/travelnxtelements/t-app-footer"
@@ -166,13 +167,13 @@
         "githubUrl": "https://github.com/travelnxtelements/t-creditcard"
     }, {
         "name": "t-header",
-        "category": "",
+        "category": "page",
         "displayName": "Header",
         "install": "travelnxtelements/t-header#master",
         "githubUrl": "https://github.com/travelnxtelements/t-header"
     }, {
         "name": "t-search-overlay",
-        "category": "",
+        "category": "page",
         "displayName": "Search Overlay",
         "install": "travelnxtelements/t-search-overlay#master",
         "githubUrl": "https://github.com/travelnxtelements/t-search-overlay"
@@ -189,5 +190,8 @@
     }, {
         "name": "page",
         "displayName": "Page"
+    }, {
+        "name": "utilities",
+        "displayName": "Utilities"
     }]
 }

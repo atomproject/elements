@@ -1,0 +1,38 @@
+{
+    "name": "App Footer",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "email": {
+                    "name": "email",
+                    "type": "string",
+                    "value": "support@travelnxt.com"
+                },
+                "emailHref": {
+                    "name": "emailHref",
+                    "type": "string"
+                },
+                "logoUrl": {
+                    "name": "logoUrl",
+                    "type": "string",
+                    "value": "http://google.com"
+                },
+                "phone": {
+                    "name": "phone",
+                    "type": "string",
+                    "value": "1-855-282-6507"
+                },
+                "phoneHref": {
+                    "name": "phoneHref",
+                    "type": "string"
+                },
+                "src": {
+                    "name": "src",
+                    "type": "string",
+                    "value": "https://s3.amazonaws.com/tavisca.samplebucket/124850/Images/c9154425-43be-4a7a-9d44-463c97a58040"
+                }
+            }
+        }
+    ]
+}
