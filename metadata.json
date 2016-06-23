@@ -64,7 +64,7 @@
         "install": "atomelements/t-input#master"
     }, {
         "name": "t-keepalive",
-        "category": "general",
+        "category": "",
         "displayName": "Keep Alive",
         "githubUrl": "https://github.com/travelnxtelements/t-keepalive",
         "install": "travelnxtelements/t-keepalive#master"
@@ -112,7 +112,7 @@
         "install": "atomelements/t-section-header#master"
     }, {
         "name": "t-sessionstorage",
-        "category": "general",
+        "category": "",
         "displayName": "Session Storage",
         "install": "travelnxtelements/t-sessionstorage#master",
         "githubUrl": "https://github.com/travelnxtelements/t-sessionstorage"
@@ -146,7 +146,36 @@
         "displayName": "Youtube Video",
         "githubUrl": "https://github.com/atomelements/t-google-youtube",
         "install": "atomelements/t-google-youtube#master"
-
+    }, {
+        "name": "t-address",
+        "category": "composite",
+        "displayName": "Address",
+        "install": "travelnxtelements/t-address#master",
+        "githubUrl": "https://github.com/travelnxtelements/t-address"
+    }, {
+        "name": "t-app-footer",
+        "category": "",
+        "displayName": "App Footer",
+        "install": "travelnxtelements/t-app-footer#master",
+        "githubUrl": "https://github.com/travelnxtelements/t-app-footer"
+    }, {
+        "name": "t-creditcard",
+        "category": "composite",
+        "displayName": "Credit card",
+        "install": "travelnxtelements/t-creditcard#master",
+        "githubUrl": "https://github.com/travelnxtelements/t-creditcard"
+    }, {
+        "name": "t-header",
+        "category": "",
+        "displayName": "Header",
+        "install": "travelnxtelements/t-header#master",
+        "githubUrl": "https://github.com/travelnxtelements/t-header"
+    }, {
+        "name": "t-search-overlay",
+        "category": "",
+        "displayName": "Search Overlay",
+        "install": "travelnxtelements/t-search-overlay#master",
+        "githubUrl": "https://github.com/travelnxtelements/t-search-overlay"
     }],
     "categories": [{
         "name": "data",
@@ -154,6 +183,9 @@
     }, {
         "name": "form",
         "displayName": "Form Basic"
+    }, {
+        "name": "composite",
+        "displayName": "Form Composite"
     }, {
         "name": "page",
         "displayName": "Page"
