@@ -4,30 +4,30 @@
         {
             "name": "Properties",
             "fields": {
-                "icon": {
-                    "name": "icon",
-                    "type": "iconset",
-                    "value": "arrow-back"
-                },
-                "label": {
-                    "name": "label",
-                    "type": "string",
-                    "value": "Normal Heading"
-                },
                 "normalHeading": {
                     "name": "normalHeading",
                     "type": "boolean",
                     "value": false
+                },
+                "icon": {
+                    "name": "icon",
+                    "type": "iconset",
+                    "value": "arrow-back"
                 },
                 "rightIcon": {
                     "name": "rightIcon",
                     "type": "iconset",
                     "value": "arrow-forward"
                 },
+                "label": {
+                    "name": "label",
+                    "type": "string",
+                    "value": "Normal Heading"
+                },
                 "url": {
                     "name": "url",
                     "type": "string",
-                    "value": ""
+                    "value": "../../../../"
                 }
             }
         }

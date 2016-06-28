@@ -9,23 +9,15 @@
                     "type": "string",
                     "value": "support@travelnxt.com"
                 },
-                "emailHref": {
-                    "name": "emailHref",
-                    "type": "string"
-                },
                 "logoUrl": {
                     "name": "logoUrl",
                     "type": "string",
-                    "value": "http://google.com"
+                    "value": "../../../../"
                 },
                 "phone": {
                     "name": "phone",
                     "type": "string",
                     "value": "1-855-282-6507"
-                },
-                "phoneHref": {
-                    "name": "phoneHref",
-                    "type": "string"
                 },
                 "src": {
                     "name": "src",
