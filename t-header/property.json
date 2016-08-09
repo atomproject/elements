@@ -4,10 +4,15 @@
         {
             "name": "Properties",
             "fields": {
-                "normalHeading": {
-                    "name": "normalHeading",
+                "hideLeftIcon": {
+                    "name": "Hide Left Icon",
                     "type": "boolean",
                     "value": false
+                },
+                "normalHeading": {
+                    "name": "Normal Heading",
+                    "type": "boolean",
+                    "value": true
                 },
                 "icon": {
                     "name": "icon",
