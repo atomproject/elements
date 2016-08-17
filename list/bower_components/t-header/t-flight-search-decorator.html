@@ -1,0 +1,104 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../t-shared-lib/t-date-behavior.html">
+<!--
+    `<t-flight-search-decorator>` is a polymer component that generates the flight details data in order.
+
+
+
+    Basic usage
+    `<t-flight-search-decorator
+        id="flightHeader"
+        is-one-way="[[isOneWay]]"
+        url="@Url.Action("Index", "Home", Runtime.GetQueryParams(new List<KeyValuePair>()))"
+        from-place="{{criteria.legs.0.departureLocation.code}}"
+        to-place="{{criteria.legs.0.arrivalLocation.code}}"
+        departure-date="{{criteria.legs.0.travelDate.date}}"
+        passenger-Data="[[criteria.passengers]]"
+        return-date="[[returnDate]]">
+    </t-flight-search-decorator>`
+-->
+<dom-module id="t-flight-search-decorator">
+    <style></style>
+    <template></template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-flight-search-decorator',
+
+    observers: [
+        'compileFlightSearchCriteria(input)'
+    ],
+
+    behaviors: [
+        TravelNxt.Behaviors.DateBehavior
+    ],
+
+    properties: {
+
+        //the data object to bind to populate data
+        input: {
+            type: Object
+        },
+
+        /**
+         * Stores output of the decorator
+         * @type {Object}
+         */
+        output: {
+            type: Object,
+            notify: true
+        }
+    },
+
+    compileFlightSearchCriteria: function (searchCriteria) {
+
+        if (!searchCriteria.legs.length) {
+            return;
+        }
+        var modifiedObject = {};
+
+        //Location
+        modifiedObject.startLocation = searchCriteria.legs[0].departureLocation.cityName;
+        modifiedObject.endLocation = searchCriteria.legs[0].arrivalLocation.cityName;
+
+        //start-end date
+        modifiedObject.startDate = this._getDate(searchCriteria.legs[0].travelDate.date);
+        modifiedObject.endDate = searchCriteria.itineraryType == "RoundTrip" ? this._getDate(searchCriteria.legs[1].travelDate.date) : null;
+
+        //guests
+        modifiedObject.guestInfo = this._getPaxInfo(searchCriteria.passengers);
+
+        //modifiedObject.locationSeperatorIcon = searchCriteria.itineraryType == "OneWay" ? 'trending-flat' : 'swap-horiz'; 
+
+        this.output = modifiedObject;
+    },
+
+    _getPaxInfo: function (passengers) {
+        var paxInfo = '';
+        var _self = this;
+        passengers.forEach(function (pax) {
+            if (paxInfo.length) {
+                paxInfo = paxInfo + ", " + _self._getPassenger(pax.quantity, pax.type);
+            } else {
+                paxInfo +=  _self._getPassenger(pax.quantity, pax.type);
+            }
+        });
+        return paxInfo;
+    },
+
+    _getPassenger: function (quantity, type) {
+        switch(type) {
+            case 'Child':
+                if (quantity == 0 || quantity > 1)
+                    return quantity + " Children";
+                return (quantity + " " + type).trim();
+                break;
+            default:
+                if (quantity == 0 || quantity > 1)
+                    return quantity + " " +type +"s";
+                return (quantity + " " + type).trim();
+        }
+    }
+});
+</script>

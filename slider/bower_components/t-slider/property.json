@@ -1,0 +1,32 @@
+{
+    "name": "Slider",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "label": {
+                "name": "Label",
+                "type": "string",
+                "value": "Untitled Slider"
+            }
+        }
+    }, {
+        "name": "Properties",
+        "fields": {
+            "editable": {
+                "name": "Allow Text Input",
+                "type": "boolean",
+                "value": false
+            },
+            "pin": {
+                "name": "Show Pin When Dragging",
+                "type": "boolean",
+                "value": false
+            },
+            "snaps": {
+                "name": "Snaps to Points",
+                "type": "boolean",
+                "value": false
+            }
+        }
+    }]
+}

@@ -1,0 +1,18 @@
+{
+
+    "properties": [{
+        "name": "Properties",
+        "fields": {
+            "active": {
+                "name":"Is Active",
+                "type": "boolean",
+                "value": true
+            },
+            "alt": {
+                "name":"Placeholder Text",
+                "type": "string",
+                "value": ""
+            }
+        }
+    }]
+}

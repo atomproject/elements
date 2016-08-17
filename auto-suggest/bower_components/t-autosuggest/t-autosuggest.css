@@ -1,0 +1,223 @@
+  :host{
+    position: relative;
+    display: block;
+    outline: none;
+  }
+  
+  :host *{
+    outline:none;    
+    box-shadow: none;
+    -webkit-tap-highlight-color:transparent;
+  }
+/* 
+  :host([label]) label{
+    color: var(--form-label-color);
+    font-size: var(--form-label-size);
+    display: block;
+    margin-bottom: var(--form-label-margin);
+    white-space: nowrap; 
+    width: 100%; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+  } 
+  :host([no-label-float]) label{
+    display: none;
+  }*/
+  #clearButton{
+      position: absolute; 
+      right: 5px;
+      top: 50%;
+      -webkit-transform: translateY(-50%);
+      -moz-transform: translateY(-50%);
+      -ms-transform: translateY(-50%);
+      -o-transform: translateY(-50%);
+      transform: translateY(-50%);
+      z-index: 11;
+      color:  #fff;
+      background: var(--grey-three);
+      width: 12px;
+      height: 12px;
+      padding: 3px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+  }  
+
+  :host paper-material:hover input{
+    padding-right: 25px!important;  
+  }
+  #spinner{
+      position: absolute;
+      width: 100%;
+      padding: 10px 0;
+      z-index: 10;
+  }
+   input{
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+/* 
+  :host paper-material input{
+    font-size: var(--autosuggest-input-text-size);
+    color:var(--autosuggest-input-value-color);
+    border: 1px solid;
+    border-color: var(--autosuggest-input-border-color);
+    border-radius: var(--standard-border-radius);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  :host paper-material input::-webkit-input-placeholder {
+   color: var(--autosuggest-input-placeholder-color);
+  }
+  :host paper-material input:-moz-placeholder { Firefox 18-
+     color: var(--autosuggest-input-placeholder-color);  
+  }
+  :host paper-material input::-moz-placeholder {  Firefox 19+
+     color: var(--autosuggest-input-placeholder-color);  
+  }
+  :host paper-material input:-ms-input-placeholder {  
+     color: var(--autosuggest-input-placeholder-color);  
+  } */
+  :host ::content .autocomplete {
+    position: absolute;
+    transition: all 0.5s ease 0s;
+    max-height: 0;
+    overflow-y: hidden;
+    transition-duration: 0.3s;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+  }
+
+  
+  
+  paper-material.paper-material-0{
+    box-shadow: none;
+  }
+
+  :host ::content   div.close{
+  position: absolute;
+  transition: all 0.5s ease 0s;
+  max-height: 0;
+  overflow-y: hidden;
+  transition-duration: 0.3s;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+  }
+
+  :host ::content .autocomplete ul  {
+    padding: 0;
+    margin: 0; 
+  }
+
+  :host ::content .autocomplete ul li.active,
+  :host ::content .autocomplete ul li:active,
+  :host ::content .autocomplete ul li:focus, 
+  :host ::content .autocomplete ul li:hover
+  {
+  background-color: #EEEEEE;
+  transition: all 0.5s ease 0s;
+  }
+
+  :host ::content .autocomplete ul > li{
+    cursor: pointer;
+    font-size: var(--autosuggest-item-text-size);
+    overflow: hidden;
+    padding: var(--autosuggest-item-padding);
+    transition: background .15s linear;
+    margin: 0;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--autosuggest-item-text-color);
+    background-color: transparent;
+    border-bottom:1px solid ;
+    border-color: var(--autosuggest-item-border-color);
+  }
+  :host ::content .autocomplete ul > li:last-child{
+    border:0;
+  }
+
+  :host ::content .autocomplete ul > li:hover{
+    background: rgb(238,238,238);
+  }
+
+  :host p{
+    display: none;
+  }
+
+  :host.no-value .empty-error,
+  :host.invalid-value .invalid-error {
+    visibility: visible;
+  }
+
+  :host.no-value ::content .unfocused-line, 
+  :host.invalid-value ::content .unfocused-line {
+    background: var(--error-color);
+  }  
+
+  #spinner{
+    background-color: var(--autosuggest-item-bg-color);
+    border-bottom:1px solid ;
+    border-color: var(--autosuggest-item-border-color);
+  }
+
+  :host #cancel{
+    display: none;
+    margin-right: 10px;
+    color:var(--autosuggest-input-value-color);
+  }
+
+  :host ::content .autocomplete.open {
+    overflow: auto;
+    width:100%;
+    max-height: 80vh;
+    z-index: 99;
+    background: var(--primary-background-color,#fff);
+  }
+  /* :host.label-is-floating:hover #clearButton{
+    display: block;
+  } */
+  /* .label-container{
+    overflow: hidden;
+  } */
+@media (max-width: 600px){
+  :host.focused{
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;  
+    width:  100%;
+    background: #fff;
+    z-index: 9;
+    box-sizing:border-box;
+    overflow: hidden;
+  }
+  :host.focused paper-material{
+      border-bottom: 1px solid var(--form-border-color, --secondary-text-color); 
+  }
+  :host.focused label,
+  :host.focused paper-material,
+  :host.focused ::content paper-input-error{
+    margin: 0 10px;
+  }
+  :host.focused #cancel,
+  :host.focused ::content .label-is-floating #clearButton{
+    display: block;
+  }
+  :host.focused ::content .label-is-floating label,
+  :host.focused ::content .unfocused-line{
+    display: none;
+  }
+  :host.focused label{
+    padding-right: 16px;
+    box-sizing: border-box;
+  }
+  :host.focused ::content .label-is-floating input{
+    padding-right: 25px!important;  
+  }
+  :host.focused .label-container{
+    position: relative;
+  }
+
+}

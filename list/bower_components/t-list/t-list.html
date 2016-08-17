@@ -1,0 +1,1009 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-filter/t-filter.html">
+<link rel="import" href="t-simple-list.html">
+<link rel="import" href="../t-button/t-button.html">
+<link rel="import" href="../t-notify/t-notify.html">
+<link rel="import" href="../iron-dropdown/iron-dropdown-scroll-manager.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../paper-spinner/paper-spinner.html">
+<link rel="import" href="../t-shared-components/jquery.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="t-update-filter-behavior.html">
+<!--
+
+`t-list` displays a virtual, 'infinite' list. The template inside
+the t-list element represents the DOM to create for each list item.
+The `items` property specifies an array of list item data.
+
+For performance reasons, not every item in the list is rendered at once;
+instead a small subset of actual template elements *(enough to fill the viewport)*
+are rendered and reused as the user scrolls. As such, it is important that all
+state of the list template be bound to the model driving it, since the view may
+be reused with a new model at any time. Particularly, any state that may change
+as the result of a user interaction with the list item must be bound to the model
+to avoid view state inconsistency.
+
+__Important:__ `t-list` must ether be explicitly sized, or delegate scrolling to an
+explicitly sized parent. By "explicitly sized", we mean it either has an explicit
+CSS `height` property set via a class or inline style, or else is sized by other
+layout means (e.g. the `flex` or `fit` classes).
+
+### Template model
+
+List item templates should bind to template models of the following structure:
+
+    {
+      index: 0,     // data index for this item
+      item: {       // user data corresponding to items[index]
+        /* user item data  */
+      }
+    }
+
+Alternatively, you can change the property name used as data index by changing the
+`indexAs` property. The `as` property defines the name of the variable to add to the binding
+scope for the array.
+
+For example, given the following `data` array:
+
+##### data.json
+
+    [
+      {"name": "Bob"},
+      {"name": "Tim"},
+      {"name": "Mike"}
+    ]
+
+The following code would render the list (note the name and checked properties are
+bound from the model object provided to the template scope):
+
+    <template is="dom-bind">
+      <iron-ajax url="data.json" last-response="{{data}}" auto></iron-ajax>
+      <t-list items="[[data]]" as="item">
+        <template>
+          <div>
+            Name: <span>[[item.name]]</span>
+          </div>
+        </template>
+      </t-list>
+    </template>
+
+### Resizing
+
+`t-list` lays out the items when it recives a notification via the `resize` event.
+This event is fired by any element that implements `IronResizableBehavior`.
+
+By default, elements such as `iron-pages`, `paper-tabs` or `paper-dialog` will trigger
+this event automatically. If you hide the list manually (e.g. you use `display: none`)
+you might want to implement `IronResizableBehavior` or fire this event manually right
+after the list became visible again. e.g.
+
+    document.querySelector('t-list').fire('resize');
+
+
+@group Iron Element
+@element t-list
+@demo demo/index.html
+-->
+<dom-module id="t-list">
+    <template>      
+        <style include="iron-flex">
+        :host {
+            display: block;
+            font-family: var(--primary-font-family, 'Open sans');
+        }
+
+        .loadMoreWrapper {
+            margin: 10px 0;
+        }
+        
+        .section-small {
+            padding: 10px ;
+        }    
+        .sorting .sorting-btn {
+            margin: 0;
+            padding: 0;
+            color: var(--grey-three,#bbbbbb);
+            border-bottom: 1px solid var(--grey-two, #eeeeee);
+            background: var(--light-color, #fff);
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .filter-block {
+            border-bottom: 1px solid var(--grey-two, #eeeeee);
+            color: #bbbbbb;
+            font-size: var(--font-12, 12px);
+            padding: 12.5px;
+        }
+        
+        .filter-block iron-icon {
+            margin-left: 10px;
+        }
+        
+        .params a {
+            /* display: block; */
+            padding: 16px 0;
+            font-size: var(--font-12, 12px);
+            text-decoration: none;
+            color: inherit;
+            width: 100%;
+            position: relative;
+            text-align: center;
+            border-right: 1px solid var(--grey-two, #eeeeee);
+        }
+        
+        .params:last-child a {
+            border-right: 0;
+        }
+        
+        .absolute {
+            position: absolute;
+            width: 100%;
+            padding: 10px 0;
+            height: 100%;
+            z-index: 3;
+            background-color: #f5f5f5;
+        }
+        
+        .params iron-icon {
+            -webkit-transition: 0.3s all ease;
+            -moz-transition: 0.3s all ease;
+            -ms-transition: 0.3s all ease;
+            -o-transition: 0.3s all ease;
+            transition: 0.3s all ease;
+            -webkit-transform: rotate(90deg);
+            -moz-transform: rotate(90deg);
+            -ms-transform: rotate(90deg);
+            -o-transform: rotate(90deg);
+            transform: rotate(90deg);
+            /* position: absolute; */
+            display: none;
+            width: 17px;
+            height: 17px;
+            /* margin-left: 5px; */
+            /* top: 50%; */
+            margin-top: -5px;
+        }
+        
+        .params .active iron-icon {
+            display: -ms-inline-flexbox;
+            display: -webkit-inline-flex;
+            display: inline-flex;
+        }
+        
+        .params .active.desc iron-icon {
+            -webkit-transform: rotate(-90deg);
+            -moz-transform: rotate(-90deg);
+            -ms-transform: rotate(-90deg);
+            -o-transform: rotate(-90deg);
+            transform: rotate(-90deg);
+        }
+        
+        #ajaxLoaderContainer{
+            padding: 10px 0;
+         } 
+        .error-message{
+            font-size:var(--font-12,12px);
+            color:var(-grey-four,#777777);
+        }
+
+        .link {
+            color: var(--link-color,#0098ff);
+        }
+        </style>  
+        <div id="listContainer" >
+            <div hidden="[[!withFilter]]">                
+                <t-filter currency="[[currency]]" opened filter-icon="[[filterIcon]]" disable-filter-icon="[[disableFilterIcon]]" search-icon="[[searchIcon]]" excluded-filters="[[excludedFilters]]"  filter-response-param="[[filterResponseParam]]" id="filter" search-label="[[filterSearchLabel]]" show-twelve-hour-clock="[[showTwelveHourClock]]" auto="[[auto]]" class="flex" style="overflow:auto" filter-api="[[filterApi]]" filter-api-params="[[filterApiParams]]" include-filters="[[includeFilters]]" on-filter-change="_applyFilters" on-filter-close="_closeModal" on-filter-open="_onFilterOpen" results-paging-info="[[data.pagingInfo]]" min-start-date="[[minStartDate]]" min-end-date="[[minEndDate]]"></t-filter>
+            </div>
+            <div class="sorting paper-header" id="sortCntr">
+                <template is="dom-if" if$="[[withSorting]]">
+                    <div class=" layout horizontal sorting-btn">
+                        <template is="dom-repeat" items="{{sortParams}}" has-scroller="false">
+                            <div class=" params flex center center-justified horizontal layout">
+                                <a id$="{{item.key}}" data-value$="{{item.value}}" on-click="_sortBy" class$="{{_getSortingClass(item)}}">{{item.key}}<iron-icon icon="arrow-back" ></iron-icon></a>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+            <div class="error-message section-small" hidden$="[[!_noResultsMatched]]">
+                <div hidden$="[[!_noResultFound]]">
+                    <div>[[noResultsFoundMessage]]</div>
+                    <div><a class="link" on-click="_redirectToPage" >[[redirectLinkText]]</a></div>
+                </div>
+                <div hidden$="[[!_noResultsFiltered]]">
+                    <div>[[noResultsFilteredMessage]]</div>
+                    <div><a class="link" on-click="_showFilters" >modify filter</a> or <a class="link" on-click="_redirectToPage" >[[redirectLinkText]]</a></div>
+                </div>
+                <div  hidden$="[[!_noResultsFilteredForSearchTerm]]">
+                    <div>[[_noResultsFilteredForSearchTermMessage]]</div>
+                    <div>Modify the search term or <a class="link" on-click="_resetSearchFilter" >reset.</a></div>
+                </div>
+            </div>
+            <template is="dom-if" if="{{!_contentLoaded}}">
+                <div class="absolute horizontal layout center-justified">
+                <t-loader id="contentLoader" active></t-loader>
+                </div>
+            </template>
+            <!-- <div class="error-message " hidden$="[[_noResultsMatched]]">[[note]]</div> -->
+            
+            <div class="layout">
+                <!--  selection-enabled has been removed to handle behaviour for Iphone-6-->
+                <t-simple-list id="list" selection-enabled items="{{_list}}" class="flex" on-selected-item-changed="_selectionChanged">
+                    <content></content>
+                </t-simple-list>
+            </div>
+            <div id="ajaxLoaderContainer" hidden$="[[!ajaxLoaderContainer]]" class="horizontal layout flex center-justified padding-horzintal-10">
+                <t-loader id="ajaxLoader" active></t-loader>
+            </div>
+            <div class="layout horizontal center-justified loadMoreWrapper">
+              <t-button class="primary" disabled="{{ajaxLoaderContainer}}" hidden$="{{_hideLoadMore(loadMore, _list, data)}}" on-tap="_loadMore" label="Load More" raised></t-button>
+            </div>
+        </div>
+        <iron-ajax id="dataCall" method="[[dataCallMethod]]" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" params="[[dataApiParams]]" last-response="{{data}}" on-response="_listPopulated"></iron-ajax>
+        <iron-ajax id="applyFilterCall" headers='{"accept": "application/json"}' content-type="application/json" method="[[filterCallMethod]]" handle-as="json" url="{{filterResultsApi}}" last-response="{{data}}" on-response="_listPopulated"></iron-ajax>
+    </template>
+</dom-module>
+<script>
+    (function () {
+
+        Polymer({
+
+            is: 't-list',
+
+            behaviors:[TravelNxt.Behaviors.UpdateFiltersBehavior],
+
+            properties: {
+
+                /**
+                 * Turns on the display of filter controls
+                 */
+                withFilter: {
+                    type: Boolean,
+                    value: false
+                },
+
+                auto: {
+                    type: Boolean,
+                    value: false
+                },
+
+                showTwelveHourClock: {
+                    type: Boolean,
+                    value:false
+                },
+
+                note: { type: String, value: '' },
+
+                /**
+                 * The object containing list data, it is fetched from the `dataApi` url
+                 * and can be optionally further configured using the `tokenParam`
+                 * property
+                 */
+                data: {
+                    type: Object,
+                    value: function () {
+                        return null;
+                    },
+                    notify: true,
+                    observer: '_getList'
+                },
+
+                noResultsFoundMessage: {
+                    type: String,
+                    value: 'We could not find any flights for your search.'
+                },
+
+                filterResponseParam: {
+                    type: String,
+                    value: 'filters'
+                },
+
+                /**
+                 * The redirect link which appears when there is no result to go to search 
+                 * page usually.
+                 */
+                redirectLink: String,
+
+                /**
+                 * The search term is the link which appears when there is no result.
+                 */
+                redirectLinkText: {
+                    type: String,
+                    value:'modify search'
+                },
+
+                _noResultFound: {
+                    type: Boolean,
+                    value: false
+                },
+
+                _noResultsFiltered: {
+                    type: Boolean,
+                    value: false
+                },
+
+                _noResultsFilteredForSearchTerm: {
+                    type: Boolean,
+                    value: false
+                },
+
+                _noResultsMatched: {
+                    type: Boolean,
+                    value: false
+                },
+
+                noResultsFilteredMessage: {
+                    type: String,
+                    value: 'We could not find any flights for the filters you have applied.'
+                },
+
+                noResultsFilteredForSearchTermMessage:{
+                    type: String,
+                    value: 'We could not find any itineraries containing \'SEARCHTERM\’'
+                },
+
+                defaultFilters:{
+                    type: Array,
+                    value: []
+                },
+
+                updateFilters: {
+                    type: Boolean,
+                    value: false
+                },
+
+                _filtersApplied: Boolean,
+
+                /**
+                 * The URL of the list data
+                 */
+                dataApi: {
+                    type: String,
+                    value: "",
+                    observer: "_dataApiChanged"
+                },
+
+                /**
+                 * Excluee the filters
+                 */
+                includeFilters: {
+                    type: Array,
+                    value: function () {
+                        return [];
+                    }
+                },
+
+                /**
+                 * Customize filter parameters
+                 * array item is an object with key equal to category and value equal toitem name
+                */
+                excludedFilters:{
+                    type: Array,
+                    value: []
+                },
+
+                /**
+                 * The parameters to append to the `dataApi` value, i.e. the
+                 * list data URL. Usually these parameters control the querying
+                 * of data on the api server.
+                 */
+                dataApiParams: {
+                    type: String,
+                    value: ""
+                },
+
+                /**
+                 * The api to fetch the various kinds of filters from
+                 */
+                filterApi: {
+                    type: String,
+                    value: ""
+                },
+
+                /**
+                 * The parameters controlling the filtering of data
+                 */
+                filterApiParams: {
+                    type: String,
+                    value: ""
+                },
+
+                /**
+                 * The api to fetch the various kinds of filters from.
+                 * This is used by this component
+                 */
+                filterResultsApi: {
+                    type: String,
+                    value: ""
+                },
+
+                /**
+                 * This property defines which values(count or starting price) are being deplayed in front of option filters.
+                 * [
+                 *     "showRatingCount",
+                 *     "show{filterGroup}Price"
+                 * ]
+                 * @type {Array}
+                 */
+                filterDisplaySettings: {
+                    type: Array,
+                    observer: '_setFilterDisplaySettings'
+                },
+
+                /**
+                 * Turns the display of sorting controls
+                 */
+                withSorting: {
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                 * Turns on when no list data can be fetched.
+                 */
+                noResultFound: {
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                 * Controls the sorting type
+                 */
+                sortBy: {
+                    type: String,
+                    value: "+asc"
+                },
+
+                /**
+                 * The actual list which contains objects/values
+                 * that will be iterated over to show the list.
+                 */
+                _list: {
+                    type: Array,
+                    value: function () {
+                        return [];
+                    }
+                },
+
+                /**
+                 * This selects an object/value inside the data
+                 * fetched from the `dataApi` URL, the selected object
+                 * is used as the list data.
+                 */
+                tokenParam: {
+                    type: String,
+                    value: ""
+                },
+
+                /**
+                 * Array of sorting controls, this property is used
+                 * to display various ways in which the list data can be sorted
+                 */
+                sortParams: {
+                    type: Array,
+                    reflectToAttribute: true,
+                    value: function () {
+                        return [];
+                    }
+                },
+
+                _skip: {
+                    type: Number,
+                    value: 0
+                },
+
+                skipCount: {
+                    type: Number,
+                    value: 20
+                },
+
+                top: {
+                    type: Number
+                },
+
+                _filterSkip: {
+                    type: Number,
+                    value: 0
+                },
+
+                _scrollFired: {
+                    type: Boolean,
+                    value: false
+                },
+
+                _isFiltered: {
+                    type: Boolean,
+                    value: false
+                },
+
+                _isSorted: {
+                    type: Boolean,
+                    value: false
+                },
+
+                _contentLoaded: {
+                    type: Boolean,
+                    value: false
+                },
+
+                _defaultSorting: {
+                    type: String,
+                    value: ""
+                },
+
+                _isFiltering: {
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                 * This is the currently selected item in list.
+                 * An item in list can be selected by clicking on it.
+                 */
+                selectedItem: {
+                    type: Object,
+                    value: null,
+                    notify: true
+                },
+
+                filterSearchLabel:{
+                    type:String,
+                    value:'Search hotel name'
+                },
+
+                dataCallMethod:{
+                    type:String,
+                    value:'GET'
+                },
+
+                filterCallMethod:{
+                    type:String,
+                    value:'POST'
+                },
+
+                /**
+                 * This flag is used to restrict minimum value for start date in date range filter
+                 * All past dates are shown by default
+                */
+                minStartDate:{
+                    type:Boolean,
+                    value:false
+                },
+
+                /**
+                 * This flag is used to restrict minimum value for end date in date range filter
+                 * All past dates are shown by default
+                */
+                minEndDate:{
+                    type:Boolean,
+                    value:false
+                },
+
+
+                /*Filter icon to be replaced and given value*/
+                filterIcon: {
+                    type: String,
+                    value: 'filter-list'
+                },
+
+                /*Disable Filter icon to be replaced and given value*/
+                disableFilterIcon: {
+                    type: String,
+                    value: 'close'
+                },
+
+                /*search icon to be replaced and given value*/
+                searchIcon: {
+                    type: String,
+                    value: 'search'
+                },
+
+                // use load more button or infinite scroll
+                loadMore: {
+                  type: Boolean,
+                  value: false
+                }
+            },
+
+
+            attached: function() {            
+                this.attachedHit = true;
+                if (this.auto)
+                    this.generateList();
+            },
+
+            generateList: function() {
+                var component = this;
+                this.sortParams.forEach(function (param) {
+                    if (param.default == true)
+                        component._defaultSorting = param.value;
+                });
+
+                if (!this.loadMore) {
+                  this._setupInfiniteScroll();
+                }
+
+                if (this.dataApi != undefined && this.dataApi != '') {
+                    this.$.dataCall.url = this.dataApi + (this.dataApi.indexOf('?') !=-1 ?  "&" : "?") + this._defaultSorting + this.sortBy;
+                    this._isSorted = true;
+                    this.$.dataCall.generateRequest();
+                    this._scrollFired = true;
+                }
+            },
+
+            _setupInfiniteScroll: function () {
+                var component = this;
+                $(window).scroll(function (event) {
+                    if (!component._scrollFired) {
+                        component.ajaxLoaderContainer =false;
+                        if (($(window).scrollTop() + $(window).height() > $(document).height() - 800)) {
+                            if (component._list.length < component.data.pagingInfo.filteredCount)
+                                component._getNextDataSet();
+                        }
+                    }
+                    event.stopImmediatePropagation();
+                    return false;
+                });
+            },
+
+            _hideLoadMore: function(loadMore, _list, data) {
+              let fc = this.get('data.pagingInfo.filteredCount');
+              let lc = this.get('_list.length');
+
+              if (!loadMore ||
+                  fc === null || fc === undefined ||
+                  lc === null || lc === undefined) {
+
+                return true;
+              }
+
+              return lc >= fc;
+            },
+
+            _loadMore: function(ev) {
+              if (ev.currentTarget.disabled) {
+                return;
+              }
+              else if (this._list.length < this.data.pagingInfo.filteredCount) {
+                this._getNextDataSet();
+              }
+            },
+
+            _dataApiChanged: function () {  
+                var component = this;
+
+                if (!this.attachedHit) return;
+
+                if (this.dataApi != undefined && this.dataApi != "" && this.auto) {
+                    this.$.dataCall.url = this.dataApi + (this.dataApi.indexOf('?') > -1 ? '&' : '?') + component._defaultSorting + this.sortBy;
+                    this._isSorted = true;
+                    this.$.dataCall.generateRequest();
+                    this._scrollFired = true;
+                }
+            },
+
+            _closeModal: function (event) {                
+                Polymer.IronDropdownScrollManager.removeScrollLock(this);
+            },
+
+            _selectionChanged: function (event) {
+                if (event.detail.value != null) {
+                    this.selectedItem = event.detail.value;
+                    this.fire('item-selected', this.selectedItem);
+                }
+            },
+
+            _getList: function () {
+                var component = this;
+                this.ajaxLoaderContainer =false;
+                if (component.data != null && component.data.status.isSuccessful) {
+                    if (this._isSorted) {
+                        this._isSorted = false;
+                        if (component.tokenParam === "") {
+                            if (component.data != null)
+                                component._list = component.data;
+                        }
+                        else {
+                            if (component.data[component.tokenParam] != null)
+                                component._list = component.data[component.tokenParam];
+                        }
+                    } else {
+                        if (component.tokenParam === "") {
+                            if (component.data != null)
+                                component._list = component._list.concat(component.data);
+                        }
+                        else {
+                            if (component.data[component.tokenParam] != null)
+                                component._list = component._list.concat(component.data[component.tokenParam]);
+                        }
+                    }
+                }
+
+                component.$.list.fire('resize');
+
+            },
+
+            _setFilterDisplaySettings: function () {
+                if (this.filterDisplaySettings.length) {
+                    var filterComp = this.$.filter;
+                    this.filterDisplaySettings.forEach(function (setting) {
+                        filterComp[setting] = true;
+                    })
+                }
+            },
+
+            _updateFilters: function () {
+
+                if (!this.data.inventories || !this.data.inventories.length) {
+                    return true;
+                }
+                
+                this.data.inventories[0].isFirstItinerary = true;
+                this.data.pagingInfo.total = this.data.inventories.length;
+                if (this.$.applyFilterCall.body && this.$.applyFilterCall.body.length) {
+                    var inputFilters = JSON.parse(this.$.applyFilterCall.body);
+                }
+                
+                var filters = this.modifyFilters(this.data.inventories, this.$.filter.response.slice(), inputFilters);
+
+                if (!filters || !filters.length) {
+                    return false;
+                }
+
+                var _self = this;
+                _self.$.filter.cachedFilters = [];
+                _self.$.filter.response = null;
+                setTimeout(function () {
+                    _self.$.filter.response = filters;
+                    _self.$.filter.handleResponse(filters);
+                }, 1000);
+                return true;
+            },
+
+            _applyFilters: function (event) {
+                var filters = event.detail.filters.push.apply(event.detail.filters, this.defaultFilters);
+                this.onApplyFilters(event.detail.filters);
+            },            
+
+            onApplyFilters: function(filters) {
+                this._contentLoaded = false;
+                this._skip = 0;                
+                this._list = [];
+                this._filtersApplied = false;
+                if (filters && filters.length)
+                    this._isFiltered = true;
+                else
+                    this._isFiltered = false;
+
+                var filter = filters;
+
+                if (!this._defaultSorting && this.sortParams && this.sortParams.length) {
+                    var component = this;
+                    this.sortParams.forEach(function (param) {
+                        if (param.default == true)
+                            component._defaultSorting = param.value;
+                    });
+                }
+
+                if (filter.length > 0) {
+                    this._isFiltering = true;
+                    this.$.applyFilterCall.url = this.filterResultsApi + "&" + this._defaultSorting + this.sortBy;
+                    this._filtersApplied = true;
+                    this.$.applyFilterCall.body = JSON.stringify(filter);
+                    this.$.applyFilterCall.generateRequest();
+                } else {
+                    this._isFiltering = false;
+                    this.$.dataCall.url = this.dataApi + "&" + this._defaultSorting + this.sortBy;
+                    this.$.dataCall.generateRequest();
+                    this._scrollFired = true;
+                }                
+
+                this._noResultsMatched = false;
+                this.$.filter._showHeader();
+                this.$.sortCntr.hidden = false;
+                
+                Polymer.IronDropdownScrollManager.removeScrollLock(this);
+            },
+
+            _sortBy: function (e) {
+
+                var sortElement = e.currentTarget;
+                var api;
+                this._skip = 0;
+                var isAscending = this.sortBy === "+asc";
+
+                if (sortElement.className.search("active") < 0) {
+                    isAscending = true;
+                    sortElement.classList.remove("desc");
+                    this.sortParams.forEach(function (param) {
+                        this.$$('#' + param.key).classList.remove("active");
+                    },this);
+                    sortElement.classList.add("active");
+                }else{                        
+                    if (sortElement.className.search("desc") >= 0) {
+                        isAscending = true;
+                        sortElement.classList.remove("desc");
+                    } else {
+                        isAscending = false;
+                        sortElement.classList.add("desc");
+                    }
+                }
+
+                if (isAscending)
+                    this.sortBy = "+asc";
+                else
+                    this.sortBy = "+desc";
+
+                this._defaultSorting = sortElement.getAttribute("data-value");
+                if (this._isFiltered) {
+                    if (this.filterResultsApi.indexOf('?') === -1) {
+                        api = this.filterResultsApi + '?';
+                    } else {
+                        api = this.filterResultsApi + '&';
+                    }
+                    this.$.applyFilterCall.url = api + this._defaultSorting + this.sortBy;
+                    this.$.applyFilterCall.body = JSON.stringify(this.$$('#filter').appliedFilters);
+                    this.$.applyFilterCall.generateRequest();
+                } else {
+                    if (this.dataApi.indexOf('?') === -1) {
+                        api = this.dataApi + '?';
+                    } else {
+                        api = this.dataApi + '&';
+                    }
+                    this.$.dataCall.url = api + this._defaultSorting + this.sortBy;
+                    this.$.dataCall.generateRequest();
+                    this._scrollFired = true;
+                }
+                this._isSorted = true;
+                this._contentLoaded = false;
+            },
+
+            _listPopulated: function () {
+
+                if (!this.data) {
+                    return;
+                }
+                var generateFilteredRatio = true;
+                if (this.updateFilters) {
+                    generateFilteredRatio = this._updateFilters();
+                }
+
+                if (generateFilteredRatio) {
+                    this.$.filter._getFilteredRatio(this.data.pagingInfo);
+                } else {
+                    if (this.$.filter.filteredRatio) {
+                        this.data.pagingInfo.total = this.$.filter.filteredRatio.split('/')[1];
+                    }
+                    this.$.filter._getFilteredRatio(this.data.pagingInfo);
+                }
+
+                var list = [];
+                if (this.tokenParam === '') {
+                    list = this.data;
+                } else {
+                    list = this.data[this.tokenParam];
+                }
+                if (!this.data.status.isSuccessful || list === null || list.length === 0) {
+                    this.noResultFound = true; //public api
+                    if (this._filtersApplied && this._list.length === 0){
+                        var hasSearchFilter = false;
+                        var recentFilter = this.$.filter.appliedFilters[this.$.filter.appliedFilters.length - 1];
+                        
+                        if(recentFilter.type == 'Search' && recentFilter.value){
+                            hasSearchFilter = true;
+                        }
+                        
+                        if(hasSearchFilter){
+                            this._noResultsFilteredForSearchTerm = true;
+                            this._noResultsFilteredForSearchTermMessage = this.noResultsFilteredForSearchTermMessage.replace('SEARCHTERM', this.$.filter.searchVal);
+                        }
+                        else                            
+                            this._noResultsFiltered = true;
+                    }
+                    else {
+                        if (this._list.length === 0)
+                            this._noResultFound = true;
+                    }
+                }
+                else {
+                    this._noResultFound = false;
+                    this._noResultsFiltered = false;
+                    this._noResultsFilteredForSearchTerm = false;
+                }
+
+                this._noResultsMatched = this._noResultsFiltered || this._noResultFound || this._noResultsFilteredForSearchTerm;
+                if(this._noResultsMatched && !this._noResultsFilteredForSearchTerm){
+                    this.$.filter._hideHeader();
+                    this.$.sortCntr.hidden = true;
+                } else if(this._noResultsFilteredForSearchTerm){
+                    this.$.sortCntr.hidden = true;
+                } else{
+                    this.$.filter._showHeader();
+                    this.$.sortCntr.hidden = false;
+                }
+                this._contentLoaded = true;
+                this.fire('list-population');
+                this._scrollFired = false;
+            },
+
+            _onFilterOpen: function () {                
+                Polymer.IronDropdownScrollManager.pushScrollLock(this);
+            },
+
+            _showFilters: function(){                
+                this.$.filter._openModal();             
+                this._onFilterOpen();
+            },
+
+            _resetSearchFilter: function(){
+                this.$.filter._removeSearchFilter();
+            },
+
+            _getNextDataSet: function () {
+
+                this.ajaxLoaderContainer =true;
+                if (this._isFiltering) {
+                    this._skip = this._skip + this.skipCount;
+                    this.$.applyFilterCall.url = this.filterResultsApi + "&" + this._defaultSorting + this.sortBy + "&$skip=" + this._skip;
+                    if(this.top){
+                        this.$.applyFilterCall.url += "&$top=" + this.top;
+                    }
+                    this.$.applyFilterCall.body = JSON.stringify(this.$$('#filter').appliedFilters);
+                    this.$.applyFilterCall.generateRequest();
+                    this._scrollFired = true;
+                } else {
+                    if (!this._isFiltered) {
+                        this._skip = this._skip + this.skipCount;
+                        this.$.dataCall.url = this.dataApi + "&" + this._defaultSorting + this.sortBy + "&$skip=" + this._skip;
+                        if(this.top){
+                            this.$.dataCall.url += "&$top=" + this.top;
+                        }
+                        this.$.dataCall.generateRequest();
+                        this._scrollFired = true;
+                    } else {
+                        this._skip = 0;
+                        this._filterSkip = this._filterSkip + this.skipCount;
+                    }
+                }
+            },
+
+            _getPaginationApi: function () {
+                return this.dataApi + "&$skip=" + this._skip;
+            },
+
+            _getSortingClass: function (item) {
+
+                if (item.default){
+                    var sortingClass = "active";                    
+                    if (this.sortBy === "+desc") {
+                        sortingClass += " desc";
+                    }
+                    return sortingClass;
+                }
+
+                return false;
+            },
+
+            _redirectToPage: function () {
+                window.location.href = this.redirectLink;
+            },
+
+            //Method to run generate filter 
+            generateFilter: function(){
+                this.$.filter.generateFilter();
+            }
+
+        });
+
+    })();
+</script>

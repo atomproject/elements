@@ -1,0 +1,33 @@
+{
+    "name": "Image",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "placeholder": {
+                "name": "Placeholder Text",
+                "type": "string",
+                "value": "No image found"
+            },
+            "src": {
+                "name": "Link to Source",
+                "type": "string",
+                "value": "http://lorempixel.com/800/400"
+            }       
+        }
+    }, {
+        "name": "Properties",
+        "fields": {
+            "fade": {
+                "name": "Fading Effect",
+                "type": "Boolean",
+                "value": true
+            },
+            "sizing": {
+                "name": "Position",
+                "type": "options",
+                "values": ["Cover", "Contain"],
+                "value":"Cover"
+            }
+        }
+    }]
+}

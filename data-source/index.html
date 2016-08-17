@@ -1,0 +1,987 @@
+<!doctype html>
+<html>
+<head>
+
+  <title>
+  
+    Data Source | Atom Elements
+  
+</title>
+
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+<link rel="shortcut icon" href="/elements/favicon.ico?v=x12">
+
+<!-- bower_components is deleted after vulcanization so files that should be
+  retained must be added to excludes array in `removeBowerComponents` function -->
+<script src="/elements/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+<link rel="stylesheet" href="/elements/styles/custom.css" media="all" async type="text/css">
+<link rel="import" href="/elements/components/elements.html">
+
+
+<!--[if lt IE 10 ]>
+  <script type='text/javascript'>
+    alert( 'Your IE is Old' );
+
+    // or set a flag or something
+
+    var oldIE = true;
+  </script>
+<![endif]-->
+
+
+</head>
+<body class="layout horizontal center center-justified">
+
+  <div class="overlay"></div>
+
+  <t-scaffold id="scaff" scaffold-type="atom">
+    <nav-toolbar>
+      <div class="product-logo" >
+        <a href="/elements/">
+          <img src="/elements/assets/logo.png" id="prod_brand" />
+        </a>
+      </div>
+    </nav-toolbar>
+
+    <header-toolbar style="width:100%">
+      <div class="horizontal layout center">
+        
+          <span id="selectedComponent">Data Source</span>
+          
+        
+        <!-- 
+          <span class="badge-alpha-testing">Alpha</span>
+         -->
+      </div>
+    </header-toolbar>
+
+    <nav-content>
+      <paper-menu class="nav-panel">
+        <paper-submenu opened>
+          <paper-item class="top menu-trigger iron-selected">
+            <span class="label">Elements</span>
+            <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+          </paper-item>
+          <paper-menu class="menu-content">
+          
+            <paper-submenu >
+              <paper-item class="menu-trigger ">
+                <span class="label">Data</span>
+                <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+              </paper-item>
+              <paper-menu class="menu-content" selected="2">
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-table"
+                    onclick="redirect('/elements/table/')"
+                    data-category="data">
+
+                    Table
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+              </paper-menu>
+            </paper-submenu>
+          
+            <paper-submenu >
+              <paper-item class="menu-trigger ">
+                <span class="label">Form Basic</span>
+                <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+              </paper-item>
+              <paper-menu class="menu-content" selected="2">
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-autosuggest"
+                    onclick="redirect('/elements/auto-suggest/')"
+                    data-category="form">
+
+                    Auto Suggest
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-button"
+                    onclick="redirect('/elements/button/')"
+                    data-category="form">
+
+                    Button
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-calendar"
+                    onclick="redirect('/elements/calendar/')"
+                    data-category="form">
+
+                    Calendar
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-checkbox-group"
+                    onclick="redirect('/elements/checkbox-list/')"
+                    data-category="form">
+
+                    Checkbox List
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-colorpicker"
+                    onclick="redirect('/elements/color-picker/')"
+                    data-category="form">
+
+                    Color Picker
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-dropdown"
+                    onclick="redirect('/elements/dropdown/')"
+                    data-category="form">
+
+                    Dropdown
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-input"
+                    onclick="redirect('/elements/input-field/')"
+                    data-category="form">
+
+                    Input Field
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-radio-group"
+                    onclick="redirect('/elements/radio-list/')"
+                    data-category="form">
+
+                    Radio List
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-range"
+                    onclick="redirect('/elements/range/')"
+                    data-category="form">
+
+                    Range
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-section-header"
+                    onclick="redirect('/elements/section-header/')"
+                    data-category="form">
+
+                    Section Header
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-slider"
+                    onclick="redirect('/elements/slider/')"
+                    data-category="form">
+
+                    Slider
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-stepper"
+                    onclick="redirect('/elements/stepper/')"
+                    data-category="form">
+
+                    Stepper
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-checkbox"
+                    onclick="redirect('/elements/checkbox/')"
+                    data-category="form">
+
+                    Checkbox
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-dropdown-menu"
+                    onclick="redirect('/elements/dropdown-menu/')"
+                    data-category="form">
+
+                    Dropdown Menu
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-icon-selector"
+                    onclick="redirect('/elements/icon-selector/')"
+                    data-category="form">
+
+                    Icon Selector
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-password-input"
+                    onclick="redirect('/elements/password-input/')"
+                    data-category="form">
+
+                    Password Input
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-radio-button"
+                    onclick="redirect('/elements/radio-button/')"
+                    data-category="form">
+
+                    Radio Button
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-data-feeder"
+                    onclick="redirect('/elements/data-feeder/')"
+                    data-category="form">
+
+                    Data Feeder
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+              </paper-menu>
+            </paper-submenu>
+          
+            <paper-submenu >
+              <paper-item class="menu-trigger ">
+                <span class="label">Form Composite</span>
+                <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+              </paper-item>
+              <paper-menu class="menu-content" selected="2">
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-address"
+                    onclick="redirect('/elements/address/')"
+                    data-category="composite">
+
+                    Address
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-creditcard"
+                    onclick="redirect('/elements/credit-card/')"
+                    data-category="composite">
+
+                    Credit card
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+              </paper-menu>
+            </paper-submenu>
+          
+            <paper-submenu >
+              <paper-item class="menu-trigger ">
+                <span class="label">Page</span>
+                <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+              </paper-item>
+              <paper-menu class="menu-content" selected="2">
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-error-block"
+                    onclick="redirect('/elements/error-block/')"
+                    data-category="page">
+
+                    Error Block
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-google-map"
+                    onclick="redirect('/elements/google-map/')"
+                    data-category="page">
+
+                    Google Map
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-image"
+                    onclick="redirect('/elements/image/')"
+                    data-category="page">
+
+                    Image
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-list"
+                    onclick="redirect('/elements/list/')"
+                    data-category="page">
+
+                    List
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-loader"
+                    onclick="redirect('/elements/loader/')"
+                    data-category="page">
+
+                    Loader
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-notify"
+                    onclick="redirect('/elements/notification/')"
+                    data-category="page">
+
+                    Notification
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-progress"
+                    onclick="redirect('/elements/progress-bar/')"
+                    data-category="page">
+
+                    Progress Bar
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-tabs"
+                    onclick="redirect('/elements/tabs/')"
+                    data-category="page">
+
+                    Tabs
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-tabs-v2"
+                    onclick="redirect('/elements/tabs-v2/')"
+                    data-category="page">
+
+                    Tabs V2
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-google-youtube"
+                    onclick="redirect('/elements/youtube-video/')"
+                    data-category="page">
+
+                    Youtube Video
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-app-footer"
+                    onclick="redirect('/elements/app-footer/')"
+                    data-category="page">
+
+                    App Footer
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-header"
+                    onclick="redirect('/elements/header/')"
+                    data-category="page">
+
+                    Header
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-search-overlay"
+                    onclick="redirect('/elements/search-overlay/')"
+                    data-category="page">
+
+                    Search Overlay
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-menu"
+                    onclick="redirect('/elements/menu/')"
+                    data-category="page">
+
+                    Menu
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-scaffold"
+                    onclick="redirect('/elements/scaffold/')"
+                    data-category="page">
+
+                    Scaffold
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-overlay"
+                    onclick="redirect('/elements/overlay/')"
+                    data-category="page">
+
+                    Overlay
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-carousel"
+                    onclick="redirect('/elements/carousel/')"
+                    data-category="page">
+
+                    Carousel
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-pagination"
+                    onclick="redirect('/elements/pagination/')"
+                    data-category="page">
+
+                    Pagination
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+              </paper-menu>
+            </paper-submenu>
+          
+            <paper-submenu  opened >
+              <paper-item class="menu-trigger  iron-selected ">
+                <span class="label">Utilities</span>
+                <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+              </paper-item>
+              <paper-menu class="menu-content" selected="2">
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-keepalive"
+                    onclick="redirect('/elements/keep-alive/')"
+                    data-category="utilities">
+
+                    Keep Alive
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-sessionstorage"
+                    onclick="redirect('/elements/session-storage/')"
+                    data-category="utilities">
+
+                    Session Storage
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link  iron-selected "
+                     active 
+                    data-component="t-datasource"
+                    onclick="redirect('/elements/data-source/')"
+                    data-category="utilities">
+
+                    Data Source
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+              </paper-menu>
+            </paper-submenu>
+          
+            <paper-submenu >
+              <paper-item class="menu-trigger ">
+                <span class="label">Account</span>
+                <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+              </paper-item>
+              <paper-menu class="menu-content" selected="2">
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-sign-in"
+                    onclick="redirect('/elements/login-or-sign-in/')"
+                    data-category="account">
+
+                    Login or Sign In
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-sign-up"
+                    onclick="redirect('/elements/register-or-sign-up/')"
+                    data-category="account">
+
+                    Register or Sign Up
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-forgot-password"
+                    onclick="redirect('/elements/forgot-password/')"
+                    data-category="account">
+
+                    Forgot Password
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+              </paper-menu>
+            </paper-submenu>
+          
+            <paper-submenu >
+              <paper-item class="menu-trigger ">
+                <span class="label">Misc</span>
+                <iron-icon icon="hardware:keyboard-arrow-down"></iron-icon>
+              </paper-item>
+              <paper-menu class="menu-content" selected="2">
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-text-container"
+                    onclick="redirect('/elements/text-container/')"
+                    data-category="misc">
+
+                    Text Container
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-map-nearby-search"
+                    onclick="redirect('/elements/map-nearby-search/')"
+                    data-category="misc">
+
+                    Map Nearby Search
+                    
+                      <span class="badge-alpha-testing">Alpha</span>
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-form"
+                    onclick="redirect('/elements/form/')"
+                    data-category="misc">
+
+                    Form
+                    
+                  </paper-item>
+                
+                  <paper-item
+                    class="component-link "
+                    
+                    data-component="t-google-apis"
+                    onclick="redirect('/elements/google-apis/')"
+                    data-category="misc">
+
+                    Google APIs
+                    
+                  </paper-item>
+                
+              </paper-menu>
+            </paper-submenu>
+          
+
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+          
+            
+              <paper-item
+                class="component-link "
+                
+                data-component="demo-tester"
+                onclick="redirect('/elements/demo-tester/')">
+
+                Demo Tester
+                
+              </paper-item>
+            
+          
+          </paper-menu>
+        </paper-submenu>
+
+        
+          <paper-item
+            class="top "
+            onClick="redirect('/elements/about/')">
+
+            About
+          </paper-item>
+        
+          <paper-item
+            class="top "
+            onClick="redirect('/elements/settings/')">
+
+            Settings
+          </paper-item>
+        
+      </paper-menu>
+    </nav-content>
+
+    <footer>
+      <p>atom-elements.io</p>
+    </footer>
+
+    <build-status
+      total="49"
+      element-ids-file-path="/elements/element-ids.json">
+    </build-status>
+
+    
+<div id="elementContent" class="content layout vertical fit content-component">
+  <div id="tabBar" class="layout horizontal center-justified">
+    <paper-tabs noink  selected="2" >
+      <paper-tab>Design Considerations</paper-tab>
+      <paper-tab>Dev Zone</paper-tab>
+      
+        <paper-tab>Demo</paper-tab>
+      
+    </paper-tabs>
+  </div>
+  <iron-pages selected="2" class="flex" style="position:relative">
+    <div class="fit designTabWrapper">
+      <div class="designTab">
+        <marked-element>
+          <div class="markdown-html"></div>
+          <script type="text/markdown">
+						
+
+          </script>
+        </marked-element>
+      </div>
+    </div>
+    <div class="fit">
+      <iframe id="idIframe" src="/elements/data-source/bower_components/t-datasource/" width="100%"></iframe>
+    </div>
+    
+      <div class="fit">
+        <t-demo-atom
+          demo-file="/elements/data-source/bower_components/t-datasource/demo/atom.html"
+          properties-file="/elements/data-source/bower_components/t-datasource/property.json"
+          el-name="t-datasource"
+          el-disp-name="data-source"
+          el-dependencies='[{"relPath":"webcomponentsjs/webcomponents-lite.js","install":"webcomponentsjs#~0.7.14","type":"script"},{"relPath":"t-datasource/t-datasource.html","install":"atomelements/t-datasource#master","type":"link"}]'
+          absolute-baseurl='https://atomproject.github.io/elements/'
+          baseurl='/elements'>
+          <template></template>
+        </t-demo-atom>
+      </div>
+    
+  </iron-pages>
+</div>
+
+<script type="text/javascript">
+  (function() {
+    var pages = document.querySelector('iron-pages');
+    var tabs = document.querySelector('paper-tabs');
+
+    tabs.addEventListener('iron-select', function () {
+      pages.selected = tabs.selected;
+    });
+  })();
+</script>
+
+  </t-scaffold>
+
+  <script>
+    window.addEventListener('WebComponentsReady', function (e) {
+      var overlay = document.querySelector('.overlay');
+
+      if (overlay) {
+        overlay.style.display = 'none';
+      }
+    });
+
+    //this is __BAD__, first of all it shouldn't be global function
+    //second if this function doesn't do much apart from simple plain
+    //redirection then it should be handled using anchor tags
+    function redirect(url) {
+      window.location = url;
+    }
+  </script>
+</body>
+</html>

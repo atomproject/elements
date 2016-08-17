@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <title>Google Map demo</title>
+  <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+  <link rel="import" href="../../google-map/google-map.html">
+  <link rel="import" href="../../google-map/google-map-marker.html">  
+  <link rel="import" href="../t-map-nearby-search.html">  
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+    }
+    #controlsToggle {
+      position: absolute;
+      left: 10%;
+      bottom: 10%;
+    }
+  </style>
+</head>
+<body class="fullbleed">
+
+<template is="dom-bind">
+  <t-map-nearby-search map="[[map]]" keyword="" types="['atm', 'bank']" results="{{results}}" radius="5000" fit-to-markers>
+  </t-map-nearby-search>
+  <google-map map="{{map}}" latitude="37.779"
+              longitude="-122.3892">
+    <template is="dom-repeat" items="{{results}}" as="marker">
+      <google-map-marker latitude="{{marker.latitude}}"
+                         longitude="{{marker.longitude}}">
+        <h2>{{marker.name}}</h2>
+        <span>{{marker.formatted_address}}</span>
+      </google-map-marker>
+    </template>
+  </google-map>
+</template>
+
+<script>
+  document.querySelector('[is=dom-bind]').addEventListener('dom-change',  function(){
+    var gmap = document.querySelector('google-map');
+    gmap.addEventListener('google-map-ready', function(e) {
+      document.querySelector('t-map-nearby-search').search();
+    });    
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+﻿<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../t-input/t-input.html" />
+<link rel="import" href="../t-dropdown/t-dropdown.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../t-text-container/travel-element-styles.html" />
+<!--
+The `t-address` is a form component for getting the address as input from the
+user. Below is the format of the address used by this component. User can
+enter address lines 1 and 2. The country and state can be selected from a
+dropdown. The city, zip and phone number are entered directly by the user.
+
+    Address line 1,
+
+    Address line 2,
+
+    Country and State,
+
+    City and Zip,
+
+    Phone Number
+
+Example:
+
+    <t-address
+        country-api="http://demo.travelnxt.com/api/Content/countries"
+        base-geo-api="http://demo.travelnxt.com/api/Content"
+        query-params="?cid=mystiquedemo&token=w1q3rbau2uswx4awygaf4ell">
+    </t-address>
+
+    <t-address
+        countries='{ "result": [{"key": "India", "value": "IN"}]}'
+    </t-address>
+
+You have to provide two api urls, one for getting a list of countries and another
+for getting a list of states for the selected country. If the states api doesn't
+return any states then user can directly enter the list of states. Alternatively,
+you can set the property `countries` with a list of countries, in this case
+the user has to enter the states directly.
+
+The `getAddress()` returns the entire address values in one object to use. Which looks like:
+
+    {
+        city: "sdas",
+        country: "US",
+        line1: "asa",
+        line2: "sasa",
+        phoneNumber: "54+95+92121",
+        state: "AS",
+        zipCode: "1212"
+    }
+-->
+<dom-module id="t-address">
+    <template>
+        <style include="iron-flex"></style>
+        <style include="travel-element-styles">
+            :host {
+                width: 100%;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+                overflow: hidden;
+                display: block;
+                padding: 0 10px;
+            }
+
+            .horizontal-margin {
+                margin-right: var(--normal-spacing,10px);
+            }
+            .section {
+                padding: 0 10px;
+            }
+        </style>
+
+        <div class="margin-bottom-medium">
+            <t-input auto-validate label="Address line 1" id="line1" name="line1" error-message="You missed this." required></t-input>
+        </div>
+        <div class="margin-bottom-medium">
+            <t-input auto-validate id="line2" name="line2" label="Address line 2 (optional)"></t-input>
+        </div>
+        <div class="margin-bottom-medium layout horizontal">
+            <div class="horizontal-margin flex countryContainer">
+                <t-dropdown 
+                    id="country" 
+                    label="Country" 
+                    dropdown-array="{{countries.result}}"
+                    selected-item="{{country}}" 
+                    error-message="You missed this." 
+                    name="country" 
+                    value-key="value"
+                    label-key="key"
+                    required>
+                    
+                </t-dropdown>
+            </div>
+            <div class="flex">
+                <template is="dom-if" if="{{hasStates}}">
+                    <t-dropdown 
+                    label="State / Province" 
+                    id="state-dropdown" 
+                    name="state"
+                    required 
+                    error-message="You missed this."
+                    dropdown-array="{{states.result}}"
+                    selected-item="{{state}}" 
+                    value-key="value"
+                    label-key="key"
+                    >
+                    
+                    </t-dropdown>
+                </template>
+                <t-input label="State / Province" id="state" name="state" required hidden$="{{hasStates}}" error-message="You missed this."></t-input>
+            </div>
+        </div>
+        <div class="margin-bottom-medium layout horizontal">
+            <div class="horizontal-margin flex">
+                <t-input auto-validate id="city" name="city" label="City" error-message="Enter city" required ></t-input>
+            </div>
+            <div class="flex">
+                <t-input id="zipCode" name="zipCode" label="Zip Code" max-length="50" auto-validate error-message="You missed this." required></t-input>
+            </div>
+        </div>
+        <div class="margin-bottom-medium">
+            <t-input id="phoneNumber" name="phoneNumber" label="Phone" pattern="^[\d, ,(,),+,-]+" max-length="20" error-message="You missed this." required auto-validate></t-input>
+        </div>
+
+        <iron-ajax id="countryCall"  method="GET" verbose headers='{"accept": "application/json"}' handle-as="json" content-type="application/json" last-response="{{countries}}"></iron-ajax>
+        <iron-ajax id="statesCall" method="GET" verbose headers='{"accept": "application/json"}' handle-as="json" content-type="application/json" last-response="{{states}}"></iron-ajax>
+    </template> 
+</dom-module>
+<script>
+    Polymer({
+
+        is: 't-address',
+
+        properties: {
+
+            /**
+             * Flag to hit country API when component is attached to DOM
+             * @type {Boolean}
+             */
+            preventAutoPopulate: {
+                type: Boolean,
+                value: false,
+            },
+
+            /**
+             * The url to hit to get the list of countries.
+             * Eg.
+             * http://demo.travelnxt.com/api/Content/countries
+             * @type {String}
+             */
+            countryApi: {
+                type: String,
+                value: "",
+                notify: true
+            },
+
+            /**
+             * TODO: shouldn't the name of this property be `stateApi`?
+             *
+             * The url to hit for getting a list of states for a country.
+             * The country code is used to fetch the list of states.
+             * In the below url `US` is the country code
+             * Eg.
+             * http://demo.travelnxt.com/api/Content/US/states
+             * @type {String}
+             */
+            baseGeoApi: {
+                type: String,
+                value: "",
+                notify: true
+            },
+
+            /**
+             * The complete list of countries. It should have below structure.
+             * @type { result: [{key: 'country name', value: 'country code'}] }
+             */
+            countries: {
+                type: Object,
+                value: null,
+                observer: '_countryPopulated'
+            },
+
+            /**
+             * The list of states for the selected country.
+             * @type {Object}
+             */
+            states: {
+                type: Object,
+                value: function () { return null; },
+                notify: true,
+                observer: '_statesChanged'
+            },
+
+            /**
+             * Indicates whether the states control is a dropdown or a simple
+             * input. If the call to `baseGeoApi` returns a list of states
+             * then the states input becomes dropdown or it is input.
+             * @type {Boolean}
+             */
+            hasStates: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * The name of the selected country.
+             * @type {String}
+             */
+            country: {
+                type: String,
+                notify: true,
+                observer: '_countryChanged'
+            },
+
+            /**
+             * Pass a country code to pre select a country from the dropdown.
+             * @type {String}
+             */
+            preselectCountry: {
+                type: String
+            },
+
+            /**
+             * The query parameters to be used while making state and country
+             * api calls.
+             * @type {String}
+             */
+            queryParams: {
+                type: String,
+                notify: true
+            }
+
+        },
+
+        attached: function () {
+            if (!this.preventAutoPopulate) {
+                this.pullCountryList();
+            }
+        },
+
+        /*The method to invoke the call for states*/
+        pullCountryList: function(){
+            if (this.countryApi && this.queryParams) {
+                this.$.countryCall.url = this.countryApi + this.queryParams;
+                this.$.countryCall.generateRequest();
+            }
+        },
+        _countryPopulated: function(){
+            if (this.preselectCountry) {
+                this.$.country.selectedItem = this.preselectCountry;
+            }else{
+                var select = this.$.country.querySelector('select');
+                select.selectedIndex = -1;
+            }
+        },
+
+        _countryChanged: function () {
+            if (this.country) {
+                var countryCode = this.$.country.selectedItem;
+                this.$.statesCall.url = this.baseGeoApi + "/" + countryCode + "/states" + this.queryParams;
+                this.$.statesCall.generateRequest();
+            }
+        },
+
+        _statesChanged: function () {
+            if (this.states !== null && this.states.result.length > 0)
+                this.hasStates = true;
+            else
+                this.hasStates = false;
+        },
+
+        /**
+         * The method that validates various components of the address like
+         * phone number, country, state etc.
+         * @return {Boolean} Indicates whether the address is valid
+         */
+        validate: function () {
+            var isValid = true;
+            
+            this.fields = this.querySelectorAll('[name]');
+
+            for (a = 0; a < this.fields.length; a++) {
+                if (this.fields[a].validate() !== undefined) {
+                    isValid = isValid && (this.fields[a].validate() || this.fields[a].hidden);
+                }
+            }
+
+            return isValid;
+        },
+
+        /**
+         * The method that returns the address that is input by the user.
+         * The consumer of this element should use this method to get the address.
+         * @return {Object} The address object
+         */
+        getAddress: function () {
+            var state = '';
+            var stateElement = this.$$('#state');
+
+            if (!this.hasStates)
+                state = stateElement.value;
+            else
+                state = this.state;
+
+            var address = {
+                "line1": this.$.line1.value,
+                "line2": this.$.line2.value,
+                "city": this.$.city.value,
+                "state": state,
+                "country": this.country,
+                "zipCode": this.$.zipCode.value,
+                "phoneNumber": this.$.phoneNumber.value
+            };
+
+            return address;
+        }
+    });
+</script>

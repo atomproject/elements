@@ -1,0 +1,43 @@
+{
+  "name": "t-creditcard",
+  "version": "1.2.6",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
+    "iron-form-element-behavior": "PolymerElements/iron-form-element-behavior#^1.0.4",
+    "iron-icon": "PolymerElements/iron-icon#^1.0.4",
+    "iron-input": "PolymerElements/iron-input#^1.0.6",
+    "iron-validatable-behavior": "PolymerElements/iron-validatable-behavior#^1.0.4",
+    "iron-validator-behavior": "PolymerElements/iron-validator-behavior#^1.0.1",
+    "t-input": "atomelements/t-input#^1.0.0",
+    "t-text-container": "travelnxtElements/t-text-container#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "~0.7.14",
+    "t-shared-components": "atomelements/t-shared-components#^1.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6"
+  }
+}

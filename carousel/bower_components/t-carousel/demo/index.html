@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <title>t-carousel demo</title>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../t-image-carousel.html">
+    <link rel="import" href="../t-carousel.html">
+</head>
+
+<body>
+    <style>
+    .div {
+        background: #000;
+        color: #fff;
+        width: 100%;
+        height: 300px;
+    }
+    
+    t-button {
+        background: #000;
+    }
+    </style>
+    <t-carousel light-box>
+        <div class="div">111111111111111111111111111</div>
+        <div class="div">222222222222222222222222222</div>
+        <div class="div">322222222222222222222222222222222222222222222222222222222</div>
+    </t-carousel>
+    <t-image-carousel light-box height="300"></t-image-carousel>
+    <script>
+    document.addEventListener('WebComponentsReady', function() {
+
+        var Arr = ["https://d3mj096p5q0e20.cloudfront.net/fi/HCM/93478/460435_153_b.jpg", "https://d3mj096p5q0e20.cloudfront.net/fi/HCM/93478/460435_154_b.jpg", "https://d3mj096p5q0e20.cloudfront.net/fi/HCM/93478/460435_156_b.jpg", "https://d3mj096p5q0e20.cloudfront.net/fi/HCM/93478/460435_152_b.jpg", "https://d3mj096p5q0e20.cloudfront.net/fi/HCM/93478/460435_173_b.jpg", "https://d3mj096p5q0e20.cloudfront.net/fi/HCM/93478/460435_164_b.jpg", "https://d3mj096p5q0e20.cloudfront.net/fi/HCM/93478/460435_146_z.jpg"];
+        document.querySelector('t-image-carousel').data = Arr;
+    });
+    </script>
+</body>
+
+</html>

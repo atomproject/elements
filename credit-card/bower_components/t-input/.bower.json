@@ -1,0 +1,52 @@
+{
+  "name": "t-input",
+  "version": "1.2.8",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-input",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-autogrow-textarea": "PolymerElements/iron-autogrow-textarea#^1.0.4",
+    "iron-form-element-behavior": "PolymerElements/iron-form-element-behavior#^1.0.4",
+    "iron-input": "PolymerElements/iron-input#^1.0.6",
+    "paper-input": "PolymerElements/paper-input#^1.0.12",
+    "paper-styles": "PolymerElements/paper-styles#^1.0.11",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "t-shared-components": "atomelements/t-shared-components#^1.0.0",
+    "web-component-tester": "*",
+    "webcomponentsjs": "^0.7.14",
+    "t-autosuggest": "atomelements/t-autosuggest#^1.0.0",
+    "t-calendar": "atomelements/t-calendar#^1.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6"
+  },
+  "_release": "1.2.8",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.2.8",
+    "commit": "43c3d54fbe51d35909d89139ae9a9e5e637eead0"
+  },
+  "_source": "git://github.com/atomelements/t-input.git",
+  "_target": "^1.0.0",
+  "_originalSource": "atomelements/t-input"
+}

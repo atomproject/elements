@@ -1,0 +1,276 @@
+
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`t-map-nearby-search` provides Google Maps Places API functionality.
+
+See https://developers.google.com/maps/documentation/javascript/places for more
+information on the API.
+
+#### Example:
+
+    <template is="dom-bind">
+      <t-map-nearby-search map="[[map]]" keyword="" types="['atm', 'bank']" results="{{results}}" radius="5000">
+      </t-map-nearby-search>
+      <google-map map="{{map}}" latitude="37.779"
+                  longitude="-122.3892">
+        <template is="dom-repeat" items="{{results}}" as="marker">
+          <google-map-marker latitude="{{marker.latitude}}"
+                             longitude="{{marker.longitude}}">
+            <h2>{{marker.name}}</h2>
+            <span>{{marker.formatted_address}}</span>
+          </google-map-marker>
+        </template>
+      </google-map>
+    </template>
+ -->
+
+<script>
+
+  Polymer({
+
+    is: 't-map-nearby-search',
+
+    properties: {
+
+      /**
+       * The Google map object.
+       */
+      map: {
+        type: Object,
+        value: null
+      },
+
+      /**
+       * The search keyword .
+       */
+      keyword: {
+        type: String,
+        value: null
+      },
+
+      /**
+       * Latitude of the center of the search area.
+       * Ignored if `globalSearch` is true.
+       */
+      latitude: {
+        type: Number,
+        value: null
+      },
+
+      /**
+       * Longitude of the center of the search area.
+       * Ignored if `globalSearch` is true.
+       */
+      longitude: {
+        type: Number,
+        value: null
+      },
+
+      /**
+       * Search radius, in meters.
+       * If `latitude` and `longitude` are not specified,
+       * the center of the currently visible map area is used.
+       *
+       * If not set, search will be restricted to the currently visible
+       * map area, unless `globalSearch` is set to true.
+       */
+      radius: {
+        type: Number,
+        value: null
+      },
+
+      /**
+       * By default, search is restricted to the currently visible map area.
+       * Set this to true to search everywhere.
+       *
+       * Ignored if `radius` is set.
+       */
+      globalSearch: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * Space-separated list of result types.
+       * The search will only return results of the listed types.
+       * See https://developers.google.com/places/documentation/supported_types
+       * for a list of supported types.
+       * Leave empty or null to search for all result types.
+       */
+      types: {
+        type: String,
+        value: null
+      },
+
+      /**
+       * The search results.
+       */
+      results: {
+        type: Array,
+        value: function() { return []; },
+        notify: true
+      },
+
+      /**
+       * The lat/lng location.
+       */
+      location: {
+        type: Object,
+        value: null,
+        readOnly: true
+      },
+
+      /**
+       * Search status
+       */
+      inProgress: {
+        type: Boolean,
+        value: false,
+        notify: true,
+        readOnly: true
+      },
+
+      /*
+       * If true, gets all pages from google places making multiple calls, else stops at first page only
+       * For more details check https://developers.google.com/places/web-service/search#PlaceSearchPaging
+       */
+      getPaginatedResults:{
+        type: Boolean,
+        value: false,
+      },
+
+     /*
+      * If true, makes google place API call on any of these variable changes - keyword, map, location, radius, types, globalSearch, else use 'search' public API to get google places.
+      */
+      auto:{
+        type: Boolean,
+        value: false,
+      }
+
+    },
+
+    _results: [],
+
+    observers: [
+      '_search(keyword,map,location,radius,types,globalSearch)',
+      '_updateLocation(latitude,longitude)'
+    ],
+
+    /**
+     * Fired when the details of a place are returned.
+     *
+     * @event t-map-nearby-search-place-detail
+     * @param {google.maps.MarkerPlace} detail The place details.
+     */
+
+    /**
+     * Fired when the search element returns a result.
+     *
+     * @event t-map-nearby-search-results
+     * @param {Array<{latitude: number, longitude: number}>} detail An array of search results
+     */
+    
+    /**
+     * Fired when the search element returns a paginated result.
+     *
+     * @event t-map-nearby-search-partial-results
+     * @param {Array<{latitude: number, longitude: number}>} detail An array of search results
+     */
+
+    _search: function() {
+      if(this.auto){
+        this.search();
+      }
+    },
+    /**
+     * Perform a search using `keyword` and `types`.
+     */
+    search: function() {
+      if (this.types && this.map) {
+        //reset data
+        this._results = [];
+        this.results = [];
+        this._setInProgress(true);
+
+        var places = new google.maps.places.PlacesService(this.map);
+
+        if (this.types && typeof this.types == 'string') {
+          var types = this.types.split(' ');
+        }
+
+        var location = this.location ? this.location : this.map.getCenter();
+        if(!location)
+          return;
+
+        if (this.radius) {
+          var radius = this.radius;          
+        }
+        else if (!this.globalSearch) {
+          var bounds = this.map.getBounds();
+        } 
+
+        places.nearbySearch({
+          keyword: this.keyword,
+          types: types,
+          bounds: bounds,
+          radius: radius,
+          location: location
+        }, this._gotResults.bind(this));
+      }
+    },
+
+    /**
+     * Fetches details for a given place.
+     * @param {String} placeId The place id.
+     * @return {Promise} place The place information.
+     */
+    getDetails: function(placeId) {
+      var places = new google.maps.places.PlacesService(this.map);
+
+      return new Promise(function(resolve, reject) {
+        places.getDetails({placeId: placeId}, function(place, status) {
+          if (status === google.maps.places.PlacesServiceStatus.OK) {
+            resolve(place);
+            this.fire('t-map-nearby-search-place-detail', place);
+          } else {
+            reject(status);
+          }
+        }.bind(this));
+      }.bind(this));
+    },
+
+    _gotResults: function(results, status, pagination) {
+      this._results = this._results.concat(results.map(function(result) {
+        // obtain lat/long from geometry
+        result.latitude  = result.geometry.location.lat();
+        result.longitude = result.geometry.location.lng();
+        return result;
+      }));
+
+      if (pagination.hasNextPage && this.getPaginatedResults) {
+          pagination.nextPage();
+          this.fire('t-map-nearby-search-partial-results', {results: this._results, status: status});
+      }
+      else {
+          this._setInProgress(false);
+          this.results = this._results;
+          this.fire('t-map-nearby-search-partial-results', {results: this.results, status: status});
+          this.fire('t-map-nearby-search-results', {results: this.results, status: status});
+      }
+    },
+
+    _updateLocation: function() {
+      if (!this.map) {
+        return;
+      } else if (typeof this.latitude !== 'number' || isNaN(this.latitude)) {
+        throw new TypeError('latitude must be a number');
+      } else if (typeof this.longitude !== 'number' || isNaN(this.longitude)) {
+        throw new TypeError('longitude must be a number');
+      }
+
+      // Update location. This will trigger a new search.
+      this._setLocation({lat: this.latitude, lng: this.longitude});
+    }
+  });
+</script>

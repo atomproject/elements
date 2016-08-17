@@ -1,0 +1,228 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../t-button/t-button.html" />
+<!--
+`t-header` is an application header component. It has a back button on the left
+and an icon on the right or a label in the middle. The icon on right can be used
+as a forward button or any other handling.
+
+Example:
+
+    <t-header normal-heading label="Home"></t-header>
+    <t-header right-icon="arrow-forward"></t-header>
+
+You can specify the names of icons for left and right icons with `icon`
+and `rightIcon` properties respectively. You can use the event `right-button-click`
+for handling the right icon clicks.
+
+### Styling
+
+Custom property | Description | Default
+----------------|-------------|----------
+--header-font-family | Font of text in header | --primary-font-family
+--t-header-bg | Background color of the header | --base-color-1
+--t-header-color | Foreground color the header | #fff
+--t-header-icons | Mixin applied to the icons | { }
+--t-header-normal | Mixin applied to the heading | { }
+--t-header-size | The height of the header | 55px
+
+Note:
+
+It allows you to pass anything in its content. It selects all in its content and populate that between the left and right icons.
+-->
+<dom-module id="t-header">
+    <template>
+        <style include="iron-flex">
+            :host {
+                display: block;
+                position: relative;
+            }
+
+            .body {
+                font-family: var(--header-font-family, --primary-font-family);
+                color: var(--t-header-color, #fff);
+                background: var(--t-header-bg, --base-color-1);
+                height: var(--t-header-size, 55px);
+            }
+
+            :host([normal-heading]) a {
+                z-index: 1;
+            }
+
+            .header__mainRow {
+                overflow: hidden;
+                padding-left: 10px;
+            }
+
+            :host([normal-heading]) .header__mainRow {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+            }
+
+            :host([normal-heading]) .header__mainRow ::content h1 {
+                margin: 0 auto;
+                font-size: 22px;
+                line-height: var(--t-header-size, 55px);
+                font-weight: 300;
+
+                @apply(--t-header-normal);
+            }
+
+            iron-icon {
+                padding: 10px;
+
+                @apply(--t-header-icons);
+            }
+
+            :host ::content p#detail {
+                -ms-flex-pack: start;
+                -webkit-justify-content: flex-start;
+                justify-content: flex-start;
+            }
+
+            .link {
+                color: inherit;
+            }
+        </style>
+
+        <div class="layout horizontal center body">
+            <a class="link" on-click="_checkUrl" href$="[[url]]" hidden$="[[hideLeftIcon]]">
+                <iron-icon icon="[[icon]]"></iron-icon>
+            </a>
+            <div class="layout horizontal center flex header__mainRow">
+                <template is="dom-if" if="{{!normalHeading}}">
+                    <content select="*"></content>
+                </template>
+                <template is="dom-if" if="{{normalHeading}}">
+                    <h1>{{label}}</h1>
+                </template>
+            </div>
+            <template is="dom-if" if="{{_hasRightIcon}}">
+                <a on-click="_rightButtonClick">
+                    <iron-icon icon="{{rightIcon}}"></iron-icon>
+                </a>
+            </template>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-header',
+
+    properties: {
+        /**
+        * Fired when the left icon is clicked
+        *
+        * @event left-button-click
+        */ 
+
+        /**
+        * Fired when the right icon is clicked
+        *
+        * @event right-button-click
+        */ 
+
+
+        /**
+         * The label to display in the middle of the header if `normalHeading`
+         * is set to true.
+         * @type {String}
+         */
+        label: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'Normal Heading'
+        },
+
+        /**
+         * The name of the icon to be displayed on the left side of the header.
+         * @type {String}
+         */
+        icon: {
+            type: String,
+            value: 'arrow-back'
+        },
+
+        /**
+         * If not empty then the value of this property is the url to which
+         * the page redirects when left icon is clicked.
+         * @type {String}
+         */
+        url: {
+            type: String,
+            reflectToAttribute: true
+        },
+
+        /**
+         * The icon to be displayed on the right side of the header if
+         * `normalHeadin` is set to false.
+         * @type {String}
+         */
+        rightIcon: {
+            type: String,
+            reflectToAttribute: true,
+            value: ''
+        },      
+
+
+        /**
+         * The icon to be displayed on the right side of the header if
+         * `normalHeadin` is set to false.
+         * @type {String}
+         */
+        hideLeftIcon: {
+            type: Boolean,
+            value: false
+        },
+
+        /**
+         * Tells whether there is a right icon or not.
+         * This property is needed because couldn't use the function directly in
+         * the template if condition.
+         * @type {Boolean}
+         */
+        _hasRightIcon: {
+            type: Boolean,
+            computed: '_checkRightIcon(normalHeading, rightIcon)'
+        },
+
+        /**
+         * Controls whether a label is displayed or an icon on the right side.
+         * @type {Boolean}
+         */
+        normalHeading: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false
+        }
+    },
+
+    // to check if theres any icon present or not
+    _checkRightIcon: function(normalHeading, rightIcon) {
+        if (normalHeading)
+            return false;
+
+        if (rightIcon.length > 0)
+            return true;
+
+        return false;
+    },
+
+    _checkUrl: function(e) {
+        this.fire('left-button-click', {
+            bubbles: false
+        });
+    },
+
+    // to fire an event for the right icon click
+    _rightButtonClick: function() {
+        // event for the right icon click
+        this.fire('right-button-click');
+    }
+});
+</script>

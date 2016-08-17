@@ -1,0 +1,179 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../paper-tabs/paper-tabs.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout.html">
+<dom-module id="t-tabs">
+    <template>
+        <style>
+        :host {
+            display: block;
+            box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        :host[align-bottom] {
+            box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.15);
+        }
+        
+        :host ::content #tabsContent {
+            position: relative;
+        }
+        
+        :host ::content #tabsContainer {
+            @apply(--layout);
+            @apply(--layout-horizontal);
+        }
+        :host ::content #tabsContainer {
+            color: var(--grey-four,#777777);
+        }
+        
+        :host([not-inverted]) ::content .iron-selected {
+            color: var(--default-primary-color, #07c5f2);
+        }
+        :host([not-inverted]) ::content .tab-content{
+            opacity: 1!important;
+          /*   to overwrite their default opacity style*/
+        } 
+        
+        :host([inverted]) ::content #tabsContainer {
+            background: var(--default-primary-color, #07c5f2);
+            color: var(--primary-background-color, #ffffff);
+        }
+        
+        paper-tabs ::content #selectionBar {
+            background-color: var(--default-primary-color, #07c5f2);
+        }
+
+        :host([inverted]) paper-tabs ::content #selectionBar {
+            background-color: var(--primary-background-color, #fff);
+        }
+        
+        :host([alignment=center]) ::content #tabsContainer {
+            -ms-flex-pack: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+        }
+        
+        :host([alignment=fullbleed]) ::content #tabsContent,
+        :host([alignment=fullbleed]) ::content paper-tab {
+            width: 100%;
+            padding: 0;
+        }
+        
+        :host([alignment=fullbleed]) ::content t-tab {
+            -ms-flex: 1 1 0.000000001px;
+            -webkit-flex: 1;
+            flex: 1;
+            -webkit-flex-basis: 0.000000001px;
+            flex-basis: 0.000000001px;
+        }
+        
+        :host([alignment=right]) ::content #tabsContainer {
+            -ms-flex-pack: flex-end;
+            -webkit-justify-content: flex-end;
+            justify-content: flex-end;
+        }
+        </style>
+        <paper-tabs no-bar="[[noBar]]" attr-for-selected="{{attrForSelected}}" no-slide="[[noSlide]]" scrollable="[[scrollable]]" disable-drag="[[disableDrag]]" hide-scroll-buttons="[[hideScrollButtons]]" align-bottom="[[alignBottom]]" selected="{{selected}}" selectable="[[selectable]]">
+            <content select="*"></content>
+        </paper-tabs>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "t-tabs",
+
+    properties: {
+
+
+        /**
+         * If true, the bottom bar to indicate the selected tab will not be shown.
+         */
+        noBar: {
+            type: Boolean,
+            value: false
+        },
+
+        /**
+         * If true, the slide effect for the bottom bar is disabled.
+         */
+        noSlide: {
+            type: Boolean,
+            value: false
+        },
+
+        /**
+         * If true, tabs are scrollable and the tab width is based on the label width.
+         */
+        scrollable: {
+            type: Boolean,
+            value: false
+        },
+
+        /**
+         * If true, dragging on the tabs to scroll is disabled.
+         */
+        disableDrag: {
+            type: Boolean,
+            value: false
+        },
+
+        /**
+         * If true, scroll buttons (left/right arrow) will be hidden for scrollable tabs.
+         */
+        hideScrollButtons: {
+            type: Boolean,
+            value: false
+        },
+
+        /**
+         * If true, the tabs are aligned to bottom (the selection bar appears at the top).
+         */
+        alignBottom: {
+            type: Boolean,
+            value: false
+        },
+
+        /**
+         * If true, the tabs are aligned to bottom (the selection bar appears at the top).
+         */
+        inverted: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+
+        /**
+         * If true, the tabs are aligned to bottom (the selection bar appears at the top).
+         */
+        notInverted: {
+            type: Boolean,
+            reflectToAttribute: true,
+            computed: '_getIfInverted(inverted)'
+        },
+
+        /**
+         * Gets or sets the selected element. The default is to use the index of the item.
+         */
+        selected: {
+            type: String,
+            notify: true
+        },
+
+        selectable: {
+            type: String,
+            value: 't-tab'
+        },
+
+        /*Alignment of the tabs values are left (default with no styles) right, center & fullbleed*/
+        alignment: {
+            type: String,
+            reflectToAttribute: true,
+            value: "left"
+        }
+    },
+
+    _getIfInverted: function(inverted){
+      return !inverted;
+    }
+
+});
+</script>

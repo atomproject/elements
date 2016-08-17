@@ -1,0 +1,136 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+
+<dom-module id="t-button">
+
+  <link rel="import" type="css" href="t-button.css">
+
+  <template>
+
+    <template is="dom-if" if="[[!onlyIcon]]" restamp>
+      <paper-button raised$="{{raised}}" disabled$="{{disabled}}" noink$="{{noink}}" toggles$="{{toggles}}">
+        <span id="text-button">{{label}}</span>
+        <span id="text-icon" hidden$="{{!hasIcon}}" restamp="true">
+          <iron-icon icon="{{ico}}" src="{{icoSrc}}" ></iron-icon>
+        </span>
+      </paper-button>
+    </template>
+
+    <template is="dom-if" if="[[onlyIcon]]" restamp>
+      <paper-icon-button disabled$="{{disabled}}" icon$="{{ico}}" src$="{{icoSrc}}" raised$="{{raised}}" noink$="{{noink}}" toggles$="{{toggles}}">
+      </paper-icon-button>
+    </template>
+
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 't-button',
+
+    properties: {
+
+      /**
+       * If true, the button will be a paper icon button
+       */
+      onlyIcon:{
+        type: Boolean,
+        value:false,
+        reflectToAttribute:true
+      },
+
+      /**
+       * To pass the src of a custom image only for icon btn
+       */
+      icoSrc:{
+        type: String
+      },
+
+      /**
+       * Button label
+       */
+      label:{
+        type: String,
+        value:'',
+        reflectToAttribute : true
+      },
+
+      /**
+       * To check if theres an icon
+       */
+      hasIcon:{
+        type: Boolean,
+        value:false,
+        reflectToAttribute:true
+      },
+
+      /**
+       * Ink effect on button
+       */
+      noink:{
+        type: Boolean,
+        value:true,
+        reflectToAttribute:true
+      },
+
+      /**
+       * If true, the button will toggle the active attribute.
+       */
+      toggles:{
+        type: Boolean,
+        reflectToAttribute:true,
+        value:false
+      },
+      
+      /**
+       * If true, the button should be styled with a shadow.
+       */
+      raised: {
+        type: Boolean,
+        reflectToAttribute: true,
+        value: false
+      },
+
+      /**
+       * If true, the button will be disabled.
+       */
+      disabled: {
+        type: Boolean,
+        reflectToAttribute: true,
+        value: false
+      },
+
+      /**
+       * The value of icon
+       */
+      ico :{
+        type: String,
+        reflectToAttribute:true,
+        notify:true,
+        observer:'_checkIcon'
+      },
+
+      /**
+       * If true, the icon will appear in the left.
+       */
+      iconLeft:{
+        type: Boolean,
+        reflectToAttribute: true,
+        value: false
+      }
+
+    },
+
+    _checkIcon: function(ico){
+      if(this.ico == '')
+        this.removeAttribute('ico');
+      this.hasIcon = this.hasAttribute('ico');
+    }
+
+  });
+
+</script>

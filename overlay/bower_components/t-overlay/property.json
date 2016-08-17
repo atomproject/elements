@@ -1,0 +1,23 @@
+{
+    "name": "Change This Name",
+    "properties": [
+    {
+        "name": "Data",
+        "fields": {
+            "label": {
+                "name":"Label",
+                "type": "string",
+                "value": "label"
+            }
+        }
+    },{
+        "name": "Properties",
+        "fields": {
+            "required": {
+                "name": "Some Field",
+                "type": "boolean",
+                "value": true
+            }
+        }
+    }]
+}

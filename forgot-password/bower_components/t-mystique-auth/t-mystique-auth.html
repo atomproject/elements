@@ -1,0 +1,80 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<!--
+This element will get you the token needed for accessing the mystique api.
+It takes `name` and `cid` of the context for which the token is to be
+issued. You also have to provide the `url` of the authenctication endpoint.
+The response can be found in `tokenResponse` property. You can use
+the [api playground](http://qa-mystiquecode.tavisca.com/mystique/apis?cid=mystiquebase#!/authentication/AuthenticateApplicationByContext_post_2) for understanding this api.
+
+Example:
+
+    <t-mystique-auth name="mystiquedemo"
+      cid="20043"
+      token-response="{{tokenResponse}}"
+      url="https//demo.travelnxt.com/api/Authentication/Authenticate/context">
+    </t-mystique-auth>
+
+@demo demo/index.html
+-->
+
+<dom-module id="t-mystique-auth">
+
+<template>
+  <iron-ajax id="tokenCall" method="POST" url="[[url]]" verbose content-type="application/json" on-response="_callback"></iron-ajax>
+</template>
+
+</dom-module>
+
+<script>
+  Polymer({
+    is: 't-mystique-auth',
+
+    properties: {
+        /**
+         * The name of the context
+         * @type {String}
+         */
+        name: {
+          type: String,
+          value: ""
+        },
+
+        /**
+         * The cid of the context
+         * @type {Number}
+         */
+        cid: Number,
+
+        /**
+         * The authenticate by context api endpoint
+         * @type {String}
+         */
+        url: String,
+
+        /**
+         * The context api response for getting token
+         * @type {Object}
+         */
+        tokenResponse: {
+          type: Object,
+          notify: true
+        }
+    },
+
+    attached: function(){
+      var request=  {
+        "Name": this.name,
+        "CID": this.cid
+      };
+
+      this.$.tokenCall.body = JSON.stringify(request);
+      this.$.tokenCall.generateRequest();
+    },
+
+    _callback: function(event){
+      this.tokenResponse =   event.detail.response;
+    }
+  });
+</script>

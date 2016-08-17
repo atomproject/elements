@@ -1,0 +1,54 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-ajax/iron-ajax.html" />
+
+<dom-module id="t-keepalive">
+    <template>
+        <iron-ajax id="ajaxComp" url="{{apiUrl}}" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" method='{{apiMethod}}'>
+        </iron-ajax>
+    </template>
+	
+</dom-module>
+
+<script>
+	Polymer({
+		is: "t-keepalive",
+
+		properties:{
+			apiUrl: {
+                type: String,
+                value: ''
+            }, 
+            apiMethod: {
+                type: String,
+                value: 'POST'
+            }, 
+            apiInterval: {
+                type: Number,
+                value: 20000
+            },
+            auto:{
+            	type: Boolean,
+            	value: false
+            },
+            timer: {
+            	type: Number,
+            	value: null
+            }
+		},
+
+		attached: function(){
+			if(this.auto){
+				this.setupTimer();
+			}
+
+		},
+
+		setupTimer: function(){
+			if(this.apiUrl && !this.timer){
+				this.timer = setInterval(function(){
+					this.$.ajaxComp.generateRequest();
+				}.bind(this), this.apiInterval);
+			}
+		}
+	});	
+</script>

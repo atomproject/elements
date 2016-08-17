@@ -1,0 +1,153 @@
+<link rel="import" href="../polymer/polymer.html">
+
+
+<!--
+An element that fetches the response from an api, applies a transform
+function on and sets the output produced by this function on a certain
+property of certain target elements.
+
+Example:
+
+  <dynamic-data-source
+    target="t-table"
+    property-name="seedData"
+    url="http://www.json-generator.com/api/json/get/bQODrtAkHS?indent=2"
+    transform="function transform(inp) { return inp.map(function(obj) { return [obj.name, obj.age]; }); }">
+  </dynamic-data-source>
+-->
+
+<dom-module id="dynamic-data-source">
+	<template>
+		<style>
+			:host {
+				display: block;
+			}
+		</style>
+	</template>
+
+	<script>
+		Polymer({
+			is: 'dynamic-data-source',
+
+      properties: {
+        /**
+         * Whether the api call should be made as soon as the url changes.
+         * @type {Object}
+         */
+        auto: {
+          type: Boolean,
+          value: false
+        },
+
+        /**
+         * This is a selector which will be used as a parameter to the function
+         * `querySelectorAll` for getting the array of elements to be updated
+         * with the transformed value.
+         * @type {Object}
+         */
+        target: {
+          type: String
+        },
+
+        /**
+         * The property of the target element on which the data will be set
+         * @type {Object}
+         */
+        propertyName: {
+          type: String
+        },
+
+        /**
+         * The url to fetch the data from
+         * @type {Object}
+         */
+        url: {
+          type: String
+        },
+
+        /**
+         * The function to be executed when the data from url is fetched.
+         * This can be a string which will converted to javascript function.
+         * @type {Object}
+         */
+        transform: {
+          type: Function,
+          observer: '_initTransform'
+        },
+
+        _inputData: Object,
+        _attachedHit: Boolean
+      },
+
+      observers: [
+        '_execTransform(_attachedHit, _inputData, transform, propertyName)',
+        '_requestData(auto, url)'
+      ],
+
+      attached: function() {
+        this._attachedHit = true;
+      },
+
+      _requestData: function(auto, url) {
+        var req, self = this;
+
+        if (!auto) {
+          return;
+        }
+
+        req = new XMLHttpRequest();
+
+        req.addEventListener('load', function() {
+          self._inputData = JSON.parse(this.response);
+        });
+
+        req.addEventListener('error', this._fetchFailed.bind(this));
+
+        req.open('GET', url);
+        req.send();
+      },
+
+      trigger: function(auto, url) {
+        this._requestData(true, this.url);
+      },
+
+      _initTransform: function(newTransform) {
+        var transformType = Object.prototype.toString.call(this.transform);
+
+        if (transformType === '[object String]') {
+          /* jshint -W061 */
+          eval(this.transform);
+          this.transform = transform;
+        }
+      },
+
+      _execTransform: function(_attachedHit, _inputData, transform, propertyName) {
+        if (!_attachedHit || !_inputData || !transform) {
+          // TODO: throw a proper error
+          return;
+        }
+
+        // we have to wait until all the sibling elements too have been
+        // initialized. we __cannot__ depend on them to be initialized.
+        this.async(function() {
+          // TODO: should the query be made relative to this element?
+          var targets = this.parentElement.querySelectorAll(this.target);
+          var outputData;
+
+          // TODO: error condition
+          if (!targets) return;
+
+          outputData = this.outputData = transform(_inputData);
+          targets = Array.prototype.slice.call(targets);
+          targets.forEach(function(target) {
+            target.set(propertyName, outputData);
+          });
+        });
+      },
+
+      _fetchFailed: function() {
+        // TODO: handle error
+      }
+		});
+	</script>
+</dom-module>

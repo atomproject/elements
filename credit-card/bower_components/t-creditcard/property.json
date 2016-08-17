@@ -1,0 +1,23 @@
+{
+    "name": "Credit card",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "cvcPassword": {
+                    "name": "cvcPassword",
+                    "type": "boolean",
+                    "value": false
+                },
+                "fields": {
+                    "name": "fields",
+                    "type": "object"
+                },
+                "response": {
+                    "name": "response",
+                    "type": "object"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,191 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../t-text-container/travel-element-styles.html">
+<!--
+    `<t-flight-header>` is a polymer component that generates the flight details data in order.
+
+
+
+    Basic usage
+    `<t-flight-header
+        id="flightHeader"
+        is-one-way="[[isOneWay]]"
+        url="@Url.Action("Index", "Home", Runtime.GetQueryParams(new List<KeyValuePair>()))"
+        from-place="{{criteria.legs.0.departureLocation.code}}"
+        to-place="{{criteria.legs.0.arrivalLocation.code}}"
+        departure-date="{{criteria.legs.0.travelDate.date}}"
+        passenger-Data="[[criteria.passengers]]"
+        return-date="[[returnDate]]">
+    </t-flight-header>`
+-->
+<dom-module id="t-flight-header">
+    <template>
+        <style include="iron-flex"></style>
+        <style include="travel-element-styles">
+        :host {
+            display: block;
+            width: 100%;
+        }
+        
+        .heading ,
+        #detail {
+            line-height: 16px;
+        }
+        #travelIcon{
+            color: var(--base-color-1, #147be1);
+            background-color:  var(--light-color, #fff);
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            padding: 2px;
+            margin: 0 5px;
+            vertical-align: baseline;
+        }
+        
+        #pencil {
+            width: 9px;
+            height: 9px;
+            vertical-align: inherit;
+            margin-left: 5px;
+        }
+        
+        :host([center-align]){
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        :host([center-align]) .heading{
+            display:inline;
+        }
+        </style>
+        <div class="layout vertical">
+            <div class="font-16 font-normal heading ellipsis">
+                <span class="places">{{fromPlace}}</span>
+                <iron-icon id="travelIcon" icon="{{_computedTravelIcon}}"></iron-icon>
+                <span class="places">{{toPlace}}</span>
+            </div>
+            <p id="detail" on-click="_takeBack" class="layout horizontal center center-justified font-12">
+                <span>{{_getDate(departureDate)}}</span> 
+                <span hidden$="{{isOneWay}}" class="layout horizontal"><span>&nbsp;-&nbsp;</span>
+                <span>{{_getDate(returnDate)}}</span></span>
+                <template is="dom-repeat" items="[[passengerData]]" as="item">
+                    <template is="dom-if" if="{{_checkPassengerQuantity(item.quantity,item.type)}}">
+                    <span>,&nbsp;<span>{{_getPassenger(item.quantity,item.type)}}</span>
+                    </span>
+                    </template>
+                </template>
+                <iron-icon hidden$={{hideIcon}} id="pencil" icon="editor:mode-edit" ></iron-icon>
+            </p>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-flight-header',
+
+    properties: {
+
+        /*The departure location/ (from place) of the journey should be passed as a string*/
+        isOneWay:{
+            type: Boolean,
+            notify: true,
+            reflectToAttribute:true,
+            value:false
+        },
+
+        /*The departure location/ (from place) of the journey should be passed as a string*/
+        fromPlace: {
+            type: String,
+            value: ''
+        },
+
+        /*The arrival location/ (to place) of the journey should be passed as a string*/
+        toPlace: {
+            type: String,
+            value: ''
+        },
+
+
+        /*The departure Date of the journey should be passed as a string*/
+        departureDate: {
+            type: String
+        },
+
+        /*The return date of the journey should be passed as a string*/
+        returnDate: {
+            type: String
+        },
+
+
+        /*The URL of the page to hit on click of the edit icon line. Ideally the url should be for the search page*/
+        url:{
+            type:String,
+            value:""
+        },
+
+        /*The passenger data is the passenger data Array which Mystique API provides*/
+        passengerData: {
+            type: Array,
+            value: [],
+            notify: true
+        },
+
+        /*This is a styling property to centrally align the component. Used in search interstetial.*/
+        centerAlign: {
+            type: Boolean,
+            value:false,
+            reflectToAttribute: true
+        },
+
+
+
+        _computedTravelIcon:{
+            type: String,
+            computed:'_travelIcon(isOneWay)'
+        }
+
+    },
+
+    _checkPassengerQuantity:function(quantity,type){
+        return quantity > 0;
+    },
+
+    _getPassenger: function (quantity, type) {
+        switch(type) {
+            case 'Child':
+                if (quantity == 0 || quantity > 1)
+                    return quantity + " Children";
+                return (quantity + " " + type).trim();
+                break;
+            default:
+                if (quantity == 0 || quantity > 1)
+                    return quantity + " " +type +"s";
+                return (quantity + " " + type).trim();
+        }
+        
+    },
+
+    _travelIcon:function(isOneWay){
+        if(!this.isOneWay){
+            return 'swap-horiz';
+        }else{
+            return 'trending-flat';
+        }
+    },
+
+
+    _getDate: function(val) {
+        var dateObj = new Date(val);
+        var date = dateObj.getDate() < 10 ? '0' + dateObj.getDate() : dateObj.getDate();
+        var month = dateObj.toDateString().substr(3, 5);
+        return (date + " " + month).trim();
+    },
+
+    _takeBack: function(){
+        window.location.href = this.url;
+    }
+});
+</script>

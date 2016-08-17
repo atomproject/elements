@@ -1,0 +1,71 @@
+{
+  "name": "Button",
+  "properties": [{
+    "name": "Properties",
+    "fields": {
+      "boolean": {
+        "name": "Boolean Value",
+        "type": "Boolean",
+        "value": false
+      },
+      "pillOptions": {
+        "name": "Pill Button Options",
+        "type": "options",
+        "values": ["first","second","third"],
+        "value":"third",
+        "index": 2
+      },
+      "range": {
+        "name": "Range Value",
+        "type": "range",
+        "min": 10,
+        "max": 100,
+        "value": 30
+      },
+      "dropdownOptions": {
+        "name":"Dropdown",
+        "type": "options",
+        "values": ["first option", "second option", "third option", " fourth option"],
+        "value": "second option"
+      },
+      "input": {
+        "name": "String Value",
+        "type": "string",
+        "value": "label"
+      },
+      "icon": {
+        "name": "Icon Value",
+        "type": "iconset",
+        "value": "icons:stars"
+      },
+      "list": {
+        "name": "List Values",
+        "type": "list",
+        "value": ["first item"]
+      },
+      "object": {
+        "name": "JSON Object",
+        "type": "object",
+        "value": {
+          "number": 1,
+          "boolean": true,
+          "string": "some string",
+          "array": [true, 1, "some string", {"object": 1}],
+          "object": {"array": [1], "number": 1}
+        }
+      },
+      "array": {
+        "name": "Array Object",
+        "type": "array",
+        "url": "http://www.json-generator.com/api/json/get/bQODrtAkHS?indent=2",
+        "transform": "function transform(inp) {return inp.map(function(obj) {return {name: obj.name, gender: obj.gender, age: obj.age }; }); }",
+        "translator": "function translator(inp) {var columns = Object.keys(inp[0]); var out = inp.map(function(obj) {return columns.map(function(colName) {return obj[colName]; }); }); out.unshift(columns); return out; }"
+      },
+      "url": {
+        "name": "Github Packages URL",
+        "type": "url",
+        "value": "https://api.github.com/search/repositories?q=troxel-core"
+      }
+    }
+  }]
+}

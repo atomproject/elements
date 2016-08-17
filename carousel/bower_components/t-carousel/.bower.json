@@ -1,0 +1,43 @@
+{
+  "name": "t-carousel",
+  "authors": [
+    "Sounak <talk2sounak@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-carousel",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "t-image": "atomelements/t-image#^1.0.0",
+    "t-button": "atomelements/t-button#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "~0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6"
+  },
+  "_release": "cf944fe865",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "cf944fe8652299616c47e520f852d5b168a4ceac"
+  },
+  "_source": "git://github.com/atomelements/t-carousel.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-carousel",
+  "_direct": true
+}

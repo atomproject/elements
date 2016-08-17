@@ -1,0 +1,87 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="t-text-container">
+    <template>
+        <style>
+        	:host ::content .font-16{
+        		font-size: var(--font-16,16px);
+        	}
+        	:host ::content .font-12{
+        		font-size: var(--font-12,12px);
+        	}
+        	:host ::content .primary-text{
+        		color: var(--grey-eight,#111111);
+        	}
+        	:host ::content .primary-light-text{
+        		color: var(--grey-six,#333333);
+        	}
+            :host ::content .secondary-text{
+                color: var(--grey-three,#bbbbbb);
+            }
+            :host ::content .section{
+                padding: 20px 10px;
+            }
+            :host ::content .section-small{
+                padding: 10px;
+            }
+            :host ::content .margin-bottom{
+                margin-bottom: 5px;
+            }
+            :host ::content .link-style{
+                color: var(--link-color,#0098ff);
+                text-decoration: none;
+            }
+            :host ::content .text-right{
+                text-align: right;
+            }
+            :host ::content .text-left{
+                text-align: left;
+            }
+            :host ::content .text-center{
+                text-align: center;
+            }
+            :host ::content .font-light{
+                font-weight: 100;
+            }
+            :host ::content .font-normal{
+                font-weight: normal;
+            }
+            :host ::content .font-semi{
+                font-weight: 600;
+            }
+            :host ::content .font-bold{
+                font-weight: 900;
+            }
+            :host ::content .border-bottom{
+                border-bottom: 1px solid var(--grey-two,#eeeeee);
+            }
+            :host ::content .capitalize{
+                text-transform: capitalize;
+            }
+            :host ::content .ellipsis-2{
+                display: block;
+                /* Fallback for non-webkit */
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                -webkit-box-orient: vertical;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            :host ::content .ellipsis{
+                width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                -ms-text-overflow: ellipsis;
+                text-overflow: ellipsis;
+            }
+        </style>
+        <div><content select="*"></content></div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-text-container',
+
+});
+</script>

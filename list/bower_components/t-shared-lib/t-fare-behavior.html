@@ -1,0 +1,154 @@
+<script>
+TravelNxt = window.TravelNxt || {};
+TravelNxt.Behaviors = TravelNxt.Behaviors || {};
+/*
+@polymerBehavior 
+*/
+TravelNxt.Behaviors.FareBehavior = {
+    properties: {
+        /*Fare components from API*/
+        _components: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        _isBasePrice: {
+            type: Boolean,
+            value: true
+        },
+
+        _currency: {
+            type: String,
+            notify: false,
+            computed: '_getCurrency(_components)'
+        },
+
+        _discount: {
+            type: Object,
+            notify: false,
+            computed: '_computeFare(_components, "totaldiscount")'
+        },
+
+        _savings: {
+            type: Object,
+            notify: false,
+            computed: '_computeFare(_components, "totalsaving")'
+        },
+
+        _price: {
+            type: Object,
+            notify: false,
+            computed: '_getPrice(_components, _isBasePrice)'
+        },
+
+        _strikeOffPrice: {
+            type: Object,
+            notify: false,
+            computed: '_getStrikeOffPrice(_price, _discount, _savings)'
+        },
+
+        _displayPrice: {
+            type: Object,
+            notify: false,
+            computed: '_getDisplayPrice(_price, _discount, _savings)'
+        }
+    },
+
+    _getPrice: function(components, _isBasePrice) {
+        if (!components || !components.length) {
+            return;
+        }
+
+        return components.find(function(component, index, array) {
+            return component.type.toLowerCase() === (_isBasePrice ? 'basefare' : 'totalfare');
+        });
+    },
+
+    _getStrikeOffPrice: function(price, discount, savings) {
+
+        if (!price) {
+            return null;
+        }
+
+        var tempPrice = JSON.parse(JSON.stringify(price));
+
+        if (this._isBasePrice) {
+            if (savings) {
+                tempPrice.money.amount += savings.money.amount
+                this._useMoneyComponents(tempPrice, savings, true);
+            }
+        } else {
+            if (discount) {
+                tempPrice.money.amount += discount.money.amount;
+                this._useMoneyComponents(tempPrice, discount, true);
+            }
+        }
+
+        return tempPrice;
+    },
+
+    _getDisplayPrice: function(price, discount, savings) {
+        if (!price) {
+            return null;
+        }
+
+        var tempPrice = JSON.parse(JSON.stringify(price));
+
+        if (this._isBasePrice && discount) {
+            tempPrice.money.amount -= discount.money.amount;
+            this._useMoneyComponents(tempPrice, discount, false);
+        }
+
+        return tempPrice;
+    },
+
+    _useMoneyComponents: function(price, fareComponent, isIncrement) {
+        if (!price || !price.components || !price.components.length) {
+            return;
+        }
+
+        if (!fareComponent || !fareComponent.components || !fareComponent.components.length) {
+            return;
+        }
+
+        var pricePointsIndex = price.components.findIndex(function(component, index) {
+            return component.currency.toLowerCase() === 'points';
+        });
+
+        var fareComponentPointsIndex = fareComponent.components.findIndex(function(component, index) {
+            return component.currency.toLowerCase() === 'points';
+        });
+
+        if (pricePointsIndex >= 0 && fareComponentPointsIndex >= 0) {
+            if (isIncrement) {
+                price.components[pricePointsIndex].amount += fareComponent.components[fareComponentPointsIndex].amount;
+            } else {
+                price.components[pricePointsIndex].amount -= fareComponent.components[fareComponentPointsIndex].amount;
+            }
+        }
+    },
+
+    _computeFare: function(components, type) {
+        if (components) {
+            for (var i = 0; i < components.length; i++) {
+                var comp = components[i];
+                if (comp.type.toLowerCase() == type.toLowerCase())
+                    return comp;
+            };
+        }
+        return null;
+    },
+
+    _getCurrency: function(_components) {
+        if (!_components || !_components.length) {
+            return '';
+        }
+        if (!_components[0].money) {
+            return '';
+        }
+        return _components[0].money.currency;
+    }
+};
+</script>

@@ -1,0 +1,122 @@
+<!--
+
+    This behavior restores the session data.
+    `sessionKeys` property need to be provided in folowing format
+
+    var sessionKeys : [{
+        key : 'Session_Key', //the session key
+        property: 'Property_Name' //property of the component which needs to be restored.
+    }];
+    
+    The `providerId` property is the `id` attribute of `t-sessionstorage` component.
+    The default value for `providerId` is conventional id value of `t-sessionstorage` component throughout application
+    
+    `_onSessionLoad` should be the success callback function for `t-sessionstorage`.
+    @polymerBehavior
+-->
+
+
+<script>
+    (function () {
+
+        'use strict'
+
+        var sessionCount = 0;
+
+        var TravelNxt = window.TravelNxt || {};
+
+        TravelNxt.Behaviors = TravelNxt.Behaviors || {};
+        
+        TravelNxt.Behaviors.SessionBehavior = {
+            properties: {
+                sessionKeys: {
+                    type: Array
+                },
+
+                providerId: {
+                    type: String,
+                    value: 'sessionStore'
+                }
+            },
+
+            restoreSessionStorage: function() {
+                if (!this.sessionKeys || !this.sessionKeys.length) {
+                    console.warn("no session keys are provided!");
+                }
+
+                sessionCount = 0;
+
+                this._loadSession();
+            },
+
+            resetSessionStorage: function () {
+                if (!this.sessionKeys || !this.sessionKeys.length) {
+                    console.warn("no session keys are provided!");
+                }
+
+                sessionCount = 0;
+
+                this._resetSession();
+
+            },
+
+            _loadSession: function () {
+                if (sessionCount >= this.sessionKeys.length) {
+                    return;
+                }
+                this.$[this.providerId].key = this.sessionKeys[sessionCount].key;
+                this.$[this.providerId].load();
+            },
+
+            _resetSession: function () {
+                if (sessionCount >= this.sessionKeys.length) {
+                    return;
+                }
+                this.$[this.providerId].key = this.sessionKeys[sessionCount].key;
+                this.$[this.providerId].value = null;
+                this.$[this.providerId].save();
+            },
+
+            _onSessionLoad: function(e) {
+
+                if (!this.$[this.providerId].value) {
+                    console.warn("Session value for key " + this.$[this.providerId].key + " not found!");
+                }
+
+                var loadedSessionKey = this.sessionKeys[sessionCount];
+
+                if (!loadedSessionKey || !loadedSessionKey.propertyName) {
+                    console.warn("Property name to restore session value not found!");
+                }
+
+                this[loadedSessionKey.propertyName] = this.$[this.providerId].value;
+
+                this.$[this.providerId].value = null;
+                this.$[this.providerId].loaded = false;
+                ++sessionCount;
+                this._loadSession();
+            },
+
+            _onSessionSave: function() {
+
+                if (this.$[this.providerId].value) {
+                    console.warn("Falied to reset session value for key " + this.$[this.providerId].key);
+                }
+
+                var loadedSessionKey = this.sessionKeys[sessionCount];
+
+                if (!loadedSessionKey || !loadedSessionKey.propertyName) {
+                    console.warn("Property name to restore session value not found!");
+                }
+
+                this[loadedSessionKey.propertyName] = this.$[this.providerId].value;
+
+                this.$[this.providerId].value = null;
+                this.$[this.providerId].loaded = false;
+                ++sessionCount;
+                this._resetSession();
+                
+            }
+        };
+    })();
+</script>

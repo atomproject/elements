@@ -1,0 +1,53 @@
+{
+  "name": "t-forgot-password",
+  "authors": [
+    "Sounak Pal <talk2sounak@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/travelnxtElements/t-forgot-password",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "t-text-container": "travelnxtElements/t-text-container#^1.0.0",
+    "t-button": "atomelements/t-button#^1.0.0",
+    "t-password-input": "atomelements/t-password-input#^1.0.0",
+    "t-input": "atomelements/t-input#^1.0.0",
+    "neon-animation": "PolymerElements/neon-animation#^1.1.0",
+    "t-loader": "atomelements/t-loader#^1.0.0",
+    "t-shared-lib": "travelnxtelements/t-shared-lib#^1.0.0",
+    "t-mystique-auth": "travelnxtelements/t-mystique-auth#^1.0.0",
+    "t-notify": "atomelements/t-notify#^1.0.0"
+  },
+  "resolutions": {
+    "paper-styles": "~1.1.3"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "~0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6"
+  },
+  "_release": "5ea06275e6",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "5ea06275e6ae6f0f556da0661f11aaf26a5ddf2c"
+  },
+  "_source": "git://github.com/travelnxtElements/t-forgot-password.git",
+  "_target": "master",
+  "_originalSource": "travelnxtElements/t-forgot-password",
+  "_direct": true
+}

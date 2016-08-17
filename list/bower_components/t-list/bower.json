@@ -1,0 +1,44 @@
+{
+  "name": "t-list",
+  "version": "1.1.19",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
+    "iron-dropdown": "PolymerElements/iron-dropdown#^1.0.5",
+    "iron-resizable-behavior": "polymerelements/iron-resizable-behavior#^1.0.0",
+    "paper-spinner": "PolymerElements/paper-spinner#^1.0.2",
+    "t-button": "atomelements/t-button#^1.0.0",
+    "t-filter": "atomelements/t-filter#^1.0.0",
+    "t-notify": "atomelements/t-notify#^1.0.0",
+    "t-shared-components": "atomelements/t-shared-components#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "^0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6",
+    "t-result-item": "travelnxtelements/t-result-item#^1.0.0"
+  }
+}

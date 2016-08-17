@@ -1,0 +1,41 @@
+{
+  "name": "t-text-container",
+  "authors": [
+    "Sounak <talk2sounak@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/travelnxtElements/t-text-container",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "~0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6"
+  },
+  "_release": "0f8f06287e",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "0f8f06287edddc66b183cec30550ec154add4c4e"
+  },
+  "_source": "git://github.com/travelnxtElements/t-text-container.git",
+  "_target": "master",
+  "_originalSource": "travelnxtElements/t-text-container",
+  "_direct": true
+}

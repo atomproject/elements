@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <title>t-loader demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../t-loader.html">
+  <link rel="import" href="../../t-shared-components/theme.html">
+</head>
+<body>
+<!-- if you remove the active attribute below
+	 the loader ceases to display after some time
+	 the reason is that the `reset` listener gets
+	 called for `animationend` event.
+	 TODO: Why does it work this way?
+-->
+	<t-loader active></t-loader>
+</body>
+</html>

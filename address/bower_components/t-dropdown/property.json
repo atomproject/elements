@@ -1,0 +1,27 @@
+{
+    "name": "DropDown",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "label": {
+                "name": "Label",
+                "type": "string",
+                "value": "Select value from items"
+            },
+            "data": {
+                "name": "Choices",
+                "type": "list",
+                "value": ["First Choice","Second Choice","Third Choice"]
+            }
+        }
+    }, {
+        "name": "Properties",
+        "fields": {
+            "required": {
+                "name": "Mandatory Field",
+                "type": "Boolean",
+                "value": true
+            }
+        }
+    }]
+}

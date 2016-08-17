@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <title>t-sign-up demo</title>
+    <link rel="import" href="../../polymer/polymer.html">
+    <link rel="import" href="../t-sign-up.html">
+    <link rel="import" href="../t-sign-up-api.html">
+    <link rel="import" href="../t-user-availability-api.html">
+    <link rel="import" href="../../t-mystique-auth/t-mystique-auth.html">
+    <link rel="import" href="../../paper-toast/paper-toast.html">
+<link rel="import" href="../../t-shared-components/theme.html">
+</head>
+<style>
+h1 {
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+}
+body{
+    margin: 0;
+}
+#toast{
+    top: 0;
+    bottom: inherit;
+    -webkit-transform: translateY(-100px);
+    transform: translateY(-100px);
+}
+#toast.paper-toast-open{
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+}
+</style>
+
+<body>
+    <template is="dom-bind" id="app">
+        <template is="dom-if" if="{{userAlreadyExist}}">
+            <t-notify active message="Email already exists." type="warn"></t-notify>
+        </template>
+        <t-mystique-auth 
+            id="tokenCall" 
+            name="nxtb2bsite" 
+            url="http://qa-mystiquecode.tavisca.com/api/authentication/authenticate/context" 
+            token-response="{{token}}">
+        </t-mystique-auth>
+
+        <t-sign-up-api 
+            id="signUpApi"
+            on-t-sign-up-api-success="registerSuccessEventHandler"
+            on-t-sign-up-api-error="registerFailureEventHandler"
+            api-base-url="http://qa-mystiquecode.tavisca.com/" 
+            api-relative-url="api/user" 
+            auth-token="{{token.authenticationToken}}">
+        </t-sign-up-api>
+
+        <t-user-availability-api
+            id="validateApi"
+            on-t-user-availability-api-success="checkAvailabilitySuccessEventHandler"
+            on-t-user-availability-api-error="checkAvailabilityFailureEventHandler"
+            api-base-url="http://qa-mystiquecode.tavisca.com/"
+            api-relative-url="api/user/availability"
+            auth-token="{{token.authenticationToken}}">
+        </t-user-availability-api>
+        <t-sign-up
+            id="signUp"
+            policies-url="http://demo.travelnxt.com/privacypolicy"
+            terms-url="http://demo.travelnxt.com/terms"
+            on-t-sign-up-register="registerEventHandler" 
+            on-t-sign-up-validate-email="checkAvailabilityEventHandler">
+        </t-sign-up>
+        <paper-toast id="toast" text="Hello world!"></paper-toast>
+    </template>
+</body>
+<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+<script>
+
+    var template = document.querySelector('#app');
+
+    template.registerEventHandler = function(e, data) {
+        this.$.signUpApi.signUp(data);
+    };
+    template.checkAvailabilityEventHandler = function(e, data) {
+        this.$.validateApi.checkAvailability(data);
+    };
+
+    template.registerSuccessEventHandler = function(e, response) {
+        // this.$.toast.text ="user registered successfully";
+        // this.$.toast.open();
+        this.$.signUp.onSaveUserSuccess(response);
+    };
+    template.registerFailureEventHandler = function(e, response) {
+        // this.$.toast.text = response.message;
+        // this.$.toast.open();
+        this.$.signUp.onSaveUserFailure(response);
+    };
+
+    template.checkAvailabilitySuccessEventHandler = function(e, response) {
+        // this.$.toast.text ="email validated successfully";
+        // this.$.toast.open();
+        this.$.signUp.onEmailValidateSuccess();
+    };
+    template.checkAvailabilityFailureEventHandler = function(e, response) {
+        // this.$.toast.text =response.message;
+        // this.$.toast.open();
+        this.$.signUp.onEmailValidateFailure(response);
+    };
+
+</script>
+
+</html>

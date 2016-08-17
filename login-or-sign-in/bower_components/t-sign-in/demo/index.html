@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <title>t-sign-in demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../t-sign-in.html">
+  <link rel="import" href="../t-sign-in-api.html">
+  <link rel="import" href="../../t-mystique-auth/t-mystique-auth.html">
+<link rel="import" href="../../t-shared-components/theme.html">
+</head>
+<body>	
+	<template is="dom-bind" id="domBindTemplate">
+	    <t-sign-in id="loginView" ></t-sign-in>
+	    <t-sign-in-api id="loginApi" loading={{loading}} api-base-url="http://dev-mystiquecode.tavisca.com/" api-relative-url="api/authentication/authenticate/user" auth-token="{{tokenResponse.authenticationToken}}"></t-sign-in-api>	    
+	    <t-mystique-auth name="nxtb2bsite" url="http://dev-mystiquecode.tavisca.com/api/authentication/authenticate/context" token-response="{{tokenResponse}}" auto></t-mystique-auth>	  
+
+      <template is="dom-if" if="{{loading}}">
+        <div>API in-progress, wait..</div>
+      </template>  
+    </template>
+</body>
+<script type="text/javascript">		
+    window.addEventListener('WebComponentsReady', function(e) {
+  		var template = document.getElementById('domBindTemplate');
+
+  		template.$.loginView.addEventListener('t-sign-in-authenticate', template.$.loginApi.onAuthenticate.bind(template.$.loginApi));
+  		template.$.loginApi.addEventListener('t-sign-in-api-success', template.$.loginView.onAuthenticateSuccess.bind(template.$.loginView));
+  		template.$.loginApi.addEventListener('t-sign-in-api-error', template.$.loginView.onAuthenticateError.bind(template.$.loginView));
+
+      template.$.loginApi.addEventListener('t-sign-in-api-authenticate-success', function(){
+        alert('login success-do post handling');
+      });
+
+	});
+</script>
+</html>
+

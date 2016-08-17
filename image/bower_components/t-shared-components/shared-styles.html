@@ -1,0 +1,83 @@
+<!-- shared-styles.html -->
+<link rel="import" href="../polymer/polymer.html">
+<dom-module id="shared-styles">
+    <template>
+        <style>
+@media (max-width: 600px){
+   
+    :host:not([no-label-float]) {
+        padding-top: 10px;
+    }
+    :host {
+        position: relative;
+        display: block;
+    }
+
+    :host ::content input{
+        background: transparent;
+    }
+    :host ::content .input-content,
+    :host ::content t-input-container{
+        position: static!important;
+    }
+    :host ::content label,
+    :host label{
+	    position: absolute;
+	    top: calc(var(--standard-padding-input-field) + 1px);
+	    right: 0;
+        left: 0!important;
+	    /* left: calc(var(--standard-padding-input-field) + 0px); */
+	    -webkit-transition: all 0.25s;
+	    transition: all 0.25s;
+    }
+
+    :host[no-label-float] ::content .input-content label{
+        top: 5px!important;
+        left: 5px!important;
+    }
+    :host.label-is-floating label,
+    :host ::content .label-is-floating label{
+        top: 0!important;
+        left: 0!important;
+        font-size: 12px!important;
+    }
+    :host:not([no-label-float]) a.t-dropdown{
+        color: transparent!important;
+        background: transparent!important;
+    }
+    :host.label-is-floating a.t-dropdown{
+        color: var(--dropdown-field-text-color)!important;
+    }
+    :host a.t-dropdown,
+    :host ::content iron-autogrow-textarea,
+    :host ::content input,
+    :host ::content #input.t-calendar{
+        border: 0!important;
+        border-radius: 0!important;
+    }
+    :host a.t-dropdown,
+    :host ::content input,
+    :host ::content textarea{
+        border-bottom:1px solid!important;
+        border-color: var(--t-input-border-color)!important;
+        padding: 5px!important;
+        padding-left: 0!important;
+    }
+    :host.no-value a.t-dropdown,
+    :host.no-value ::content input,
+    :host.no-value ::content textarea{
+        border-color: var(--error-color)!important;
+    }
+    :host ::content t-input-container paper-input-error {
+        top: 90%;
+    }
+}
+
+</style>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: 'shared-styles'
+})
+</script>

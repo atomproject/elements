@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <title>t-input demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../t-input.html">
+    <link rel="import" href="../../t-shared-components/theme.html">
+    <link rel="import" href="../../t-calendar/t-calendar.html">
+    <link rel="import" href="../../t-autosuggest/t-autosuggest.html">
+</head>
+
+<body>
+    <t-input no-label-float ></t-input>
+    <t-input prevent-invalid-input required label="Search city, address, zip or landmark"></t-input>
+    <t-input multi-line label="something"  validate-on-blur required></t-input>
+	<t-calendar  no-label-float  id="one" required label="Select date"></t-calendar>
+  <t-autosuggest validate-on-blur="false" required label="Untitled Autosuggest very Bidduds o dsjdlsj" data-url="http://qa-mystiquecode.tavisca.com/api/content/autosuggest/" query-params="cid=nxtb2bsite" token-param="formattedAddress"></t-autosuggest>
+</body>
+
+</html>

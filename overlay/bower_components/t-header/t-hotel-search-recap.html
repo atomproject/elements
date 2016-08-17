@@ -1,0 +1,180 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../t-text-container/travel-element-styles.html">
+<!--
+    `<t-hotel-search-recap>` is a polymer component that generates the hotel details/passengers/ Journey details in order.
+
+
+
+    Basic usage
+    `
+        <t-hotel-search-recap hide-icon
+            hotel-name="{{selectedHotel.name}}"
+            check-in="{{parseDate(searchCriteria.checkInDate.date)}}"
+            check-out="{{parseDate(searchCriteria.checkOutDate.date)}}"
+            adult-count="{{searchCriteria.rooms.0.adults.quantity}}"
+            child-count="{{searchCriteria.rooms.0.children.quantity}}">
+
+        </t-hotel-search-recap>`
+-->
+<dom-module id="t-hotel-search-recap">
+    <style include="iron-flex"></style>
+    <style include="travel-element-styles">
+        :host {
+            display: block;
+            width: 100%;
+        }
+        
+        h6,
+        #detail {
+            line-height: var(--hotel-header-line-height, 20px);
+        }
+        
+        #pencil {
+            width: 9px;
+            height: 9px;
+            vertical-align: inherit;
+            margin-left: 5px;
+        }
+        
+        :host([center-align]) {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        
+        :host([center-align]) h6 {
+            display: inline;
+        }
+    </style>
+    <template>        
+        <div class="layout vertical">
+            <template is="dom-if" if="{{location}}">
+                <h6 class="font-16 font-normal capitalize ellipsis">{{location}}</h6>
+            </template>
+            <template is="dom-if" if="{{!location}}">
+                <h6 class="font-16 font-normal capitalize ellipsis">{{hotelName}}</h6>
+            </template>
+            <p id="detail" on-click="_editSearch" class="layout horizontal center center-justified ellipsis font-12">                
+                <span>{{_getDisplayDate(checkIn)}}</span>
+                <span>&nbsp;-&nbsp;</span>
+                <span>{{_getDisplayDate(checkOut)}}</span>
+                <span>,&nbsp;</span>
+                <span>{{_getDisplayNightsCount(checkIn,checkOut)}}</span>
+                <span>,&nbsp;</span>
+                <span>{{_getDisplayPaxCount(adultCount, childCount)}}</span>
+                <iron-icon hidden$={{hideIcon}} id="pencil" icon="editor:mode-edit"></iron-icon>
+            </p>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-hotel-search-recap',
+
+    properties: {
+
+        /*Search location*/
+        location: {
+            type: String,
+            value:''
+        },
+
+        /*Selected hotel name*/
+        hotelName: {
+            type: String,
+            value:''
+        },
+
+        /*Chekin Date*/
+        checkIn: {
+            type: Date,
+            value: new Date()
+        },
+
+        /*Check out date*/
+        checkOut: {
+            type: Date,
+            value: new Date()
+        },
+                
+        /*Adult guest count*/
+        adultCount: {
+            type: Number,
+            value: 0
+        },
+
+        /*Adult guest count*/
+        childCount: {
+            type: Number,
+            value: 0
+        },
+
+        /*This is a boolean value to centrall align the content.. Used in search overlay*/
+        centerAlign: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+        
+        /*Url to search page to allow user to edit criteria*/
+        searchPageUrl: {
+            type: String,
+            value: ''
+        },
+
+        /*Flag to show/hide edit criteria icon*/
+        hideIcon: Boolean
+    },
+
+    _dateDiff:function(fromDate, toDate) {        
+      var diff = toDate - fromDate; 
+      var divideBy = (24 * 60 * 60 * 1000) ; 
+      
+      return Math.floor( diff/divideBy);
+    },
+
+    /*This function is used to get total stay period string*/
+    _getDisplayNightsCount:function(fromDate, toDate){        
+        var nights = this._dateDiff(fromDate, toDate);
+        if(nights>1){
+            return nights + " Nights";
+        }else{
+            return nights + " Night";
+        }
+    },
+
+    /*This function is used to format date to (dd mmm)*/
+    _getDisplayDate: function(val) {
+        if(!val)
+            return '';
+        //TODO: accept format from globalization or from user
+        var dateObj = val;
+        var date = dateObj.getDate() < 10 ? '0' + dateObj.getDate() : dateObj.getDate();
+        var month = dateObj.toDateString().substr(3, 5);
+        return (date + " " + month).trim();
+    },
+
+    /*This function is used to get total pax guests count sting*/
+    _getDisplayPaxCount:function(adultCount, childCount){
+        var count = adultCount + childCount; 
+        
+        if(count>1){
+            return count + " Guests";
+        }else{
+            return count + " Guest";
+        }
+    },
+
+    /*Action to take user to search page if url is provided else raise an event 'editsearch'*/
+    _editSearch: function() {
+        if(this.searchPageUrl)
+            window.location.href = this.searchPageUrl;
+        else
+            this.fire('editsearch');
+    }
+});
+</script>

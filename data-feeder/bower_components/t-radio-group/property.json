@@ -1,0 +1,34 @@
+{
+    "name": "Radio List",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "label": {
+                "name":"Label",
+                "type": "string",
+                "value": "Untitled Radio List"
+            },
+            "data": {
+                "name":"Choices",
+                "type": "list",
+                "value": ["First Choice","Second Choice","Third Choice"]
+            }
+        }
+
+    },
+    {
+        "name": "Properties",
+        "fields": {
+            "required": {
+                "name": "Mandatory Field",
+                "type": "boolean",
+                "value": true
+            },
+            "pillButton": {
+                "name":"Style as Pill Buttons",
+                "type": "boolean",
+                "value": false
+            }
+        }
+    }]
+}

@@ -1,0 +1,19 @@
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../t-filter.html" />
+    <link rel="import" href="../../t-input/t-input.html" />
+    <link rel="import" href="../../t-shared-components/theme.html">
+    <!-- <link rel="import" href="../../../datacomponents/t-table/t-column.html"/>  -->
+</head>
+
+<body>
+    <div class="demo-canvas">
+    </div>
+    <t-filter filter-api="hotelfilter.json" search-label = "search traveller name" include-filters='["Distance","Price","Brand","Rating"]' auto opened></t-filter>
+
+    <!-- <t-filter filter-api="filter.json" search-label = "search traveller name" include-filters='["Status","DateRange", "Traveller"]' auto opened></t-filter>
+     --></body>

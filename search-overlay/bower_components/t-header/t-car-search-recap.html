@@ -1,0 +1,128 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../t-text-container/travel-element-styles.html">
+<!--
+    `<t-car-search-recap>` is a polymer component that generates the car details/passengers/ Journey details in order.
+
+
+
+    Basic usage
+    `
+        <t-car-search-recap 
+            hide-icon
+            data="[[searchCriteria]]">
+        </t-car-search-recap>`
+-->
+<dom-module id="t-car-search-recap">
+    <style include="iron-flex"></style>
+    <style include="travel-element-styles">
+        :host {
+            display: block;
+            width: 100%;
+        }
+        
+        h6,
+        #detail {
+            line-height: var(--car-header-line-height, 20px);
+        }
+        
+        #pencil {
+            width: 9px;
+            height: 9px;
+            vertical-align: inherit;
+            margin-left: 5px;
+        }
+        
+        :host([center-align]) {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        
+        :host([center-align]) h6 {
+            display: inline;
+        }
+    </style>
+    <template>        
+        <div class="layout vertical">
+            <h6 class="font-16 font-normal capitalize ellipsis">[[data.pickupLocation.cityName]] 
+                <template is="dom-if" if="{{_dropOffSame}}">
+                    <iron-icon icon="[[directionIcon]]"></iron-icon>
+                    [[data.dropoffLocation.cityName]]
+                </template>
+            </h6>
+            
+            <p id="detail" on-click="_editSearch" class="layout horizontal center center-justified ellipsis font-12">                
+                [[_getDisplayDate(data.pickupDate)]]
+                ,&nbsp;[[data.pickupTime]]&nbsp;-&nbsp;[[_getDisplayDate(data.dropoffDate)]],&nbsp;[[data.dropoffTime]]
+                <iron-icon hidden$=[[hideIcon]] id="pencil" icon="[[pencilIcon]]"></iron-icon>
+            </p>
+        </div>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+
+        is: 't-car-search-recap',
+
+        properties: {
+            //the data object to bind to populate data
+            data: {
+                type: Object
+            },
+
+            //the direction when dropoff and pickup location are different
+            directionIcon: {
+                type: String,
+                value: 'trending-flat'
+            },
+
+            /*Url to search page to allow user to edit criteria*/
+            searchPageUrl: {
+                type: String
+            },
+
+
+            /*Flag to show/hide edit criteria icon*/
+            hideIcon: Boolean,
+
+            //the pencil icon
+            pencilIcon: {
+                type: String,
+                value: 'editor:mode-edit'
+            },
+
+            _dropOffSame: {
+                type: Boolean,
+                computed:'_checkDropOffLocation(data.dropoffLocation.cityName,data.pickupLocation.cityName)'
+            }
+
+        },
+
+        _checkDropOffLocation: function (pickup, dropoff) {
+            return pickup !== dropoff;
+        },
+
+        /*This function is used to format date to (dd mmm)*/
+        _getDisplayDate: function (val) {
+            if (!val)
+                return '';
+            //TODO: accept format from globalization or from user
+            var dateObj = new Date(val);
+            var date = dateObj.getDate() < 10 ? '0' + dateObj.getDate() : dateObj.getDate();
+            var month = dateObj.toDateString().substr(3, 5);
+            return (date + " " + month).trim();
+        },
+
+        /*Action to take user to search page if url is provided else raise an event 'editsearch'*/
+        _editSearch: function () {
+            if (this.searchPageUrl) {
+                window.location.href = this.searchPageUrl;
+            } else {
+                this.fire('editsearch');
+            }
+        }
+    });
+</script>

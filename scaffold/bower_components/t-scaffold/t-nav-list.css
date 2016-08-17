@@ -1,0 +1,41 @@
+:host {
+  display: block;
+}
+
+.nav {
+  border-right: 1px solid #ccc;
+}
+
+.list-panel {
+  background-color: #fafafa;
+}
+
+.list-panel {
+  --paper-header-panel-standard-container: {
+    border-right: 1px solid #ccc;
+  };
+}
+paper-toolbar{
+  color:#fff;
+}
+.list {
+  padding: 0;
+}
+
+.list ::content paper-item {
+  height: 80px;
+  border-bottom: 1px solid #dedede;
+  background-color: #fafafa;
+}
+
+.main-drawer-panel:not([narrow]) [list-toggle] {
+  display: none;
+}
+
+.content {
+  height: 3000px;
+}
+
+.left-panel .main-nav{
+ overflow: auto;
+}

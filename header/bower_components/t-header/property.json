@@ -1,0 +1,40 @@
+{
+    "name": "Header",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "hideLeftIcon": {
+                    "name": "Hide Left Icon",
+                    "type": "boolean",
+                    "value": false
+                },
+                "normalHeading": {
+                    "name": "Normal Heading",
+                    "type": "boolean",
+                    "value": true
+                },
+                "icon": {
+                    "name": "icon",
+                    "type": "iconset",
+                    "value": "arrow-back"
+                },
+                "rightIcon": {
+                    "name": "rightIcon",
+                    "type": "iconset",
+                    "value": "arrow-forward"
+                },
+                "label": {
+                    "name": "label",
+                    "type": "string",
+                    "value": "Normal Heading"
+                },
+                "url": {
+                    "name": "url",
+                    "type": "string",
+                    "value": "../../../../"
+                }
+            }
+        }
+    ]
+}

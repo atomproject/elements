@@ -1,0 +1,35 @@
+{
+    "name": "Session Storage",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "apiUrlFormat": {
+                    "name": "apiUrlFormat",
+                    "type": "string"
+                },
+                "auto": {
+                    "name": "auto",
+                    "type": "object"
+                },
+                "key": {
+                    "name": "key",
+                    "type": "string"
+                },
+                "loaded": {
+                    "name": "loaded",
+                    "type": "boolean",
+                    "value": false
+                },
+                "useRaw": {
+                    "name": "useRaw",
+                    "type": "boolean"
+                },
+                "value": {
+                    "name": "value",
+                    "type": "object"
+                }
+            }
+        }
+    ]
+}

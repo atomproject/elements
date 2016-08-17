@@ -1,0 +1,60 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../paper-item/paper-item.html">
+<dom-module id="t-item">
+<style is="custom-style">
+:host:focus:after{
+  display: none;
+
+}
+:host{
+  display: block;
+
+}
+  paper-item{
+    background: none;
+    margin: 0;
+  }
+  paper-item iron-icon{
+    color: var(--grey-five);
+  }
+  label{
+    font-family: var(--primary-font-family);
+    color: var(--grey-five);
+  }
+</style>
+	<template>
+		<paper-item class="flex-1" label$="{{label}}" >
+	      <label class="flex-1">{{label}}</label>
+	      <div hidden$="{{_checkIcon}}">
+          <iron-icon icon="{{ico}}" ></iron-icon>
+	      </div>
+	    </paper-item>
+	</template>
+</dom-module>
+
+<script>
+  Polymer({
+
+    is: 't-item',
+    properties: {
+
+      /**
+       * The table has headerRow or not.
+       */
+      ico:{
+        type:String,
+        notify:true,
+        value:'',
+        reflectToAttribute:true
+      },
+      
+      /**
+       * The label of the item.
+       */
+      label: {
+        type: String,
+      }
+    }
+  })
+</script>

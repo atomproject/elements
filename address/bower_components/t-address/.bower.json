@@ -1,0 +1,50 @@
+{
+  "name": "t-address",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/travelnxtelements/t-address",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
+    "t-dropdown": "atomelements/t-dropdown#^2.0.0",
+    "t-input": "atomelements/t-input#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "^0.7.14",
+    "web-component-tester": "*",
+    "t-creditcard": "travelnxtElements/t-creditcard#^1.0.0",
+    "t-shared-components": "atomelements/t-shared-components#^1.0.0",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6"
+  },
+  "_release": "1f6e678c00",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "1f6e678c005af59dae1d3c1a1d3bf8e6b2f3b167"
+  },
+  "_source": "git://github.com/travelnxtelements/t-address.git",
+  "_target": "master",
+  "_originalSource": "travelnxtelements/t-address",
+  "_direct": true
+}

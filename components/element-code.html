@@ -1,0 +1,326 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/highlightjs-element/highlightjs-element.html">
+<link rel="import" href="../bower_components/code-generator-behavior/code-generator-behavior.html">
+<link rel="import" href="../bower_components/code-generator-behavior/html-beautify.html">
+
+<dom-module id="element-code">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-size: 14px;
+        margin: 10px 0;
+      }
+
+      [hidden] {
+        display: none;
+      }
+
+      highlightjs-element,
+      pre {
+        padding: 5px 0;
+        border: 1px solid;
+        border-color: var(--grey-two);
+        border-radius: 5px;
+      }
+
+      pre {
+        overflow: auto;
+      }
+
+      :host > * {
+        padding-left: 0.5em;
+      }
+
+      .step-1, .step-2 {
+        padding-left: 1em;
+      }
+
+      .substep {
+        padding-left: 1em;
+      }
+
+      h3 {
+        font-weight: 600;
+        padding-top: 25px;
+      }
+
+      h4, h5 {
+        font-weight: normal;
+      }
+
+      h5 {
+        font-size: inherit;
+      }
+    </style>
+
+    <h3>Element code</h3>
+    <highlightjs-element text="{{elCode}}">
+    </highlightjs-element>
+
+    <h3>To use this element on a web page</h3>
+
+    <h4>Step 1: Get the dependencies</h4>
+    <div class="step-1">
+      <p>
+        You need two files for using this element, the polyfill library
+        <code>webcomponentsjs</code> and <code><span>{{elName}}</span>.html</code> file,
+        the third file <code>theme.html</code> contains styles so that your element looks good.<br>
+        You can either use a package manager like <b>bower</b> to install the files and then
+        use them or a <b>CDN</b> to include the files directly on your web page.
+      </p>
+
+      <h4>Option 1: CDN (Recommended for quick and simple usage)</h4>
+      <highlightjs-element
+        text="{{cdnImports(elName, elDispName, elDependencies, showDs, absoluteBaseurl)}}">
+      </highlightjs-element>
+
+      <h4>Option 2: Bower (Recommended for production usage)</h4>
+
+      <div class="substep">
+        <h5>Install the libraries</h5>
+        <pre><code>{{bowerInstalls(elName, elDependencies, showDs)}}</code></pre>
+
+        <h5>Include the files</h5>
+        <highlightjs-element
+          text="{{bowerImports(elName, elDependencies, showDs)}}">
+        </highlightjs-element>
+      </div>
+    </div>
+
+    <h4>Step 2: Add the element code</h4>
+    <div class="step-2">
+      <p>
+        Once you've got the requisite depenedencies on your web page, all you need
+        to do is <b>copy</b> the code in <b>Element Code</b> section and paste it in
+        your web page.
+      </p>
+    </div>
+  </template>
+  <script>
+    Polymer({
+      is: 'element-code',
+
+      behaviors: [
+        Polymer.CodeGeneratorBehavior,
+      ],
+
+      properties: {
+        /**
+         * The code snippet of the element
+         * @type {String}
+         */
+        elCode: {
+          type: String,
+          notify: true,
+          computed: 'updateCode(elName, elHtml, elAttribs.*, dataSources.*)'
+        },
+
+        /**
+         * Name of the element
+         * @type {String}
+         */
+        elName: {
+          type: String,
+          observer: 'nameChanged'
+        },
+
+        /**
+         * The display name of the element
+         * @type {String}
+         */
+        elDispName: {
+          type: String,
+        },
+
+        /**
+         * The inner html of the element in demo file
+         * @type {String}
+         */
+        elHtml: {
+          type: String
+        },
+
+        /**
+         * The hash of key value pairs (attribute value pairs)
+         * of an element
+         * @type {Object}
+         */
+        elAttribs: {
+          type: Object
+        },
+
+        /**
+         * The array of dependencies for an element
+         * @type {Array}
+         */
+        elDependencies: {
+          type: Array
+        },
+
+        /**
+         * Show the data source in the code snippet?
+         * @type {Boolean}
+         */
+        showDs: {
+          type: Boolean,
+          computed: 'getShowDs(dataSources.*)'
+        },
+
+        /**
+         * The base url to use in the cdn listing
+         * TODO: handle bad `absoluteBaseurl`
+         * @type {String}
+         */
+        absoluteBaseurl: {
+          type: String
+        },
+
+        /**
+         * The hash of attribute key (on element) and the data source object
+         * @type {Object}
+         */
+        dataSources: {
+          type: Object,
+          value: function() { return {}; }
+        }
+      },
+
+      //TODO: this will be set on prototype of the element, allow this?
+      beautifyOpts: {
+        wrap_line_length: 80,
+      },
+
+      /**
+       * Calculate the `showDs` property value from `dataSources` object
+       * @return {Boolean} value of `showDs`
+       */
+      getShowDs: function() {
+        return Object.keys(this.dataSources).reduce((showDs, key) => {
+          return showDs || Boolean(this.dataSources[key].showDs);
+        }, false);
+      },
+
+      /**
+       * Generate the the command line code snippet for installing
+       * the dependencies of the demo
+       * @param  {String} elName         The name of element
+       * @param  {Array} elDependencies Array of dependencies
+       * @param  {Boolean} showDs         Add data source dependency?
+       * @return {String}                The command line code snippet
+       */
+      bowerInstalls: function(elName, elDependencies, showDs) {
+        let installs = 'bower install --save ';
+
+        installs += elDependencies
+          .map(dep => dep.install)
+          .filter((dep, i, deps) => dep && deps.indexOf(dep) === i)
+          .reduce((total, dep) => `${total}${dep} `, '');
+
+        if (showDs) {
+          installs += 'atomproject/dynamic-data-source';
+        }
+
+        return installs;
+      },
+
+      /**
+       * Generates the html for script and html imports with cdn urls
+       * for use in an html page directly
+       * @param  {String} elName          Name of the element
+       * @param  {String} elDispName      Display name of the element
+       * @param  {Array} elDependencies  Array of dependencies of demo
+       * @param  {Boolean} showDs          Add data source imports?
+       * @param  {String} absoluteBaseurl baseurl of the cdn
+       * @return {String}                 Html text of imports
+       */
+      cdnImports: function(elName, elDispName, elDependencies,
+        showDs, absoluteBaseurl) {
+
+        // TODO: handle bad `absoluteBaseurl`
+        absoluteBaseurl += `${elDispName}/bower_components`;
+
+        return this.getDeps(elName, elDependencies, showDs, absoluteBaseurl);
+      },
+
+      /**
+       * Generates the html for script and html imports with relative urls
+       * to be used after installing dependencies using bower
+       * @param  {String} elName         Name of the element
+       * @param  {Array} elDependencies Array of dependencies
+       * @param  {Boolean} showDs         Add data source imports?
+       * @return {String}                Html text of imports
+       */
+      bowerImports: function(elName, elDependencies, showDs) {
+        let baseDomain = '{{ path to bower_components dir }}';
+
+        return this.getDeps(elName, elDependencies, showDs, baseDomain);
+      },
+
+      getDeps: function(elName, elDependencies, showDs, baseDomain) {
+        let ds = 'dynamic-data-source/dynamic-data-source.html';
+
+        elDependencies = elDependencies.slice();
+
+        if (showDs) {
+          elDependencies.push({relPath: ds, type: 'link'});
+        }
+
+        return elDependencies
+          .map(dep => {
+            var url = baseDomain + '/' + dep.relPath;
+
+            if (dep.type === 'script') {
+              return this.scriptTemplate(url);
+            }
+            else if (dep.type === 'link') {
+              return this.linkTemplate(url);
+            }
+            else {
+              return '';
+            }
+          })
+          .join('\n');
+      },
+
+      scriptTemplate: function(src) {
+        //we can't have either script start tag or script end tag inside
+        //the string literal because polymer html parser dies
+        return '<' + 'script type="text/javascript" src="' + src + '">' +
+               '</' + 'script' + '>';
+      },
+
+      linkTemplate: function(href) {
+        return `<link rel="import" href="${href}">`;
+      },
+
+      // reset things if the name changes
+      nameChanged: function() {
+        this.elAttribs = {};
+        this.elHtml = '';
+      },
+
+      // update the element code snippet if anything changes
+      updateCode: function() {
+        let name = this.elName;
+        let attribs = this.elAttribs;
+        let innerHTML = this.elHtml;
+        let code = this.getComponentCode(name, attribs, innerHTML);
+
+        if (this.dataSources) {
+          Object.keys(this.dataSources).forEach(key => {
+            let ds = this.dataSources[key];
+
+            if (!ds.showDs) {
+              return;
+            }
+
+            code += this.getComponentCode(ds.name, ds.attribs);
+          });
+        }
+
+        return window.html_beautify(code, this.beautifyOpts);
+      }
+    });
+  </script>
+</dom-module>

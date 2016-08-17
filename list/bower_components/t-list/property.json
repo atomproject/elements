@@ -1,0 +1,42 @@
+{
+    "name": "List",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "dataApi": {
+                "name": "URL for list data",
+                "type": "url",
+                "value": "https://vivid-inferno-4587.firebaseio.com/results.json"
+            },
+            "filterApi": {
+                "name": "URL for the filter",
+                "type": "url",
+                "value": "https://vivid-inferno-4587.firebaseio.com/filter.json"
+            },
+            "paginatedApi": {
+                "name": "URL for pagination",
+                "type": "url",
+                "value": ""
+            }
+        }
+    }, {
+        "name": "Properties",
+        "fields": {
+            "tokenParam": {
+                "name": "List key",
+                "type": "string",
+                "value": "inventories"
+            },
+            "withSorting": {
+                "name": "Show sorting controls",
+                "type": "boolean",
+                "value": true
+            },
+            "withFilter": {
+                "name": "Show filters",
+                "type": "boolean",
+                "value": true
+            }
+        }
+    }]
+}

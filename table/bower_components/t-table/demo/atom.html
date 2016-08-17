@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">   
+    
+	<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  
+	<link rel="import" href="../t-table.html"/>
+	<link rel="import" href="../t-column.html"/> 
+	<link rel="import" href="../../t-shared-components/theme.html">
+</head>
+
+<body unresolved>
+	<div style="margin:10px">
+		<t-table id="rtable">
+			<t-column data-value="0" display-value="Name" hide-on="tablet" column-template="test"></t-column>
+			<t-column data-value="1" display-value="Role" hide-on="phone"></t-column>
+			<t-column data-value="2" display-value="Last"></t-column>
+			<t-column data-value="3" display-value="Status" ></t-column>
+		</t-table>
+	</div>
+</body>
+</html>
+

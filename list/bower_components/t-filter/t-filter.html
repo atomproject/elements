@@ -1,0 +1,1282 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../t-input/t-input.html" />
+<link rel="import" href="../t-button/t-button.html" />
+<link rel="import" href="../t-range/t-range.html" />
+<link rel="import" href="../t-starrating/t-starrating.html" />
+<link rel="import" href="../iron-ajax/iron-ajax.html" />
+<link rel="import" href="../iron-collapse/iron-collapse.html" />
+<link rel="import" href="../t-checkbox/t-checkbox.html" />
+<link rel="import" href="../t-calendar/t-calendar.html" />
+<link rel="import" href="../t-header/t-header.html" />
+<link rel="import" href="../paper-item/paper-item.html" />
+<link rel="import" href="../iron-icon/iron-icon.html" />
+<link rel="import" href="../iron-list/iron-list.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<!--
+    `<t-filter>` is a polymer component that generates a playground for interacting with components.
+    
+    If parent view explicitly asks to show price or count with option filter by setting either of `show-{{group}}-count` or `show-{{group}}-price`,
+    component handles this to show respective value along with `option` filter 
+
+    <div class="demo-canvas">
+    </div>
+
+    <t-filter metadata-source="metadata url" property-source="property url" component="component name">
+
+        
+        <div class="component">
+            'component template'
+        </div>
+    </t-filter>     
+-->
+<dom-module id="t-filter">
+    <template>
+        <style include="iron-flex-alignment"></style>
+        <style include="iron-positioning"></style>
+        <style include="iron-flex">
+        :root {
+            --checkbox-unchecked-color: var(-grey-two, #eeeeee);
+            --checkbox-unchecked-ink-color: var(-grey-two, #eeeeee);
+        }
+        
+        :host {
+            font-size: var(--font-12, 12px);
+            font-family: var(--primary-font-family);
+            cursor: pointer;
+            display: block;
+            color: var(--primary-text-color, #333333);
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .mainBody {
+            height: 100vh;
+        }
+        
+        .scrollsection > .item,
+        .heading {
+            padding: 10px;
+        }
+        #controller .category {
+            padding: 2px 0;
+            font-size: var(--font-16, 16px);
+        }
+        #controller .category,
+          .chip {
+            border-bottom: 1px solid;
+            border-color: var(--grey-two, #eeeeee);
+        }
+        
+        .category iron-icon {
+            will-change: transform;
+            transition: 0.3s ease transform;
+        }
+        
+        .category.closed iron-icon {
+            transform: rotate(180deg);
+        }
+        
+        .filter-block {
+            padding: 0 0 10px;
+        }
+        
+        .filter-block > .layout {
+            margin-top: 20px;
+        }
+        
+        .chip {
+            background: #ffffd0;
+            padding: 10px 5px;
+        }
+        
+        .chip:last-child {
+            border-bottom: 0;
+        }
+        
+        .chip iron-icon {
+            width: 16px;
+            height: 16px;
+        }
+        
+        t-checkbox {
+            width: 100%;
+        }
+        
+        t-range {
+            margin: 0 48px;
+        }
+        
+        .range-block {
+            padding: 10px 0;
+        }
+        
+        .font-12 {
+            font-size: var(--font-12, 12px);
+        }
+        
+        t-starrating ::content paper-icon-button {
+            padding: 0;
+            width: 16px;
+            height: 16px;
+            position: static;
+            margin: 0;
+            line-height: normal;
+        }
+        
+        t-starrating ::content .t-starrating-wrapper > span {
+            width: auto;
+            vertical-align: super;
+            font-size: 0;
+        }
+        
+        .modal {
+            bottom: 0;
+            z-index: 10;
+            background: #fff;
+        }
+        
+        #filteredRatio {
+            padding: 10px;
+            border-bottom: 1px solid;
+            border-color: var(--grey-two, #eeeeee);
+            position: relative;
+            overflow: hidden;
+            color: var(--grey-three, #bbbbbb);
+        }
+        
+        .total-results{
+            margin-left: 20px;  
+        }
+        .icon-reset-search {
+            margin-left: 10px;
+        }
+        
+        #searchBox {
+            background: #fff;
+            z-index: 1;
+            transition: 0.3s ease left;
+            padding: 0 10px;
+            width: 100%;
+            left: 100%;
+            /* color: #bbbbbb; */
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        
+        #searchBox.active {
+            left: 0;
+        }
+        
+        #searchBox-loader {
+            width: 14px;
+            height: 14px;
+        }
+        /* patch to handle nexus page scroll */
+        
+        #controller {
+            overflow: hidden;
+        }
+        
+        .scrollsection {
+            overflow: auto;
+        }
+        
+        .searchBox-content {
+            width: 50%;
+        }
+        
+        .searchBox-content-ellipsis {
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            -ms-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+        }
+        
+        .link {
+            color: var(--link-color, #0098ff);
+        }
+        
+        .display-value {
+            margin-right: 5px;
+        }
+        
+        .devider {
+            width: 1px;
+            height: 20px;
+            margin: 0px 5px 0 10px;
+            background: var(--grey-three, #bbbbbb);
+        }
+        
+        :host ::content #checkboxLabel {
+            padding-left: 20px!important;
+            line-height: 18px;
+            color: var(--primary-text-color, #333333);
+        }
+        
+        t-range{
+            font-size: var(--font-14, 14px);
+        }
+        
+        t-range ::content .label,
+        ::content .display-value,
+        .secondary-text {
+            color: var(--grey-three, #bbbbbb);
+            font-size: var(--font-14, 14px);
+        }
+        </style>
+        <div class="layout horizontal" id="filteredRatio">
+            <div class="flex layout horizontal center">
+                <iron-icon hidden$="[[_disableFilters]]" icon="[[filterIcon]]" on-click="_openModal"></iron-icon>
+                <iron-icon hidden$="[[!_disableFilters]]" icon="[[disableFilterIcon]]"></iron-icon>
+                <span class="total-results" hidden$="[[!_loadingResultsSearchBox]]">
+                    <span>[[filteredRatio]]</span>
+                <span>results</span>
+                </span>
+            </div>
+            <!-- <span>{{_getFilterCount(cachedFilters.length)}}</span> -->
+            <template is="dom-if" if="[[_searchFilter]]">
+                <div class="searchBox-content layout horizontal center">
+                    <span on-click="_toggleSearchBox" class="flex searchBox-content-ellipsis">[[searchVal]]</span>
+                    <!-- <span class="devider" hidden$="[[!searchVal]]"></span> -->
+                    <iron-icon class="icon-reset-search" on-click="_removeSearchFilter" icon="close" hidden$="[[!searchVal]]"></iron-icon>
+                    <iron-icon on-click="_toggleSearchBox" icon="[[searchIcon]]" hidden$="[[searchVal]]"></iron-icon>
+                </div>
+                <div class="layout horizontal center fit" id="searchBox">
+                    <t-input id="searchInput" no-label-float class="flex" label="[[searchLabel]]" value="{{searchVal}}" on-keyup="searchSubmit"></t-input>
+                    <span hidden$="[[!_loadingResultsSearchBox]]">[[filteredRatio]]</span>
+                    <t-loader id="searchBox-loader" active hidden$="[[_loadingResultsSearchBox]]"></t-loader>
+                    <span class="devider"></span>
+                    <iron-icon class="icon" on-click="_clearFilterAndFocus" icon="close"></iron-icon>
+                </div>
+            </template>
+        </div>
+        <div class="modal layout vertical fixed-top" id="filterModal" hidden>
+            <div class="layout vertical mainBody">
+                <t-header normal-heading label="Filter Your Search Results" on-click="_revertChanges">
+                </t-header>
+                <div id="controller" class="layout vertical flex">
+                    <div class="heading">
+                        <div class="layout horizontal center justified item-layout">
+                            <a class="link" on-click="_resetFilters">Reset</a>
+                            <t-button id="applyfilters" label="Apply" class="primary" on-click="_applyFilters" disabled="true"></t-button>
+                        </div>
+                    </div>
+                    <div class="flex scrollsection">
+                        <div class="chips layout vertical flex">
+                            <template is="dom-repeat" items="[[cachedFilters]]">
+                                <template is="dom-if" if="[[!item.hide]]">
+                                    <div class="chip horizontal layout">
+                                        <div class="flex value">
+                                            <span>{{_getChip(item,index)}}</span>
+                                        </div>
+                                        <iron-icon class="icon" on-click="_removeFilter" icon="close"></iron-icon>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                        <template is="dom-repeat" items="{{response}}" as="key">
+                            <template is="dom-if" if="{{_isTypeMatching(key,'Options')}}">
+                                <div class="layout item">
+                                    <div class="category layout horizontal center" data-category$="[[key.category]]" data-category$="[[key.category]]" on-click="_toggle">
+                                        <div class="flex label">[[key.label]]</div>
+                                        <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
+                                    </div>
+                                    <iron-collapse opened="[[opened]]" id="[[key.category]]" data-label$="[[key.label]]">
+                                        <div class="filter-block">
+                                            <template is="dom-if" if="[[_isNotRating(key.category)]]">
+                                                <template is="dom-repeat" items="[[key.items]]" as="item">
+                                                    <div class="layout horizontal" hidden$="[[_hideFilterByCount(item.additionalInfo)]]">
+                                                        <div class="layout horizontal flex item-layout justified style-scope t-component-panel">
+                                                            <t-checkbox data-label$="{{key.label}}" data-category$="[[key.category]]" data-type$="[[key.type]]" on-checked-change="_checkChanged">
+                                                                <div class="layout horizontal center justified">
+                                                                    <div>[[item.label]]</div>
+                                                                    <span class="display-value">[[_getDisplayValue(item)]]</span>
+                                                                </div>
+                                                            </t-checkbox>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                            <template is="dom-if" if="[[_isRating(key.category)]]" as="key">
+                                                <template is="dom-repeat" items="[[key.items]]" as="item">
+                                                    <div class="layout item-layout justified style-scope t-component-panel">
+                                                        <t-checkbox data-type$="[[key.type]]" data-label$="{{key.label}}" data-category$="[[key.category]]" name$="[[item.name]]" value$="[[item.value]]" on-checked-change="_checkChanged">
+                                                            <div class="layout horizontal center font-12 justified">
+                                                                <t-starrating disabled stars="5" rate="[[item.name]]"></t-starrating>
+                                                                <div class="display-value">
+                                                                    [[_getDisplayValue(item)]]
+                                                                </div>
+                                                            </div>
+                                                        </t-checkbox>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                        </div>
+                                    </iron-collapse>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(key,'Range')}}">
+                                <div class="layout item">
+                                    <div class="category layout horizontal center" data-category$="[[key.category]]" on-click="_toggle">
+                                        <div class="flex label">[[_getDisplayLabel(key)]]</div>
+                                        <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
+                                    </div>
+                                    <iron-collapse opened="[[opened]]" id="Iron-collapse1">
+                                        <div class="filter-block">
+                                            <template is="dom-repeat" items="[[key.items]]" as="range" index-as="i">
+                                                <template is="dom-if" if="[[_isEven(i)]]">
+                                                    <div class="range-block">
+                                                        <t-range show-twelve-hour-clock="[[showTwelveHourClock]]" label="[[range.label]]" no-label="[[_hideLabel(range)]]" data-index$="[[i]]" step="[[_getStepValue(range,i)]]" range-type="[[_getRangeType(range)]]" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[range.group]]" min="[[_getMinRange(key.items, i)]]" max="[[_getMaxRange(key.items, i)]]" on-range-change="_rangeChanged" margin="1"></t-range>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                        </div>
+                                    </iron-collapse>
+                                </div>
+                            </template>
+                            <template is="dom-if" if="{{_isTypeMatching(key,'DateRange')}}">
+                                <div class="layout item">
+                                    <div class="category layout horizontal center" data-category$="[[key.category]]" on-click="_toggle">
+                                        <div class="flex label">[[_getDisplayLabel(key)]]</div>
+                                        <iron-icon class="secondary-text" icon="icons:expand-less"></iron-icon>
+                                    </div>
+                                    <iron-collapse opened="[[opened]]" id="Iron-collapse2">
+                                        <div class="filter-block">
+                                            <template is="dom-repeat" items="[[key.items]]" as="dateRange" index-as="i">
+                                                <template is="dom-if" if="[[_isEven(i)]]">
+                                                    <div class="layout horizontal">
+                                                        <t-calendar class="flex margin-horizontal" data-index="0" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="Start Date" name="StartDate" id="startDate" selected-date="{{startDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged" min="[[minStartDate]]">
+                                                        </t-calendar>
+                                                        &nbsp; &nbsp; &nbsp;
+                                                        <t-calendar class="flex" data-index="1" data-category$="[[key.category]]" data-type$="[[key.type]]" data-group$="[[dateRange.group]]" label="End Date" name="EndDate" id="endDate" selected-date="{{endDate}}" format="mm/dd/yyyy" on-selected-date-changed="_dateChanged" min="[[minEndDate]]">
+                                                        </t-calendar>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                        </div>
+                                    </iron-collapse>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <iron-ajax id="call" url="{{filterApi}}" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" on-response="_onHandleResponse" on-error="_handleError">
+        </iron-ajax>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-filter',
+
+    properties: {
+
+
+
+        /*Filter icon to be replaced and given value*/
+        filterIcon: {
+            type: String,
+            value: 'filter-list',
+            reflectToAttribute: true
+        },
+
+        // Disable filter icon to be replaced with given value
+        disableFilterIcon: {
+            type: String,
+            value: 'close',
+            reflectToAttribute: true
+        },
+
+        /*search icon to be replaced and given value*/
+        searchIcon: {
+            type: String,
+            value: 'search'
+        },
+
+
+        showTwelveHourClock: {
+            type: Boolean,
+            value: false
+        },
+
+        response: {
+            type: Array,
+            value: []
+        },
+
+
+
+        auto: {
+            type: Boolean,
+            value: false
+        },
+
+        filterApi: {
+            type: String,
+            value: ''
+        },
+
+        /*Pass currency */
+        currency: {
+            type: String
+        },
+
+        appliedFilters: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        includeFilters: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        /**
+         * Customize filter parameters
+         * array item is an object with key equal to category and value equal toitem name
+         */
+        excludedFilters: {
+            type: Array,
+            value: []
+        },
+
+        cachedFilters: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        _interstitialFilters: {
+            type: Array,
+            value: function() {
+                return [];
+            }
+        },
+
+        opened: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+
+        searchVal: {
+            type: String,
+            value: null,
+            observer: '_searchValChanged'
+        },
+
+        filterResponseParam: {
+            type: String,
+            value: 'filters'
+        },
+
+        _searchFilter: {
+            type: Object,
+            computed: 'findSearchFilter(response)'
+        },
+
+        _searchFilterTimer: {
+            type: Number,
+            value: -1
+        },
+
+
+        _loadingResultsSearchBox: {
+            type: Boolean,
+            value: false
+        },
+
+        _disableFilters: {
+            type: Boolean,
+            value: false
+        },
+
+        searchLabel: {
+            type: String
+        },
+
+        minStartDate: {
+            type: Boolean,
+            value: false
+        },
+
+        minEndDate: {
+            type: Boolean,
+            value: false
+        }
+    },
+    observers: [
+        '_onResultsResponse(resultsPagingInfo)',
+        '_addListenerBlur(_searchFilter)',
+        //'_setButtonState(cachedFilters.splices)'
+    ],
+
+    attached: function() {
+        var component = this;
+        Polymer.dom(this.$.component).getDistributedNodes()[0];
+        if (this.filterApi != '' && this.auto)
+            this.generateFilter();
+    },
+
+    _setButtonState: function(changeReacord) {
+        this.$.applyfilters.disabled = true;
+    },
+
+    _hideFilterByCount: function (items) {
+        if (!items || !items.length)
+            return true;
+
+        var hideFilter = false;
+        items.forEach(function (data) {
+            if (data.key && data.key == 'Count' && data.value == 0) {
+                hideFilter = true;
+            }
+        });
+
+        return hideFilter;
+    },
+
+    _getMaxRange: function(items, index) {
+        var range = items[index + 1];
+
+        return this._getRangeValue(range);
+    },
+
+    _getStepValue: function(range) {
+        var type = this._getRangeType(range);
+        switch (type) {
+            case 'date':
+                return 60 * 60;
+            case 'number':
+                return 1;
+        }
+    },
+
+    _getMinRange: function(items, index) {
+        var range = items[index];
+
+        return this._getRangeValue(range);
+    },
+
+    _getRangeValue: function(range) {
+
+        var filter = this;
+        var value = range.value;
+        range.additionalInfo.forEach(function(r) {
+            if (r.key.toLowerCase() === 'unit' && r.value.toLowerCase() === 'ticks') {
+                value = filter._convertToTime(range.value);
+            }
+        });
+        return value;
+    },
+
+    _hideLabel: function(range) {
+        var type = this._getRangeType(range);
+        switch (type) {
+            case 'date':
+                return false;
+            default:
+                return true;
+        }
+    },
+
+    _getRangeType: function(range) {
+        var type = 'number';
+        range.additionalInfo.forEach(function(r) {
+            if (r.key.toLowerCase() === 'unit' && r.value.toLowerCase() === 'ticks') {
+                type = 'date';
+            }
+        });
+        return type;
+    },
+
+    generateFilter: function() {
+        this.$.call.generateRequest();
+    },
+
+    _isTypeMatching: function(key, type) {
+        if (key.type === type && key.items.length > 0)
+            return true;
+        return false;
+    },
+
+    _isEven: function(index) {
+        return index % 2 === 0;
+    },
+
+    _onHandleResponse: function(e) {
+        var response = e.detail.response;
+        if (response.status.isSuccessful && response[this.filterResponseParam] && response[this.filterResponseParam].length > 0) {
+            this.response = this._applyInclusions(response[this.filterResponseParam]);
+            this.handleResponse(this.response);
+        }
+    },
+
+    handleResponse: function (response) {
+        this._customizeFilters();
+        this.fire('modify-filter-data', {
+            element: this,
+            filters: this.response
+        });
+    },
+
+    _customizeFilters: function() {
+        if (!this.response || !this.response.length || !this.excludedFilters || !this.excludedFilters.length)
+            return;
+
+        for (var i = 0; i < this.response.length; i++) {
+            for (var j = 0; j < this.excludedFilters.length; j++) {
+                if (this.excludedFilters[j].hasOwnProperty(this.response[i].category)) {
+                    var itemsToBeRemoved = this.excludedFilters[j][this.response[i].category];
+                    var itemsToBeRetained = this.response[i].items.filter(function(item) {
+                        return itemsToBeRemoved.indexOf(item.name) < 0;
+                    });
+                    this.response[i].items = itemsToBeRetained;
+                }
+            }
+        }
+
+    },
+
+    _handleError: function(e) {
+        this.$.controller.textContent = "No configuration found.";
+    },
+
+    _convertToTime: function(epochTime) {
+
+        var epochTicks = 621355968000000000; // the number of .net ticks at the unix epoch
+        var ticksPerMillisecond = 10000; // there are 10000 .net ticks per millisecond
+
+        var dateTime = (epochTime - epochTicks) / ticksPerMillisecond;
+        var date = new Date();
+        date.setTime(dateTime);
+        var utcDate = new Date(date.getTime() + (date.getTimezoneOffset() * 60000));
+
+        return utcDate.getTime();
+    },
+
+    _convertToTicks: function(time) {
+
+        var localtzDateTime = new Date(parseInt(time));
+        var standardDateTime = new Date(localtzDateTime.getTime() - (localtzDateTime.getTimezoneOffset() * 60000));
+
+        var cTime = standardDateTime.getTime() * 10000;
+
+        var epochTicks = 621355968000000000; // the number of .net ticks at the unix epoch               
+        return (cTime + epochTicks);
+    },
+
+    _checkChanged: function(e) {
+        var instance = e.model.item;
+        var target = e.currentTarget;
+        var category = target.getAttribute("data-category");
+
+        if (instance) {
+            this.$.applyfilters.disabled = false;
+
+            var label = e.currentTarget.getAttribute("data-label");
+            var type = e.currentTarget.getAttribute("data-type");
+            var currentFilter = {
+                "category": category,
+                "group": instance.group,
+                "name": instance.name,
+                "value": instance.value,
+                "label": label,
+                "textLabel": instance.label,
+                "type": type
+            };
+
+            if (e.target.checked) {
+                currentFilter.element = e.target;
+                this.push('cachedFilters', currentFilter);
+            } else {
+                this.cachedFilters = this.cachedFilters.filter(function(filter) {
+                    if (filter.category === currentFilter.category && filter.name === currentFilter.name)
+                        return false;
+                    return true;
+                });
+            }
+        }
+    },
+
+    _applyInclusions: function(filters) {
+        var component = this;
+        if (this.includeFilters.length == 0)
+            return filters;
+
+        var inclusiveFilters = filters.filter(function(group) {
+            if (component.includeFilters.indexOf(group.category) >= 0)
+                return true;
+            return false;
+        });
+        return inclusiveFilters;
+    },
+
+    _rangeChanged: function(e) {
+
+        var instance = e.model.item;
+        var target = e.currentTarget;
+        var category = target.getAttribute("data-category");
+        var group = target.getAttribute("data-group");
+        var subCategory = target.label;
+        var elementIndex = target.getAttribute('data-index');
+        var type = target.getAttribute("data-type");
+        this.$.applyfilters.disabled = false;
+        this.cachedFilters = this.cachedFilters.filter(function(instance) {
+            var cIndex = instance.element.getAttribute('data-index');
+            return instance.category != category || elementIndex !== cIndex;
+        });
+
+        var currentFilter = {
+            "category": category,
+            "group": group,
+            "subgroup": subCategory,
+            "name": "Range",
+            "min": target.from,
+            "max": target.to,
+            "label": category,
+            "type": type
+        };
+
+        currentFilter.element = e.target;
+        this.push('cachedFilters', currentFilter);
+
+    },
+
+    _dateChanged: function(e) {
+
+        if (!e.model.dateRange)
+            return;
+
+        var instance = e.model.dateRange;
+        var target = e.currentTarget;
+
+        if (target.id === "startDate") {
+            this._startDateDateChanged();
+        } else {
+            this._endDateDateChanged();
+        }
+
+        var category = target.getAttribute("data-category");
+        var group = target.getAttribute("data-group");
+        var subCategory = target.label;
+        var elementIndex = target.getAttribute('data-index');
+        var type = target.getAttribute("data-type");
+        var name = target.getAttribute("name");
+
+        this.$.applyfilters.disabled = false;
+
+        this.cachedFilters = this.cachedFilters.filter(function(instance) {
+            var cIndex = instance.element.getAttribute('data-index');
+            return instance.category != category || elementIndex !== cIndex;
+        });
+
+        var currentFilter = {
+            "category": category,
+            "group": group,
+            "subgroup": subCategory,
+            "name": name,
+            "min": target.from,
+            "max": target.to,
+            "label": category,
+            "type": type
+        };
+
+        currentFilter.element = e.target;
+        this.push('cachedFilters', currentFilter);
+
+    },
+
+    _startDateDateChanged: function() {
+        if (this.startDate != '') {
+            this.$$("#endDate").picker.set('min', new Date(this.startDate));
+        } else {
+            this.$$("#startDate").picker.set('max', false);
+            this.$$("#endDate").picker.set('min', false);
+        }
+    },
+
+    _endDateDateChanged: function() {
+        if (this.endDate != '') {
+            this.$$("#startDate").picker.set('max', new Date(this.endDate));
+        } else {
+            this.$$("#startDate").picker.set('max', false);
+        }
+    },
+
+    _toggle: function(event) {
+        event.currentTarget.classList.toggle('closed');
+        var parentElement = event.currentTarget.parentElement,
+            element = parentElement.querySelector('iron-collapse');
+        if (element !== null)
+            element.toggle();
+        event.stopPropagation();
+        return false;
+    },
+
+    _isRating: function(category) {
+        return category.toLowerCase() === 'rating';
+    },
+
+    _isNotRating: function(category) {
+        return category.toLowerCase() != 'rating';
+    },
+
+    _resetElement: function(element, name) {
+        switch (element.tagName.toLowerCase()) {
+            case 't-checkbox':
+                element.checked = false;
+                break;
+            case 't-range':
+                if (name.toLowerCase() == 'range') {
+                    element.from = element.min;
+                    element.to = element.max;
+                }
+
+                break;
+            case 't-input':
+                element.value = '';
+                break;
+            case 't-calendar':
+                element._clear();
+                //patch because in app is not removing the input value
+                element.querySelector('input').value = '';
+                break;
+        }
+    },
+
+    _removeFilter: function(event) {
+        var currentFilter = event.model.item;
+        var component = this;
+        this.$.applyfilters.disabled = false;
+        var element = currentFilter.element;
+        component._resetElement(element, currentFilter.name);
+        this.$.applyfilters.disabled = false;
+        component.cachedFilters = component.cachedFilters.filter(function(filter, index) {
+            if (filter.category == currentFilter.category && filter.name == currentFilter.name)
+                return false;
+            return true;
+        });
+    },
+
+    _getDisplayLabel: function(key) {
+        if (key.items[0].additionalInfo && key.items[0].additionalInfo[0].value.toLowerCase() !== 'ticks') {
+            if (this.currency) {
+                return key.label + ' (' + this.currency + ')';
+            }
+            return key.label + ' (' + key.items[0].additionalInfo[0].value + ')';
+        }
+        return key.label;
+    },
+
+    _applyFilters: function(e) {
+        if (e) {
+            if (e.target.id == 'applyfilters' && e.target.disabled) {
+                return;
+            }
+        }
+        this.$.applyfilters.disabled = true;
+        var component = this;
+        var filters = [];
+        // this._interstitialFilters = this.cachedFilters;
+        this.cachedFilters.forEach(function(filter) {
+            filters = filters.concat(component._getAppliedFilter(filter));
+        });
+        this.appliedFilters = filters;
+        setTimeout(function() {
+            component.$$('#filterModal').hidden = true;
+            component.fire('filter-change', {
+                "filters": component.appliedFilters,
+                "count": component.cachedFilters.length
+            });
+        }, 0);
+    },
+
+    _getAppliedFilter: function(filter) {
+        var filters = [];
+        switch (filter.type) {
+            case 'Options':
+                filters.push({
+                    "category": filter.category,
+                    "group": filter.group,
+                    "name": filter.name,
+                    "value": filter.value,
+                    "label": filter.label,
+                    "type": filter.type
+                });
+                break;
+            case 'Range':
+                filters.push({
+                    "category": filter.category,
+                    "group": filter.group,
+                    "name": "Min",
+                    "value": this._getRangePostValue(filter.element.rangeType, filter.min),
+                    "label": filter.label,
+                    "type": filter.type
+                });
+                filters.push({
+                    "category": filter.category,
+                    "group": filter.category,
+                    "name": "Max",
+                    "value": this._getRangePostValue(filter.element.rangeType, filter.max),
+                    "label": filter.label,
+                    "type": filter.type
+                });
+                break;
+            case 'Search':
+                filters.push({
+                    "category": filter.category,
+                    "group": filter.group,
+                    "name": filter.name,
+                    "value": this.searchVal,
+                    "label": filter.label,
+                    "type": filter.type
+                });
+                break;
+            case 'DateRange':
+                filters.push({
+                    "category": filter.category,
+                    "group": filter.group,
+                    "name": filter.name,
+                    "value": filter.element.selectedDate,
+                    "label": filter.label,
+                    "type": filter.type
+                });
+                break;
+        }
+
+        return filters;
+    },
+
+    _getRangePostValue: function(type, value) {
+        switch (type) {
+            default: return value;
+            case 'date':
+                    return this._convertToTicks(value)
+        }
+    },
+
+    _resetFilters: function() {
+        var component = this;
+        this.cachedFilters.forEach(function(cache) {
+            if (!(component._searchFilter && cache.category == component._searchFilter.category)) {
+                component._resetElement(cache.element, cache.name);
+            }
+        });
+        this.cachedFilters = this.cachedFilters.filter(function(filter, index) {
+            if (component._searchFilter && filter.category == component._searchFilter.category)
+                return true;
+            return false;
+        });
+        setTimeout(function() {
+            component._applyFilters();
+        }, 0);
+    },
+
+    _formatDate: function(time) {
+
+        var date = new Date(parseInt(time));
+        var day = date.toDateString().substr(0, 3);
+        return day + ', ' + this._getTime(date);
+    },
+
+    _getTime: function(date) {
+        var formattedTime = '';
+        var hours = date.getHours();
+        if (hours < 10) {
+            if (hours === 0 && this.showTwelveHourClock)
+                formattedTime = '12';
+            else
+                formattedTime = '0' + formattedTime + hours;
+        } else {
+            if (hours > 12 && this.showTwelveHourClock) {
+                hours = hours - 12;
+                formattedTime = hours.toString();
+            } else {
+                formattedTime = formattedTime + hours;
+            }
+        }
+        formattedTime = formattedTime + ':';
+        if (date.getMinutes() < 10) {
+            formattedTime = formattedTime + '0';
+        }
+        formattedTime = formattedTime + date.getMinutes();
+        if (this.showTwelveHourClock) {
+
+            if (date.getHours() >= 12)
+                formattedTime = formattedTime + " pm";
+            else
+                formattedTime = formattedTime + " am";
+        }
+
+        return formattedTime;
+    },
+
+    _getChip: function(item, index) {
+
+        var filter = this.cachedFilters[index];
+        switch (filter.type) {
+            case 'Options':
+                return filter.textLabel;
+            case 'Range':
+                {
+                    var category = filter.category;
+                    if (filter.element.rangeType === 'date') {
+                        category = category + '(' + filter.subgroup + ") :";
+                    }
+                    return category + ' ' + this._getFormattedValue(filter.min, filter.element.rangeType) + " - " + this._getFormattedValue(filter.max, filter.element.rangeType);
+                }
+            case 'Search':
+                return filter.category;
+            case 'DateRange':
+                {
+                    return this._buildDateChip(filter);
+                }
+        }
+    },
+
+    _buildDateChip: function(filter) {
+        if (filter.name === 'StartDate') {
+            return 'trips after ' + filter.element.selectedDate;
+        } else {
+            return 'trips before ' + filter.element.selectedDate;
+        }
+    },
+
+    _getFormattedValue: function(value, type) {
+        switch (type) {
+            case 'number':
+                return parseInt(value);
+            case 'date':
+                return this._formatDate(value);
+        }
+    },
+
+    _getInt: function(deci) {
+        return parseInt(deci);
+    },
+
+    _hideIfMax: function(item) {
+        return item.name === "Max";
+    },
+
+    _revertChanges: function(event) {
+        var component = this;
+        //this.cachedFilters = this._interstitialFilters;
+        // this.$.applyfilters.disabled =  this.cachedFilters.length > 0 ? false:true;
+        component.fire('filter-close');
+
+        //this.$$('#filteredRatio').hidden = false;
+        this.$$('#filterModal').hidden = true;
+        return false;
+    },
+
+    _openModal: function() {
+        var component = this;
+        //this.$$('#filteredRatio').hidden = true;
+        this.$$('#filterModal').hidden = false;
+        component.fire('filter-open');
+    },
+
+    _showHeader: function() {
+        this.$.filteredRatio.hidden = false;
+    },
+
+
+    _hideHeader: function() {
+        this.$.filteredRatio.hidden = true;
+    },
+
+    _getFilteredRatio: function(pagingInfo) {
+        if (pagingInfo) {
+            this.filteredRatio = pagingInfo.filteredCount + "/" + pagingInfo.total;
+
+            if (pagingInfo.total == 1 && pagingInfo.filteredCount == pagingInfo.total) {
+                this._disableFilters = true;
+            } else {
+                this._disableFilters = false;
+            }
+        }
+    },
+    /*This functionality is removed for now*/
+    /* _getFilterCount: function (count) { 
+         var _filterCount;
+         switch (count) {
+             case 0:
+                 _filterCount = "";
+                 break;
+             case 1:
+                 _filterCount = count + " filter applied";
+                 break;
+             default:
+                 _filterCount = count + " filters applied";
+
+         }
+         return _filterCount;
+     },*/
+
+    findSearchFilter: function(response) {
+        var searchFilter = null;
+        if (response && response.length) {
+            response.forEach(function(val) {
+                if (val.type == 'Search') {
+                    searchFilter = val;
+                }
+            });
+        }
+        return searchFilter;
+    },
+
+    _searchValChanged: function(newValue, oldValue) {
+        //on load scenario
+        if ((!newValue && !oldValue) || !this._searchFilter)
+            return;
+
+        //empty space handling not fire api call
+        if (newValue && oldValue && newValue.trim() == oldValue.trim())
+            return;
+
+        var component = this;
+
+        this._loadingResultsSearchBox = false;
+
+        this.cachedFilters = this.cachedFilters.filter(function(filter, index) {
+            if (filter.category == component._searchFilter.category)
+                return false;
+            return true;
+        });
+
+        var currentFilter = {
+            "category": this._searchFilter.category,
+            "group": this._searchFilter.items[0].group,
+            "name": this._searchFilter.items[0].name,
+            "label": this._searchFilter.items[0].label,
+            "type": this._searchFilter.type,
+            'element': this.$$('#searchInput'),
+            'hide': true
+        };
+        this.push('cachedFilters', currentFilter);
+
+        // if(this._searchFilterTimer){
+        //     clearTimeout(this._searchFilterTimer);
+        // }
+
+        if (this._searchFilterTimer == -1) {
+            this._searchFilterTimer = setTimeout(function() {
+                component._applyFilters();
+                component._searchFilterTimer = -1;
+            }, 750);
+        }
+    },
+
+    _removeSearchFilter: function() {
+        var component = this;
+        component._removeFilter({
+            model: {
+                item: component.cachedFilters.find(function(filter, index) {
+                    if (filter.category == component._searchFilter.category)
+                        return true;
+                    return false;
+                })
+            }
+        });
+        component.searchVal = null;
+
+    },
+
+    _clearFilterAndFocus: function(e) {
+        if (this.searchVal) {
+            this._removeSearchFilter();
+            this._toggleSearchBox(e);
+        }
+    },
+
+    searchSubmit: function(e) {
+        if (e.keyCode == 13) {
+            //code to hide mobile keypad 
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+        }
+    },
+
+    _getCountValue: function(items) {
+        if (!items || !items.length)
+            return '';
+
+        var count = '';
+        items.forEach(function(data) {
+            if (data.key && data.key == 'Count') {
+                count = '(' + data.value + ')';
+            }
+        });
+
+        return count;
+    },
+    _addListenerBlur: function() {
+        if (this._searchFilter) {
+            var component = this;
+            setTimeout(function() {
+                component.$$('#searchInput').querySelector('input').addEventListener('blur', function(e) {
+                    component.$$('#searchBox').classList.remove('active');
+                });
+            }, 100);
+        }
+    },
+
+    _onResultsResponse: function() {
+        this._loadingResultsSearchBox = true;
+
+    },
+
+    _toggleSearchBox: function(e) {
+        if (this.$$('#searchBox').classList.contains('active')) {
+            this.$$('#searchBox').classList.remove('active');
+            this.$$('#searchInput').querySelector('input').blur();
+        } else {
+            this.$$('#searchBox').classList.add('active');
+            this.$$('#searchInput').querySelector('input').focus();
+        }
+        e.stopPropagation();
+    },
+    /**
+     * This method returns diplay value for a filter.
+     * It might be either `count` in additional info or `price` in the item value with currency.
+     * If parent view explicitely asks to show price or count by setting either of `show-{{group}}-count` or `show-{{group}}-price`,
+     * method shows that value.
+     * @param  {[Object]} item {"group":"Price","name":"Min","label":"Minimum Price","displayValue":"$17.49","value":"17.49","selectedValue":null,"additionalInfo":[{"key":"Unit","value":"$"}]}
+     * @return {String}
+     */
+    _getDisplayValue: function(item) {
+        var showCountProp = 'show' + item.group + 'Count';
+        var showPriceProp = 'show' + item.group + 'Price';
+        if (!this[showPriceProp] && !this[showCountProp]){
+            if (parseFloat(item.value)) {
+                return this._getMinValueWithCurrency(item);
+            } else {
+                return this._getCountValue(item.additionalInfo);
+            }
+        } else if (this[showPriceProp]) {
+            return this._getMinValueWithCurrency(item);
+        } else if (this[showCountProp]) {
+            return this._getCountValue(item.additionalInfo);
+        }
+        return "";
+    },
+    _getMinValueWithCurrency: function (item) {
+        if (this.currency) {
+            item.value = parseFloat(Math.round(item.value * 100) / 100);
+            return this.currency + ' ' + item.value;
+        } else {
+            return item.displayValue;
+        }
+    }
+})
+</script>

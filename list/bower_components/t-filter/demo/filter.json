@@ -1,0 +1,112 @@
+{
+    "filters": [{
+        "category": "TripName",
+        "type": "Search",
+        "label": "Trip Name",
+        "items": [{
+            "group": "TripName",
+            "name": "TripName",
+            "label": "Trip Name",
+            "displayValue": null,
+            "value": null,
+            "selectedValue": null,
+            "additionalInfo": null
+        }],
+        "settings": null
+    }, {
+        "category": "Traveller",
+        "type": "Search",
+        "label": "Traveller",
+        "items": [{
+            "group": "Traveller",
+            "name": "Traveller",
+            "label": "Traveller",
+            "displayValue": null,
+            "value": null,
+            "selectedValue": null,
+            "additionalInfo": null
+        }],
+        "settings": null
+    }, {
+        "category": "ConfirmationNumber",
+        "type": "Search",
+        "label": "Trip ID",
+        "items": [{
+            "group": "ConfirmationNumber",
+            "name": "ConfirmationNumber",
+            "label": "Trip ID",
+            "displayValue": null,
+            "value": null,
+            "selectedValue": null,
+            "additionalInfo": null
+        }],
+        "settings": null
+    }, {
+        "category": "DateRange",
+        "type": "DateRange",
+        "label": "Travel Dates",
+        "items": [{
+            "group": "DateRange",
+            "name": "StartDate",
+            "label": "Start Date",
+            "displayValue": null,
+            "value": null,
+            "selectedValue": null,
+            "additionalInfo": null
+        }, {
+            "group": "DateRange",
+            "name": "EndDate",
+            "label": "End Date",
+            "displayValue": null,
+            "value": null,
+            "selectedValue": null,
+            "additionalInfo": null
+        }],
+        "settings": null
+    }, {
+        "category": "Status",
+        "type": "Options",
+        "label": "Status",
+        "items": [{
+            "group": null,
+            "name": "Planned",
+            "label": "Planned",
+            "displayValue": null,
+            "value": "Planned",
+            "selectedValue": null,
+            "additionalInfo": null
+        }, {
+            "group": null,
+            "name": "Purchased",
+            "label": "Purchased",
+            "displayValue": null,
+            "value": "Purchased",
+            "selectedValue": null,
+            "additionalInfo": null
+        }, {
+            "group": null,
+            "name": "Cancelled",
+            "label": "Cancelled",
+            "displayValue": null,
+            "value": "Cancelled",
+            "selectedValue": null,
+            "additionalInfo": null
+        }, {
+            "group": null,
+            "name": "Past",
+            "label": "Past",
+            "displayValue": null,
+            "value": "Past",
+            "selectedValue": null,
+            "additionalInfo": null
+        }],
+        "settings": null
+    }],
+    "status": {
+        "isSuccessful": true,
+        "code": 200,
+        "message": "Successful",
+        "referenceId": "2e367335-fc64-4bc8-a465-d173585cfc56",
+        "additionalMessages": []
+    }
+}

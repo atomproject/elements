@@ -1,0 +1,148 @@
+
+:host {
+  display: inline-block;
+  white-space: nowrap;
+  font-family: var(--primary-font-family);
+}
+
+:host(:focus) {
+  outline: none;
+}
+
+.hidden {
+  display: none;
+}
+
+#checkboxContainer {
+  display: inline-block;
+  position: relative;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  vertical-align: middle;
+}
+
+:host #checkbox {
+  position: relative;
+  box-sizing: border-box;
+  height: 100%;
+  border: solid 2px;
+  border-color: var(--checkbox-unchecked-color, #777);
+  border-radius: 2px;
+  pointer-events: none;
+  -webkit-transition: background-color 140ms, border-color 140ms;
+  transition: background-color 140ms, border-color 140ms;
+  background: var(--checkbox-unchecked-bg, #fff);
+}
+
+/* checkbox checked animations */
+#checkbox.checked #checkmark {
+  -webkit-animation: checkmark-expand 140ms ease-out forwards;
+  animation: checkmark-expand 140ms ease-out forwards;
+}
+
+@-webkit-keyframes checkmark-expand {
+  0% {
+    top: 9px;
+    left: 6px;
+    width: 0px;
+    height: 0px;
+  }
+  100% {
+    top: -1px;
+    left: 4px;
+    width: 5px;
+    height: 10px;
+  }
+}
+
+@keyframes checkmark-expand {
+  0% {
+    top: 9px;
+    left: 6px;
+    width: 0px;
+    height: 0px;
+  }
+  100% {
+    top: -1px;
+    left: 4px;
+    width: 5px;
+    height: 10px;
+  }
+}
+
+:host #checkbox.checked {
+  background-color: var(--checkbox-checked-color, #07c5f2);
+  border-color: var(--checkbox-checked-color, #07c5f2);
+}
+
+:host #checkmark {
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+  position: absolute;
+  top: -1px;
+  left: 4px;
+  width: 5px;
+  height: 10px;
+  border-style: solid;
+  border-top: none;
+  border-left: none;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-color: var(--checkbox-check-sign-color, #ffffff);
+}
+
+/* label */
+#checkboxLabel {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: var(--checkbox-label-padding-left, 8px);
+  white-space: normal;
+  pointer-events: none;
+  font-size:var(--checkbox-item-text-size, 14px);
+  color:var(--checkbox-item-text-color, #777777);
+}
+
+#checkboxLabel[hidden] {
+  display: none;
+}
+
+/* disabled state */
+:host([disabled]) {
+  pointer-events: none;
+}
+
+:host([disabled]) #checkbox {
+  opacity: 0.33;
+  border-color: var(--checkbox-unchecked-color, #777777);
+}
+
+:host([disabled][checked]) #checkbox {
+  background-color: var(--checkbox-unchecked-color, #777777);
+}
+:host([checkbox-right]) #checkboxLabel {
+  padding-left: 0;
+  padding-right: 8px;
+}
+:host([checkbox-right]) #checkboxContainer {
+  order:2;
+}
+
+/* TODO: Hack. Use iron behaviors to remove ripples */
+paper-ripple {
+  color: rgba(0, 0, 0, 0) !important;
+}
+
+
+/* its moved to theme-map.html
+
+:host {
+    --checkbox-unchecked-color: var(--primary-text-color);
+    --checkbox-unchecked-ink-color: var(--primary-text-color);
+
+    --checkbox-checked-color: var(--default-primary-color);
+    --checkbox-checked-ink-color: var(--default-primary-color);
+  } */

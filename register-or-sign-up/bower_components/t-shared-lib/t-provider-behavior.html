@@ -1,0 +1,228 @@
+
+
+<script>
+TravelNxt = window.TravelNxt || {};
+TravelNxt.Behaviors = TravelNxt.Behaviors || {};
+/*
+@polymerBehavior 
+*/
+TravelNxt.Behaviors.ProviderBehavior = {
+    properties: {
+        /*
+        API base url. Ex http://demo.travelnxt.com
+         */
+        apiBaseUrl: String,
+        /*
+        API relative url. Ex /api/hotel/search
+         */
+        apiRelativeUrl: String,
+        /*
+        Key values to be set in api url query string
+         */
+        queryParams: Array,
+        /*
+        API authentication token, this will be appended to url as per Mystique standards
+         */
+        authToken: String,
+        /*
+        API in progress stage
+         */
+        loading: {
+            type: Boolean,
+            notify: true,
+            readOnly: true
+        },
+
+
+        /*
+        Most recent request's API success response
+         */
+        lastResponse: {
+            type: Object,
+            notify: true,
+            readOnly: true
+        },
+
+
+        /*
+        Most recent request's API error or network error
+        Translate all network errors to below given format
+        Sample error object
+        {
+            "code": Number,
+            "message": String,
+            "additionalMessages": [
+              {
+                "description": String,
+                "code": Number,
+                "message": String
+              }
+            ]
+        }
+         */
+        lastError: {
+            type: Object,
+            notify: true,
+            readOnly: true
+        },
+
+        /*
+        This property tracks mappings of all the errr codes and corresponding application specific error messages
+        Key will be the error code sent by API.
+        It is a readonly field
+        Example
+            var code = 316700;
+            var message = this.errorCodes[code];
+            message => 'An error occurred while updating user.'
+        */
+        errorCodes: {
+            type: Object,
+            value: {
+                "316000": "Username does not exist.",
+                "316100": "Email not registered for the user.",
+                "316200": "Invalid credentials, please try again.",
+                "316300": "Invalid credentials, please try again.",
+                "316400": "Error occurred during operation on user password.",
+                "316500": "Operation error occured, please try again.",
+                "316600": "An error occurred while deleting user.",
+                "316700": "An error occurred while updating user.",
+                "316800": "Invalid credentials, please try again.",
+                "317100": "Username is already in use, try another.",
+                "317000": "User not authorized for this action",
+                "316901": "Security answer is incorrect.",
+                "316900": "Invalid credentials, please try again.",
+                "316407": "Password cannot be same as previous 3 passwords.",
+                "316405": "Password has expired. Please set a new password.",
+                "316403": "Account locked due to wrong password attempts. Contact administrator or return after some time.",
+                "316401": "Password doesn't match complexity constraints."
+            },
+            readOnly: true
+        }
+    },
+
+    _getUrl: function() {
+        //sanitize urls before use
+        var queryString = '';
+
+        if (!this.apiBaseUrl && this.apiBaseUrl.lastIndexOf('/') == this.apiBaseUrl.length - 1) {
+            this.set('apiBaseUrl', this.apiBaseUrl.substring(0, this.apiBaseUrl.length - 1));
+        }
+        if (!this.apiRelativeUrl && this.apiRelativeUrl.firstIndexOf('/') != 0) {
+            this.set('apiRelativeUrl', '/' + this.apiRelativeUrl);
+        }
+        if (this.queryParams && this.queryParams.length) {
+            for (var i = 0; i < this.queryParams.length; i++) {
+                var key = Object.keys(this.queryParams[i])[0];
+                queryString += '&' + key + '=' + this.queryParams[i][key];
+            }
+        }
+        return this.apiBaseUrl + this.apiRelativeUrl + '?token=' + this.authToken + queryString;
+    },
+
+    _validateApiMeta: function() {
+        if (!this.apiBaseUrl) {
+            console.error('apiBaseUrl can\'t be empty');
+            return false;
+        } else if (!this.apiRelativeUrl) {
+            console.error('apiRelativeUrl can\'t be empty');
+            return false;
+        } else if (!this.authToken) {
+            console.error('authToken can\'t be empty');
+            return false;
+        }
+        return true;
+    },
+
+    /*
+    This method handles the success callback event handling.
+    It fires the success and faulure events with customized error messages
+    Success and failure event names follow following conventions -
+        1. success event name  = [component name] + '-success'
+        2. failure event name  = [component name] + '-error'
+    Expects ajax sussess event as a parameter & throws error if component name not found.
+    */
+    _successHandler: function(event) {
+
+        if (!this.nodeName)
+            console.error('node name not found!');
+
+        var error = null;
+        var success = null;    
+
+        if (!event.detail.response || !event.detail.response.status || event.detail.response.status.code == 500){
+
+            error = {
+                message: 'Operation error occured, please try again.',
+                code: 500
+            };
+            this.fire(this.nodeName.toLowerCase() + '-error', error);
+            
+        }
+
+        else if (!event.detail.response.status.isSuccessful) {
+
+            error = this._setErrorMessage(event.detail.response);
+            this.fire(this.nodeName.toLowerCase() + '-error', error);
+
+        } else {
+            success = event.detail.response;
+            this.fire(this.nodeName.toLowerCase() + '-success', success);
+        }
+
+        if(error)
+            this._setLastError(error);
+        else if(success)
+            this._setLastResponse(success);
+
+        this._setLoading(false);
+    },
+
+    /*
+    This method handles the error callback event handling.
+    It fires the faulure event with customized error message & logs the error
+    Failure event name follows following convention -
+        2. failure event name  = [component name] + '-error'
+    Expects ajax error event as a parameter & throws error if component name not found.
+    */
+    _errorHandler: function(event) {
+
+        if (!this.nodeName)
+            console.error('node name not found!');
+
+        var error = {
+            message: 'Connection error occured, please try again.',
+            code: event.detail.request.status || 500
+        };
+
+        this._setLastError(error);
+        this._setLoading(false);
+
+        this.fire(this.nodeName.toLowerCase() + '-error', error);
+        console.error(this.nodeName.toLowerCase() + '-error', error);
+
+    },
+
+    /*
+    This method returns current api response.
+    The response message will be set using errorCode property & error code sent in api response.
+    If error code is not found in the property, api message will be sent.
+    Failure message will be logged in case of no response.
+    */
+    _setErrorMessage: function(response) {
+
+        if (!response || !response.status || !this.errorCodes)
+            console.error('No api response or response status found!');
+
+        if (!this.errorCodes)
+            return {
+                code: response.status.code,
+                message: response.status.message
+            };
+
+        return {
+            code: response.status.code,
+            message: this.errorCodes[response.status.code] || response.status.message
+        };
+    }
+};
+</script>

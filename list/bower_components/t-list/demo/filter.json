@@ -1,0 +1,405 @@
+{
+    "filters": [{
+        "category": "Price",
+        "type": "Range",
+        "label": "Price",
+        "items": [{
+            "group": "Price",
+            "name": "Min",
+            "label": "Minimum Price",
+            "displayValue": "USD 158.81",
+            "value": "158.8105500",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "USD"
+            }]
+        }, {
+            "group": "Price",
+            "name": "Max",
+            "label": "Maximum Price",
+            "displayValue": "USD 1,309.95",
+            "value": "1309.9557600",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "USD"
+            }]
+        }],
+        "settings": null
+    }, {
+        "category": "Stops",
+        "type": "Options",
+        "label": "Stop",
+        "items": [{
+            "group": "Stops",
+            "name": "0",
+            "label": "Non-Stop",
+            "displayValue": "USD 158.81",
+            "value": "158.8105500",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "207"
+            }]
+        }, {
+            "group": "Stops",
+            "name": "1",
+            "label": "1 Stop",
+            "displayValue": "USD 209.07",
+            "value": "209.0748600",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "78"
+            }]
+        }],
+        "settings": [{
+            "key": "EnableSearch",
+            "value": "false"
+        }]
+    }, {
+        "category": "Name",
+        "type": "Options",
+        "label": "Airline",
+        "items": [{
+            "group": "Name",
+            "name": "Mixed",
+            "label": "Mixed Airlines",
+            "displayValue": "USD 160.70",
+            "value": "160.7012000",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "200"
+            }]
+        }, {
+            "group": "Name",
+            "name": "VX",
+            "label": "REDWOOD",
+            "displayValue": "USD 192.11",
+            "value": "192.1145100",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "12"
+            }]
+        }, {
+            "group": "Name",
+            "name": "AS",
+            "label": "Alaska Airlines",
+            "displayValue": "USD 1,309.95",
+            "value": "1309.9557600",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "2"
+            }]
+        }, {
+            "group": "Name",
+            "name": "UA",
+            "label": "United Airlines",
+            "displayValue": "USD 178.85",
+            "value": "178.8546000",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "9"
+            }]
+        }, {
+            "group": "Name",
+            "name": "US",
+            "label": "US Airways",
+            "displayValue": "USD 192.11",
+            "value": "192.1145100",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "24"
+            }]
+        }, {
+            "group": "Name",
+            "name": "AA",
+            "label": "American Airlines",
+            "displayValue": "USD 158.81",
+            "value": "158.8105500",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "22"
+            }]
+        }, {
+            "group": "Name",
+            "name": "DL",
+            "label": "Delta Air Lines",
+            "displayValue": "USD 424.00",
+            "value": "424.0087500",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "12"
+            }]
+        }, {
+            "group": "Name",
+            "name": "NK",
+            "label": "Spirit Airlines",
+            "displayValue": "USD 172.07",
+            "value": "172.0704600",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "4"
+            }]
+        }],
+        "settings": null
+    }, {
+        "category": "CabinType",
+        "type": "Options",
+        "label": "Cabin class",
+        "items": [{
+            "group": "CabinType",
+            "name": "Economy",
+            "label": "Economy",
+            "displayValue": "USD 158.81",
+            "value": "158.8105500",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "242"
+            }]
+        }, {
+            "group": "CabinType",
+            "name": "Mixed",
+            "label": "Mixed",
+            "displayValue": "USD 192.11",
+            "value": "192.1145100",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "43"
+            }]
+        }],
+        "settings": null
+    }, {
+        "category": "FareType",
+        "type": "Options",
+        "label": "Fare Type",
+        "items": [{
+            "group": "FareType",
+            "name": "NonRefundable",
+            "label": "Non Refundable",
+            "displayValue": "USD 158.81",
+            "value": "158.8105500",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Count",
+                "value": "285"
+            }]
+        }],
+        "settings": [{
+            "key": "EnableSearch",
+            "value": "false"
+        }]
+    }, {
+        "category": "FlightDuration",
+        "type": "Range",
+        "label": "Flight Duration",
+        "items": [{
+            "group": "0",
+            "name": "Min",
+            "label": "LAS to LAX",
+            "displayValue": "61",
+            "value": "61",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "mins"
+            }, {
+                "key": "Type",
+                "value": "Duration"
+            }]
+        }, {
+            "group": "0",
+            "name": "Max",
+            "label": "LAS to LAX",
+            "displayValue": "353",
+            "value": "353",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "mins"
+            }, {
+                "key": "Type",
+                "value": "Duration"
+            }]
+        }, {
+            "group": "1",
+            "name": "Min",
+            "label": "LAX to LAS",
+            "displayValue": "64",
+            "value": "64",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "mins"
+            }, {
+                "key": "Type",
+                "value": "Duration"
+            }]
+        }, {
+            "group": "1",
+            "name": "Max",
+            "label": "LAX to LAS",
+            "displayValue": "357",
+            "value": "357",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "mins"
+            }, {
+                "key": "Type",
+                "value": "Duration"
+            }]
+        }],
+        "settings": null
+    }, {
+        "category": "DepartureTime",
+        "type": "Range",
+        "label": "Departure Time",
+        "items": [{
+            "group": "0",
+            "name": "Min",
+            "label": "LAS to LAX",
+            "displayValue": "635786718000000000",
+            "value": "635786718000000000",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "ticks"
+            }, {
+                "key": "Type",
+                "value": "Time"
+            }]
+        }, {
+            "group": "0",
+            "name": "Max",
+            "label": "LAS to LAX",
+            "displayValue": "635787264000000000",
+            "value": "635787264000000000",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "ticks"
+            }, {
+                "key": "Type",
+                "value": "Time"
+            }]
+        }, {
+            "group": "1",
+            "name": "Min",
+            "label": "LAX to LAS",
+            "displayValue": "635791911000000000",
+            "value": "635791911000000000",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "ticks"
+            }, {
+                "key": "Type",
+                "value": "Time"
+            }]
+        }, {
+            "group": "1",
+            "name": "Max",
+            "label": "LAX to LAS",
+            "displayValue": "635792508000000000",
+            "value": "635792508000000000",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "ticks"
+            }, {
+                "key": "Type",
+                "value": "Time"
+            }]
+        }],
+        "settings": null
+    }, {
+        "category": "ArrivalTime",
+        "type": "Range",
+        "label": "Arrival Time",
+        "items": [{
+            "group": "0",
+            "name": "Min",
+            "label": "LAS to LAX",
+            "displayValue": "635786763000000000",
+            "value": "635786763000000000",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "ticks"
+            }, {
+                "key": "Type",
+                "value": "Time"
+            }]
+        }, {
+            "group": "0",
+            "name": "Max",
+            "label": "LAS to LAX",
+            "displayValue": "635787307200000000",
+            "value": "635787307200000000",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "ticks"
+            }, {
+                "key": "Type",
+                "value": "Time"
+            }]
+        }, {
+            "group": "1",
+            "name": "Min",
+            "label": "LAX to LAS",
+            "displayValue": "635791951200000000",
+            "value": "635791951200000000",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "ticks"
+            }, {
+                "key": "Type",
+                "value": "Time"
+            }]
+        }, {
+            "group": "1",
+            "name": "Max",
+            "label": "LAX to LAS",
+            "displayValue": "635792551800000000",
+            "value": "635792551800000000",
+            "selectedValue": null,
+            "additionalInfo": [{
+                "key": "Unit",
+                "value": "ticks"
+            }, {
+                "key": "Type",
+                "value": "Time"
+            }]
+        }],
+        "settings": null
+    }],
+    "pagingInfo": {
+        "enabled": true,
+        "startingFrom": 1,
+        "stopAt": 0,
+        "total": 285,
+        "filteredCount": 285
+    },
+    "responseContentType": "Rates",
+    "status": {
+        "isSuccessful": true,
+        "code": 200,
+        "message": "Successful",
+        "referenceId": "c50dcc8c-d2c7-4c31-b82f-75366450d18d",
+        "additionalMessages": []
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "name": "Calendar",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "label": {
+                "name": "Label",
+                "type": "string",
+                "value": "Select a date"
+            }
+        }
+    }, {
+        "name": "Properties",
+        "fields": {
+            "required": {
+                "name": "Mandatory Field",
+                "type": "Boolean",
+                "value": true
+            }
+        }
+    }]
+}

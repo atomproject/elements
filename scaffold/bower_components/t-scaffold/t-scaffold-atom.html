@@ -1,0 +1,69 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-drawer-panel/paper-drawer-panel.html">
+<link rel="import" href="../paper-header-panel/paper-header-panel.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-menu/paper-menu.html">
+<link rel="import" href="../paper-toolbar/paper-toolbar.html">
+<link rel="import" href="../t-button/t-button.html">
+<!--
+Left Nav + View
+ -->
+<dom-module id="t-scaffold-atom">
+
+  <link rel="import" type="css" href="t-scaffold-atom.css"/>
+  <template>
+    <paper-drawer-panel disable-edge-swipe id="mainDrawerPanel" responsive-width="{{responsiveWidth}}" drawer-toggle-attribute="main-toggle">
+      <div id="left-panel" class="nav layout vertical" drawer>
+         <paper-toolbar>
+            <content select="nav-toolbar"></content>
+         </paper-toolbar>
+        <!-- Nav Content -->
+          <div class="main-nav flex">
+            
+              <content select="nav-content"> </content> 
+          </div>
+
+          <content select="build-status"></content>
+      </div>
+      <div main main-scaff>
+        <paper-header-panel id="mainPanel" class="main" mode="waterfall">
+          <!-- Main Toolbar -->
+          <paper-toolbar>
+            <t-button ico="menu" only-icon main-toggle paper-drawer-toggle></t-button>
+            <content select="header-toolbar"></content>
+          </paper-toolbar>
+          <div  id="subPanel" class="fit">
+            <content select=".content"></content>
+          </div>
+        </paper-header-panel>
+        <footer class="layout horizontal center center-justified">
+          <content id="footer" select="footer"></content>
+        </footer>
+      </div>
+    </paper-drawer-panel>
+  </template>
+
+</dom-module>
+
+  <script>
+    Polymer({
+      
+      is: 't-scaffold-atom',
+      
+      properties:{
+        responsiveWidth: {
+          type: String,
+          value: '1200px'
+        }
+      },
+
+      attached: function(){
+        if(Polymer.dom(this.$.innerPanel).getDistributedNodes().length > 0)
+          this.$.demoButton.hidden=false;
+      }
+
+    });
+  </script>
+

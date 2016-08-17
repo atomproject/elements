@@ -1,0 +1,98 @@
+_
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../t-shared-lib/t-provider-behavior.html">
+<dom-module id="t-sign-in-api">
+    <template>
+        <iron-ajax id="ajaxCall" method="POST" content-type="application/json" handle-as="json" verbose>
+        </iron-ajax>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "t-sign-in-api",
+
+    behaviors: [TravelNxt.Behaviors.ProviderBehavior],
+
+    properties: {
+        /*
+        Username
+         */
+        username: String,
+
+        /*
+        Password
+         */
+        password: String,
+    },
+
+    listeners: {
+        'ajaxCall.response': '_successCallback',
+        'ajaxCall.error': '_errorCallback'
+    },
+
+    /*
+    Authenticates user with given username and password
+     */
+    authenticate: function() {
+        //validate API meta before making a call
+        if (this._validateApiMeta()) {
+            var request = {
+                "UserCredentials": {
+                    "UserName": this.username,
+                    "Password": this.password
+                }
+            };
+            this.$.ajaxCall.url = this._getUrl();
+            this.$.ajaxCall.body = JSON.stringify(request);
+            this._setLoading(true);
+            this.$.ajaxCall.generateRequest();
+        }
+    },
+
+    /*
+    Callback for t-sign-in-authenticate event from UI component
+     */
+    onAuthenticate: function(e) {
+        this.username = e.detail.username;
+        this.password = e.detail.password;
+        this.authenticate();
+    },
+
+
+    /*
+    Callback for authenticate iron ajax success evnt
+     */
+    _successCallback: function(event) {
+        this._successHandler(event);
+    },
+
+
+    /*
+    Callback for authenticate iron ajax success evnt
+     */
+    _errorCallback: function(event) {
+        this._errorHandler(event);
+    }
+
+    /**
+     * Fired when authentication API succeeds
+     *
+     * @event t-sign-in-api-authenticate-success
+     * @param {{authenticationToken: string}}
+     * @param authenticationToken 
+     */
+
+    /**
+     * Fired when authentication API fails
+     *
+     * @event t-sign-in-api-authenticate-error
+     * @param {{message:string, code: string}} detail -
+     * Invalid credentials error codes - 316200, 316800, 316900
+     * Operation error codes - 316000, 500
+     * Misc error codes - 316407(Password cannot be same as previous 3 passwords), 316405(Password has expired. Please set a new password), 316403(Account locked due to wrong password attempts. Contact administrator or return after some time)
+     * Incase network error, brower error code and message will be set in it
+     * In all these cases 'lastError' field will be updated with proper message and error code
+     */
+});
+</script>

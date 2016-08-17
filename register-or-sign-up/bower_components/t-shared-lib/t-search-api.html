@@ -1,0 +1,79 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="t-provider-behavior.html">
+<!--
+    <h3>Details:</h3>
+
+        `t-search-api` is fundamentally an ajax component which fires the xmlhttp request when you pass the data object to it. And this api is used in all search pages in the application.
+        
+        You have to pass the `api-base-url            api-relative-url            auth-token` to make it point to the url.
+
+        It uses 'iron-ajax' and 'TravelNxt.Behaviors.ProviderBehavior' internally to handle the request and respective events.
+
+    <h3>Events:</h3>
+
+        following events are fired by this component
+
+            1. 't-search-api-success' - fired upon successful search call
+            2. 't-search-api-error' - fired if search call is failed
+
+    <h3>Example:</h3>
+
+        <t-search-api 
+            id="searchApi" 
+            loading={{loading}} 
+            api-base-url="{{apiBaseUrl}}" 
+            api-relative-url="api/air/search" 
+            auth-token="{{authToken}}"
+            on-t-search-api-success="onSearchSuccess"
+            on-t-search-api-error="onSearchError">
+        </t-search-api>
+
+    @demo demo/index.html
+-->
+<dom-module id="t-search-api">
+    <template>
+        <iron-ajax id="ajaxCall" method="POST" content-type="application/json" on-response="_successHandler" handle-as="json" on-error="_errorCallback" verbose>
+        </iron-ajax>
+    </template>
+</dom-module>
+<script>
+(function() {
+
+    Polymer({
+        is: 't-search-api',
+
+        properties: {
+            /*Pass the build data for each type of search request*/
+            data:{
+                type: Object
+            }
+
+        },
+
+        observers:[
+            'search(data)'
+        ],
+        /*
+         * <p>Behaviour to validate ajax parameters and handle error codes.</p>
+         */
+        behaviors: [TravelNxt.Behaviors.ProviderBehavior],
+
+        /*
+         * <p>Method to search airs</p>
+         */
+        search: function(data) {
+
+            if (!data) {
+                throw Error("search request is mandetory");
+            }
+
+            if (this._validateApiMeta()) {
+                this.$.ajaxCall.url = this._getUrl();
+                this.$.ajaxCall.body = JSON.stringify(data);
+                this.$.ajaxCall.generateRequest();
+            }
+        }
+    });
+})();
+</script>

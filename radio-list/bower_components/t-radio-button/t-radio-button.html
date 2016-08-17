@@ -1,0 +1,135 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../paper-behaviors/paper-inky-focus-behavior.html">
+
+<!--
+`t-radio-button` is a button that can be either checked or unchecked.
+User can tap the radio button to check it.  But it cannot be unchecked by
+tapping once checked.
+
+Use `t-radio-group` to group a set of radio buttons.  When radio buttons
+are inside a radio group, only one radio button in the group can be checked.
+
+Example:
+
+    <t-radio-button></t-radio-button>
+
+Styling a radio button:
+
+`<style is="custom-style">`
+  * {
+
+    /* Unhecked state colors. */
+
+    --t-radio-button-unchecked-color: #5a5a5a;
+    --t-radio-button-unchecked-ink-color: #5a5a5a;
+
+    /* Checked state colors. */
+    
+    --t-radio-button-checked-color: #009688;
+    --t-radio-button-checked-ink-color: #0f9d58;
+  }
+`</style>`
+
+-->
+
+
+<dom-module id="t-radio-button">
+
+  <link rel="import" type="css" href="t-radio-button.css">
+
+  <template>
+  <style include="iron-flex"></style>
+    <div class="layout horizontal center">
+      <div id="radioContainer">
+        <div id="offRadio"></div>
+        <div id="onRadio"></div>
+      </div>
+
+      <div id="radioLabel" class="flex" aria-hidden="true"><content></content></div>
+    </div>
+  </template>
+</dom-module>
+
+<script>
+  Polymer({
+    is: 't-radio-button',
+
+    behaviors: [
+      // TODO: Paper behaviors add ripple. Remove them if we don't want ripples
+      Polymer.PaperInkyFocusBehavior
+    ],
+
+    hostAttributes: {
+      role: 'radio',
+      'aria-checked': false,
+      tabindex: 0
+    },
+
+    properties: {
+       
+
+       /**
+       * Put the checkmark on the right.
+       *
+       * @attribute checked
+       * @type boolean
+       * @default false
+       */
+       radioRight:{
+        type:Boolean,
+        value:false,
+        reflectToAttribute:true
+       },
+
+      /**
+       * Gets or sets the state, `true` is checked and `false` is unchecked.
+       *
+       * @attribute checked
+       * @type boolean
+       * @default false
+       */
+      checked: {
+        type: Boolean,
+        value: false,
+        reflectToAttribute: true,
+        notify: true,
+        observer: '_checkedChanged'
+      },
+
+      /**
+       * If true, the button toggles the active state with each tap or press
+       * of the spacebar.
+       *
+       * @attribute toggles
+       * @type boolean
+       * @default true
+       */
+      toggles: {
+        type: Boolean,
+        value: true,
+        reflectToAttribute: true
+      }
+    },
+
+    ready: function() {
+      if (this.$.radioLabel.innerText == '') {
+        this.$.radioLabel.hidden = true;
+      } else {
+        this.setAttribute('aria-label', this.$.radioLabel.textContent);
+      }
+    },
+
+    _buttonStateChanged: function() {
+      if(this.active)
+        this.checked = this.active;
+    },
+
+    _checkedChanged: function() {
+      this.setAttribute('aria-checked', this.checked ? 'true' : 'false');
+      this.active = this.checked;
+      this.fire('iron-change');
+    }
+  })
+</script>

@@ -1,0 +1,294 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-icon/iron-icon.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+
+<!-- TODO: handle enter on cross icon -->
+<!-- TODO: handle paste events -->
+<dom-module id="t-data-feeder">
+    <template>
+        <style>
+            :host {
+                display: flex;
+                flex-direction: column;
+
+                max-width: 600px;
+                margin: auto;
+            }
+
+            .item {
+                position: relative;
+            }
+
+            .text, .placeholder {
+                box-sizing: border-box;
+                font-size: 14px;
+                line-height: 19px;
+                min-height: 39px;
+                padding: 10px 45px 10px 10px;   
+            }
+
+            .item iron-icon {
+                position: absolute;
+                top: 8px;
+                right: 12px;
+            }
+
+            .placeholder {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                color: var(--placeholder-color, rgba(100, 100, 100, 0.9));
+            }
+
+            .item iron-icon {
+                color: gray;
+                opacity: 0;
+                cursor: pointer;
+            }
+
+            .item iron-icon:hover, .item iron-icon:focus {
+                color: black;
+                opacity: 1;
+            }
+
+            .text:focus + iron-icon, .text:hover + iron-icon {
+                opacity: 1;
+            }
+        </style>
+
+        <template is="dom-repeat" items={{data}} index-as={{index}}>
+            <div class="item">
+                <div class="text" contenteditable on-focus="moveCursorToEnd" tabindex="0" data-index="{{index}}">{{item.value}}</div>
+                <iron-icon icon="icons:cancel" tabindex="0" on-tap="deleteItem" data-index="{{index}}"></iron-icon>
+            </div>
+        </template>
+
+        <div on-tap="focusInput" class="item">
+            <div id="input" class="text" contenteditable tabindex="0"></div>
+            <div class="placeholder">{{placeholder}}</div>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 't-data-feeder',
+
+            properties: {
+                data: {
+                    type: Array,
+                    value: function() {
+                        return [];
+                    },
+                    notify: true
+                },
+
+                placeholder: {
+                    type: String,
+                    value: 'Add Item'
+                }
+            },
+
+            listeners: {
+                'keydown': 'handleKeys',
+            },
+
+            attached: function() {
+                var that = this;
+
+                this.$.input.focus();
+            },
+
+            focusInput: function() {
+                this.$.input.focus();
+            },
+
+            getItems: function() {
+                var items = this.querySelectorAll('.text');
+
+                items = Array.prototype.slice.call(items);
+
+                return items;
+            },
+
+            handleKeys: function(event) {
+                var inputItem, itemIdx;
+
+                if (event.altKey || event.ctrlKey) {
+                    return;
+                }
+
+                inputItem = this.$.input;
+                itemIdx = event.target.dataIndex;
+
+                this.handleArrowKeys(event);
+                this.handleEnterKey(event, itemIdx);
+
+                if (event.target === inputItem &&
+                    this.isTextKey(event.keyCode)) {
+
+                    this.pushNewData(event, inputItem);
+                }
+
+                if (itemIdx >= 0) {
+                    this.updateData(event, itemIdx);
+                }
+            },
+
+            updateData: function(event, itemIdx) {
+                setTimeout(function() {
+                    var items = this.getItems().slice(0, -1);
+                    var itemVal, newItemVal, item;
+
+                    item = items[itemIdx];
+                    /*
+                    We need to wrap the values in an object because of
+                    https://github.com/Polymer/polymer/issues/3062
+                     */
+                    itemVal = this.get('data.' + itemIdx).value;
+
+                    newItemVal = item.textContent;
+
+                    if (newItemVal !== itemVal) {
+                        /*
+                        We need to wrap the values in an object because of
+                        https://github.com/Polymer/polymer/issues/3062
+                         */
+                        this.set('data.' + itemIdx + '.value', newItemVal);
+                    }
+
+                    setTimeout(function() {
+                        if (item.childNodes.length > 1) {
+                            item.removeChild(event.target.childNodes[1]);
+                        }
+                    }.bind(this), 0);
+                }.bind(this), 0);
+            },
+
+            handleArrowKeys: function(event) {
+                var items = this.getItems();
+                var itemIdx = items.indexOf(event.target);
+                var itemsCnt = items.length;
+                var lastIndex = itemsCnt - 1;
+
+                //if down arrow pressed 
+                if (event.keyCode === 40 &&
+                    itemIdx >= 0 &&
+                    itemIdx < lastIndex){
+                    /* focus next item */
+                    items[itemIdx + 1].focus()
+
+                    return true;
+                }
+                //if up arrow pressed 
+                else if (event.keyCode === 38 &&
+                    itemIdx > 0 &&
+                    itemIdx <= lastIndex) {
+                    //focus previous item 
+                    items[itemIdx - 1].focus()
+
+                    return true;
+                }
+            },
+
+            isTextKey: function(code) {
+                var isAlphabet = code >= 65 && code <= 90;
+                var isNumeric = code >= 48 && code <= 57;
+                var specialChars = [
+                    code === 188,
+                    code >= 190 && code <= 192,
+                    code >= 219 && code <= 222,
+                    //keys with incompatible keycodes on browsers 
+                    code === 186 || code === 59,
+                    code === 187 || code === 61,
+                    code === 189 || code === 173,
+                    //num pad keys 
+                    code >= 96 && code <= 111,
+                ];
+                var isSpecialChar = specialChars.indexOf(true) > -1;
+
+                return isAlphabet || isNumeric || isSpecialChar;
+            },
+
+            //refer http://www.javascripter.net/faq/keycodes.htm for key codes 
+            pushNewData: function(event, inputItem) {
+                setTimeout(function () {
+                    /* add new item */
+                    /*
+                    We need to wrap the values in an object because of
+                    https://github.com/Polymer/polymer/issues/3062
+                     */
+                    this.push('data', {value: inputItem.textContent});
+                    inputItem.textContent = '';
+
+                    /* focus the new item */
+                    setTimeout(function() {
+                        var items = this.getItems();
+                        items[items.length - 2].focus();
+                        this.moveCursorToEnd(items[items.length - 2]);
+                    }.bind(this), 0);
+                }.bind(this), 0);
+
+                return true;
+            },
+
+            handleEnterKey: function(event, itemIdx) {
+                var items;
+
+                if (event.keyCode !== 13) {
+                    return;
+                }
+
+                event.preventDefault();
+
+                if (itemIdx >= 0) {
+                    items = this.getItems();
+                    setTimeout(function () {
+                        /*
+                        We need to wrap the values in an object because of
+                        https://github.com/Polymer/polymer/issues/3062
+                         */
+                        this.splice('data', itemIdx + 1, 0, {value: ''});
+
+                        setTimeout(function() {
+                            var items = this.getItems();
+                            items[itemIdx + 1].textContent = '';
+
+                            setTimeout(function() {
+                                var items = this.getItems();
+                                items[itemIdx + 1].focus();
+                            }.bind(this), 0);
+                        }.bind(this), 0);
+                    }.bind(this), 0);
+                }
+            },
+
+            deleteItem: function(event) {
+                var itemIdx = event.target.dataIndex;
+
+                this.splice('data', itemIdx, 1);
+            },
+
+            //refer http://stackoverflow.com/a/6249440 
+            moveCursorToEnd: function(event) {
+                var node = event.target || event;
+                var range = document.createRange();
+                var sel = window.getSelection();
+                var textNode = node.childNodes[0];
+
+                if (range &&
+                    sel &&
+                    textNode &&
+                    textNode.length > 0) {
+
+                    setTimeout(function() {
+                        range.setStart(textNode, textNode.length);
+                        range.collapse(true);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }.bind(this), 0);
+                }
+            }
+        });
+    </script>
+</dom-module>

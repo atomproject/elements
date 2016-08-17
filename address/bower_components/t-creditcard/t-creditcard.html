@@ -1,0 +1,136 @@
+<!-- We are still creating this components -->
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="t-cc-cvc-input.html" />
+<link rel="import" href="t-cc-expiration-input.html" />
+<link rel="import" href="t-cc-input.html" />
+<link rel="import" href="../t-text-container/travel-element-styles.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<!--
+    `<t-creditcard>` is a polymer component that generates a playground for interacting with components.
+
+    <div class="demo-canvas">
+        
+    </div>
+
+    <t-creditcard metadata-source="metadata url" property-source="property url" component="component name">
+        
+        <div class="component">
+            
+            'component template'
+        </div>
+    </t-creditcard>     
+-->
+<dom-module id="t-creditcard">
+    <template>
+    <style include="iron-flex"></style>
+    <style include="travel-element-styles">
+    :host {
+        display: block;
+    }
+    .horizontal-margin {
+        margin-right: var(--normal-spacing,10px);
+    }
+    .section-horizontal{
+        padding: 0 var(--normal-spacing,10px);
+    }
+    </style>
+        <div class="layout vertical section-horizontal">
+            <div class="margin-bottom-medium">
+                <t-cc-input label="Card number" card-type="{{cardType}}"  id="number" name="number" error-message="You missed this." required ></t-cc-input>
+            </div>
+            <div class="margin-bottom-medium">
+                <t-input  label="Name on card" name="nameOnCard"  id="nameOnCard" pattern="^[a-zA-Z\d.' ]+" error-message="You missed this." required></t-input>
+            </div>
+            <div class="margin-bottom-medium layout horizontal">
+                <div class="horizontal-margin flex">
+                    <t-cc-expiration-input name="expiryDate" id="expiryDate" error-message="Invalid date." required ></t-cc-expiration-input>
+                </div>
+                <div class="flex">
+                    <t-cc-cvc-input cvc-password="[[cvcPassword]]" name="securityCode" id="securityCode" card-type="[[cardType]]" error-message="You missed this." required ></t-cc-cvc-input>
+                </div>
+            </div>
+
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-creditcard',
+
+    properties: {
+        /**
+         * Response object of the form.
+         */
+        response: {
+            type: Object,
+            value: function() {
+                return {};
+            }
+        },
+        
+        /**
+         * NodeList of all fields present in the form.
+         */
+        fields: {
+            type: Array,
+            value: function() {
+                return [];
+           }
+        },
+
+          /**
+           * This is to set cvc input as password.
+           */
+          cvcPassword: {
+            type: Boolean,
+            value: false
+          }
+
+    },
+    
+    /**
+     * Returns true if the element has a valid value, and sets the visual
+     * error state.
+     *
+     * @return {boolean} Whether the input is currently valid or not.
+     */
+    validate: function() {
+        var isValid = true;
+        this.fields = this.querySelectorAll('[name]')
+        for(a=0; a <this.fields.length;a++){
+            if (this.fields[a].validate() != undefined){
+                isValid = isValid && this.fields[a].validate();
+            }
+        }
+        return isValid;
+    },
+
+    /**
+     * Returns the submit object of the form
+     *
+     * @return {object} 
+     */
+    getInfo: function() {
+        var date = new Date();
+        date = date.getFullYear().toString();
+        var expiryMonth = this.$.expiryDate._computeMonth(this.$.expiryDate.value);
+        var expiryYear = this.$.expiryDate._computeYear(this.$.expiryDate.value);
+ 
+        expiryYear = date.substring(0, 2) + expiryYear;
+
+        var info = {
+            "number": this.$.number.formattedValue,
+            "nameOnCard": this.$.nameOnCard.value,
+            "securityCode": this.$.securityCode.value,
+            "expiryMonth": expiryMonth,
+            "expiryYear": expiryYear,
+            "type":"CreditCard" //TODO: remove hardcoded
+        }
+        return info;
+    }
+
+
+
+})
+</script>

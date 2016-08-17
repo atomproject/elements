@@ -1,0 +1,50 @@
+{
+  "name": "t-menu",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-menu",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-collapse": "PolymerElements/iron-collapse#^1.0.3",
+    "iron-menu-behavior": "PolymerElements/iron-menu-behavior#^1.0.3",
+    "iron-selector": "PolymerElements/iron-selector#^1.0.2",
+    "paper-item": "PolymerElements/paper-item#^1.0.2",
+    "paper-menu": "PolymerElements/paper-menu#^1.1.0",
+    "t-button": "atomelements/t-button#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "^0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6"
+  },
+  "_release": "a3a90d5246",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "a3a90d524665719381539b6fbf344659e3411e7b"
+  },
+  "_source": "git://github.com/atomelements/t-menu.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-menu",
+  "_direct": true
+}

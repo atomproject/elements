@@ -1,0 +1,66 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../t-shared-lib/t-date-behavior.html">
+<!--
+    `<t-car-search-decorator>` is a polymer component that generates the car details/passengers/ Journey details in order.
+
+    Basic usage
+    
+        `<t-car-search-decorator 
+            hide-icon
+            data="[[searchCriteria]]">
+        </t-car-search-decorator>`
+-->
+<dom-module id="t-car-search-decorator">
+    <style include="travel-element-styles">
+    </style>
+    <template></template>
+</dom-module>
+<script>
+    Polymer({
+
+        is: 't-car-search-decorator',
+
+        behaviors: [
+            TravelNxt.Behaviors.DateBehavior
+        ],
+
+        observers:[
+            'compileCarSearchCriteria(input)'
+        ],
+
+        properties: {
+            //the data object to bind to populate data
+            input: {
+                type: Object
+            },
+
+            /**
+             * Stores output of the decorator
+             * @type {Object}
+             */
+            output: {
+                type: Object,
+                notify: true
+            }
+        },
+
+        compileCarSearchCriteria: function (criteria) {
+            var modifiedObject = {};
+
+            //Location
+            modifiedObject.startLocation = criteria.pickupLocation.name;
+            if (criteria.pickupLocation.geoCode != criteria.dropoffLocation.geoCode) {
+                modifiedObject.endLocation = criteria.dropoffLocation.name;
+            }
+
+            //Date
+            modifiedObject.startDate = this._getDate(criteria.pickupDate);
+            modifiedObject.endDate = this._getDate(criteria.dropoffDate);
+
+            //Time
+            modifiedObject.startTime = criteria.pickupTime;
+            modifiedObject.endTime = criteria.dropoffTime;
+            this.output = modifiedObject;
+        }
+    });
+</script>

@@ -1,0 +1,43 @@
+{
+  "name": "dynamic-data-source",
+  "authors": [
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "Generate and transform api responses and apply them to a component",
+  "main": "dynamic-data-source.html",
+  "moduleType": [],
+  "keywords": [
+    "API",
+    "Polymer",
+    "Transform"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/atomproject/dynamic-data-source",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "webcomponentsjs": "^0.7.14",
+    "t-shared-components": "atomelements/t-shared-components#^1.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6",
+    "t-table": "atomelements/t-table#^1.1.0",
+    "t-input": "atomelements/t-input#^1.0.2"
+  },
+  "version": "1.1.0",
+  "_release": "1.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.0",
+    "commit": "334da4b5004811b797dfb08c4b7286316beb3ada"
+  },
+  "_source": "git://github.com/atomproject/dynamic-data-source.git",
+  "_target": "^1.1.0",
+  "_originalSource": "atomproject/dynamic-data-source",
+  "_direct": true
+}

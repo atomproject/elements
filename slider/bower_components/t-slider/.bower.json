@@ -1,0 +1,49 @@
+{
+  "name": "t-slider",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-slider",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-behaviors": "PolymerElements/iron-behaviors#^1.0.8",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.3",
+    "paper-input": "PolymerElements/paper-input#^1.0.12",
+    "paper-progress": "PolymerElements/paper-progress#^1.0.2",
+    "paper-styles": "PolymerElements/paper-styles#^1.0.11",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "^0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6",
+    "t-shared-components": "atomelements/t-shared-components#^1.0.0"
+  },
+  "_release": "9116eb12a9",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "9116eb12a944daa3d05bea652b89e188923b3159"
+  },
+  "_source": "git://github.com/atomelements/t-slider.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-slider",
+  "_direct": true
+}

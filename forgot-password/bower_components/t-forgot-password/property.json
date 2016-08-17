@@ -1,0 +1,36 @@
+{
+    "name": "Forgot Password",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "newPassword": {
+                    "name": "newPassword",
+                    "type": "string"
+                },
+                "passwordQuestion": {
+                    "name": "passwordQuestion",
+                    "type": "string",
+                    "value": "What is your nickname?"
+                },
+                "securityAnswer": {
+                    "name": "securityAnswer",
+                    "type": "string"
+                },
+                "selectedPage": {
+                    "name": "selectedPage",
+                    "type": "string",
+                    "value": "forgotPassword"
+                },
+                "username": {
+                    "name": "username",
+                    "type": "string"
+                },
+                "userToken": {
+                    "name": "userToken",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

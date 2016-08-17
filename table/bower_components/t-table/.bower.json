@@ -1,0 +1,54 @@
+{
+  "name": "t-table",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-table",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
+    "iron-collapse": "PolymerElements/iron-collapse#^1.0.3",
+    "iron-input": "PolymerElements/iron-input#^1.0.6",
+    "iron-media-query": "PolymerElements/iron-media-query#^1.0.2",
+    "paper-spinner": "PolymerElements/paper-spinner#^1.0.2",
+    "t-button": "atomelements/t-button#^1.0.0",
+    "t-pagination": "atomelements/t-pagination#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-icon": "polymerelements/iron-icon#^1.0.7",
+    "iron-icons": "polymerelements/iron-icons#^1.0.5"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "^0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6",
+    "t-shared-components": "atomelements/t-shared-components#^1.0.0"
+  },
+  "_release": "a38a879cd7",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "a38a879cd7ab9db41e89ed7a6768bc157e682a6d"
+  },
+  "_source": "git://github.com/atomelements/t-table.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-table",
+  "_direct": true
+}

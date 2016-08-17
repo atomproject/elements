@@ -1,0 +1,143 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+
+<!--
+`t-app-footer` is an application footer component. It displays contact information
+like phone number and email address of the people behind the application.
+It also has the logo of the application which can be used to redirect to a page
+in the application.
+
+Example:
+
+    <t-app-footer email="somemail@mail.com"></t-app-footer>
+
+### Styling
+
+Custom property | Description | Default
+----------------|-------------|----------
+--footer-text-size | The font size to use in footer | 10px
+--t-footer-text-color | The color of the footer text | #777777
+--t-footer-bg-color | The background color of the footer | #eeeeee
+--primary-font-family | The font of the text in footer |
+-->
+
+<dom-module id="t-app-footer">
+    <template>
+        <style include="iron-flex"></style>
+        <style include="iron-flex-alignment">
+        :host {
+            display: block;
+            padding: 10px 12px 10px;
+            height: 55px;
+            background: var(--t-footer-bg-color, --grey-two);
+            overflow: hidden;
+            color: var(--t-footer-text-color, --grey-four);
+            font-size: var(--footer-text-size, 10px);
+            font-family: var(--primary-font-family);
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            transform: translateZ(0);
+        }
+
+        iron-icon {
+            width: 10px;
+            height: 10px;
+        }
+
+        img {
+            max-height: 20px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        </style>
+        <div class="layout horizontal">
+            <div class="flex layout vertical">
+                <a href$="[[logoUrl]]">
+                    <img alt="Travlnxt" src$="[[src]]">
+                </a>
+                <div>&copy; [[copyRightYear]] | [[copyRightText]] </div>
+            </div>
+            <div class="layout around-justified vertical">
+                <div>
+                    <iron-icon icon="icons:mail"></iron-icon>
+                    <a href$="mailto:[[email]]">{{email}}</a>
+                </div>
+                <div>
+                    <iron-icon icon="settings-phone"></iron-icon>
+                    <a href$="tel:[[phone]]">{{phone}}</a>
+                </div>
+            </div>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-app-footer',
+
+    properties: {
+
+        /**
+         * The url of the image to be displayed in the footer
+         * @type {String}
+         */
+        src: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'https://s3.amazonaws.com/tavisca.samplebucket/124850/Images/c9154425-43be-4a7a-9d44-463c97a58040'
+        },
+
+        /**
+         * The url to redirect to on the logo click
+         * @type {String}
+         */
+        logoUrl: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'http://google.com'
+        },
+
+        /**
+         * The contact email to be shown in the footer
+         * @type {String}
+         */
+        email: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'support@travelnxt.com'
+        },
+
+        /**
+         * The contact phone number to be shown in the footer
+         * @type {String}
+         */
+        phone: {
+            type: String,
+            reflectToAttribute: true,
+            value: '1-855-282-6507'
+        },
+
+        /**
+         * Pass the copyright year
+         * @type {String}
+         */
+        copyRightYear: {
+            type: String,
+            value: "2016",
+        },
+
+        /**
+         * Pass the copyright Text
+         * @type {String}
+         */
+        copyRightText: {
+            type: String,
+            value: "All Rights Reserved."
+        }
+    }
+});
+</script>

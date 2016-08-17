@@ -1,0 +1,48 @@
+{
+  "name": "t-range",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-range",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.3",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.3",
+    "paper-material": "PolymerElements/paper-material#^1.0.2",
+    "t-shared-components": "atomelements/t-shared-components#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "^0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6"
+  },
+  "_release": "224ae030a5",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "224ae030a5b07aa22c94ca1d0a0700e961111a41"
+  },
+  "_source": "git://github.com/atomelements/t-range.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-range",
+  "_direct": true
+}

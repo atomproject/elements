@@ -1,0 +1,112 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../t-shared-lib/t-date-behavior.html">
+<!--
+    `<t-hotel-search-decorator>` is a polymer component that generates the hotel details/passengers/ Journey details in order.
+
+    Basic usage
+    `
+        <t-hotel-search-decorator hide-icon
+            hotel-name="{{selectedHotel.name}}"
+            check-in="{{parseDate(searchCriteria.checkInDate.date)}}"
+            check-out="{{parseDate(searchCriteria.checkOutDate.date)}}"
+            adult-count="{{searchCriteria.rooms.0.adults.quantity}}"
+            child-count="{{searchCriteria.rooms.0.children.quantity}}">
+
+        </t-hotel-search-decorator>`
+-->
+<dom-module id="t-hotel-search-decorator">
+    <style>
+    </style>
+    <template>        
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-hotel-search-decorator',
+
+    observers: [
+        'compileHotelSearchCriteria(input)'
+    ],
+
+    behaviors: [
+        TravelNxt.Behaviors.DateBehavior
+    ],
+
+    properties: {
+
+        //the data object to bind to populate data
+        input: {
+            type: Object
+        },
+
+        /**
+         * Stores output of the decorator
+         * @type {Object}
+         */
+        output: {
+            type: Object,
+            notify: true
+        }
+    },
+
+    /*This function is used to get total stay period string*/
+    _getDisplayNightsCount: function(fromDate, toDate){        
+        var nights = this._dateDiff(fromDate, toDate);
+        if(nights>1){
+            return nights + " Nights";
+        }else{
+            return nights + " Night";
+        }
+    },
+
+    /*This function is used to format date to (dd mmm)*/
+    _getDisplayDate: function(val) {
+        if(!val)
+            return '';
+        //TODO: accept format from globalization or from user
+        var dateObj = val;
+        var date = dateObj.getDate() < 10 ? '0' + dateObj.getDate() : dateObj.getDate();
+        var month = dateObj.toDateString().substr(3, 5);
+        return (date + " " + month).trim();
+    },
+
+    /*This function is used to get total pax guests count sting*/
+    _getDisplayPaxCount:function(adultCount, childCount){
+        var count = adultCount + childCount; 
+        
+        if(count>1){
+            return count + " Guests";
+        }else{
+            return count + " Guest";
+        }
+    },
+
+    /*Action to take user to search page if url is provided else raise an event 'editsearch'*/
+    _editSearch: function() {
+        if(this.searchPageUrl)
+            window.location.href = this.searchPageUrl;
+        else
+            this.fire('editsearch');
+    },
+
+    compileHotelSearchCriteria: function (searchCriteria) {
+        var modifiedObject = {};
+
+        //Location
+        modifiedObject.startLocation = searchCriteria.location.name || searchCriteria.location.formattedAddress;
+
+        //start-end date
+        modifiedObject.startDate = this._getDate(searchCriteria.checkIn);
+        modifiedObject.endDate = this._getDate(searchCriteria.checkOut);
+
+        //guests
+        modifiedObject.guestInfo = this._getDisplayPaxCount(searchCriteria.adultCount, searchCriteria.childCount);
+
+        // additional info
+        modifiedObject.additionalInfo = this._getDisplayNightsCount(searchCriteria.checkIn, searchCriteria.checkOut);
+
+        this.output = modifiedObject;
+    }
+});
+</script>

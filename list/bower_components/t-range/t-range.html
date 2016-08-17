@@ -1,0 +1,402 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../paper-material/paper-material.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../t-shared-components/jquery.html">
+<link rel="import" href="range-dependency.html">
+<!--
+`t-range` is a polymer component which lets the user choose a date. The date picker is built on top of pickadate.js
+ 
+
+Example:
+
+    <t-range label="Select one"></t-calendar>
+-->
+<dom-module id="t-range">
+    <!-- <link rel="import" type="css" href="nouislider.pips.css"> -->
+    <template>
+        <style include="iron-flex">
+        /* Functional styling;
+ * These styles are required for noUiSlider to function.
+ * You don't need to change these rules to apply your design.
+ */
+        
+        :host {
+            display: block;
+            margin: 0 auto;
+            font-family: var(--primary-font-family, 'Open Sans');
+        }
+
+        .noUi-target,
+        .noUi-target * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -ms-touch-action: none;
+            -ms-user-select: none;
+            -moz-user-select: none;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        
+        :host::content .noUi-target {
+            position: relative;
+            direction: ltr;
+        }
+        
+        :host::content .noUi-base {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 1;
+            /* Fix 401 */
+        }
+        
+        :host::content .noUi-origin {
+            position: absolute;
+            right: 0;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+        
+        :host::content .noUi-handle {
+            position: relative;
+            z-index: 1;
+        }
+        
+        :host::content .noUi-stacking .noUi-handle {
+            /* This class is applied to the lower origin when
+   its values is > 50%. */
+            z-index: 10;
+        }
+        
+        :host::content .noUi-state-tap .noUi-origin {
+            -webkit-transition: left 0.3s, top 0.3s;
+            transition: left 0.3s, top 0.3s;
+        }
+        
+        :host::content .noUi-state-drag * {
+            cursor: inherit !important;
+        }
+        /* Painting and performance;
+ * Browsers can paint handles in their own layer.
+ */
+        
+        :host::content .noUi-base {
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0);
+        }
+        /* Slider size and handle placement;
+ */
+        
+        :host::content .noUi-horizontal {
+            height: 2px;
+        }
+        
+        :host::content .noUi-horizontal .noUi-handle {
+            width: 24px;
+            height: 24px;
+            left: -12px;
+            top: -12px;
+        }
+        
+        :host::content .noUi-vertical {
+            width: 18px;
+        }
+        
+        :host::content .noUi-vertical .noUi-handle {
+            width: 28px;
+            height: 34px;
+            left: -6px;
+            top: -17px;
+        }
+        /* Styling;
+ */
+        
+        :host::content .noUi-background {
+            background: #FAFAFA;
+            box-shadow: inset 0 1px 1px #f0f0f0;
+        }
+        
+        :host::content .noUi-connect {
+            background: var(--default-primary-color, #07c5f2);
+            box-shadow: inset 0 0 3px rgba(51, 51, 51, 0.45);
+            -webkit-transition: background 450ms;
+            transition: background 450ms;
+        }
+        
+        :host::content .noUi-origin {
+            border-radius: 2px;
+        }
+        
+        :host::content .noUi-target {
+            border-radius: 2px;
+        }
+        
+        :host::content .noUi-target.noUi-connect {
+            box-shadow: inset 0 0 3px rgba(51, 51, 51, 0.45), 0 3px 6px -5px #BBB;
+        }
+        /* Handles and cursors;
+ */
+        
+        :host::content .noUi-dragable {
+            cursor: w-resize;
+        }
+        
+        :host::content .noUi-vertical .noUi-dragable {
+            cursor: n-resize;
+        }
+        
+        :host::content .noUi-handle {
+            border-radius: 50%;
+            background: var(--default-primary-color, #07c5f2);
+            cursor: default;
+        }
+        
+        :host::content .noUi-active {
+            -ms-transform: scale(1.5);
+            /* IE 9 */
+            -webkit-transform: scale(1.5);
+            /* Safari */
+            transform: scale(1.5);
+        }
+        /* Handle stripes;
+:host ::content .noUi-handle:before,
+
+:host ::content .noUi-handle:after {
+    content: "";
+    display: block;
+    position: absolute;
+    height: 14px;
+    width: 1px;
+    background: #E8E7E6;
+    left: 14px;
+    top: 6px;
+}
+
+:host ::content .noUi-handle:after {
+    left: 17px;
+}
+
+:host ::content .noUi-vertical .noUi-handle:before,
+
+:host ::content .noUi-vertical .noUi-handle:after {
+    width: 14px;
+    height: 1px;
+    left: 6px;
+    top: 14px;
+}
+
+:host ::content .noUi-vertical .noUi-handle:after {
+    top: 17px;
+}
+ */
+        /* Disabled state;
+ */
+        
+        :host::content [disabled].noUi-connect,
+        :host::content [disabled] .noUi-connect {
+            background: #B8B8B8;
+        }
+        
+        :host::content [disabled].noUi-origin,
+        :host::content [disabled] .noUi-handle {
+            cursor: not-allowed;
+        }
+        
+        .reading {
+            padding-bottom: 15px;
+        }
+        </style>
+        <div class="label" hidden$="[[noLabel]]">[[label]]</div>
+        <div class="horizontal layout reading">
+            <div class="flex">[[formatValue(from)]]</div>
+            <div>[[formatValue(to)]]</div>
+        </div>
+        <div id="range"></div>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+
+        is: 't-range',
+
+        properties: {
+
+            from: {
+                type: Object,
+                notify: true,
+                observer: '_minChanged'
+            },
+
+            label: String,
+
+            noLabel: {
+                type: Boolean,
+                value: true
+            },
+
+            showTwelveHourClock: {
+                type: Boolean,
+                value: false
+            },
+
+            editable: {
+                type: Boolean,
+                value: false
+            },
+
+            to: {
+                type: Object,
+                notify: true,
+                observer: '_maxChanged'
+            },
+
+            min: {
+                type: Object,
+                notify: true,
+                observer: '_rangeChanged'
+            },
+
+            max: {
+                type: Object,
+                notify: true,
+                observer: '_rangeChanged'
+            },
+
+            step: {
+                type: Object,
+                value: 1,
+                reflectToAttribute: true
+            },
+
+            rangeType: {
+                type: String,
+                value: 'number',
+                observer: '_rangeTypeChanged'
+            },
+
+            margin: {
+                type: Number,
+                value: 1 
+            }
+        },
+
+
+        _rangeTypeChanged: function () {
+            if (this.rangeType && this.min && this.max) {
+                this._initiate();
+            }
+        },
+
+        formatValue: function (value, type) {
+            switch (this.rangeType) {
+                case 'date':
+                    return this._formatDate(value);
+                case 'number':                    
+                    return parseInt(value);                    
+            }
+        },
+
+        _formatDate: function (time) {
+            var date = new Date(parseInt(time));
+            var day = date.toDateString().substr(0, 3);
+            return day + ', ' + this._getTime(date);
+        },
+
+        _getTime: function (date) {
+            var formattedTime = '';
+            var hours = date.getHours();
+            if (hours < 10) {
+                if (hours === 0 && this.showTwelveHourClock)
+                    formattedTime = '12';
+                else
+                    formattedTime = '0' + formattedTime + hours;
+            }
+            else {
+                if (hours > 12 && this.showTwelveHourClock) {
+                    hours = hours - 12;
+                    formattedTime = hours.toString();
+                }
+                else {
+                    formattedTime = formattedTime + hours;
+                }
+            }
+            formattedTime = formattedTime + ':';
+            if (date.getMinutes() < 10) {
+                formattedTime = formattedTime + '0';
+            }
+            formattedTime = formattedTime + date.getMinutes();
+            if (this.showTwelveHourClock) {
+
+                if (date.getHours() >= 12)
+                    formattedTime = formattedTime + " pm";
+                else
+                    formattedTime = formattedTime + " am";
+            }
+
+            return formattedTime;
+        },
+
+        _initiate: function () {
+
+            var rangeElement = this;
+
+            this.min = parseInt(this.min);
+            this.max = Math.ceil(parseFloat(this.max));
+
+            this.from = this.min;
+            this.to = this.max;
+
+            if (this.$.range.noUiSlider) {
+                this.$.range.noUiSlider.destroy();
+            }
+            noUiSlider.create(this.$.range, {
+                start: [this.min, this.max],
+                connect: true,
+                tooltips: true,
+                margin: this.margin,
+                range: {
+                    'min': this.min,  
+                    'max': this.max  
+                }
+            }, true);
+
+            this.$.range.noUiSlider.on('update', function (values, handle) {
+                if (handle) {
+                    rangeElement.to = values[handle];
+                } else {
+                    rangeElement.from = values[handle];
+                }
+            });
+
+            this.$.range.noUiSlider.on('change', function (values, handle) {
+
+                rangeElement.fire('range-change');
+            });
+
+
+        },
+
+        _minChanged: function () {
+            if (this.to && this.from) {
+                if (this.$.range.noUiSlider)
+                    this.$.range.noUiSlider.set([this.from, null]);
+            }
+        },
+
+        _rangeChanged: function () {
+            if (this.min && this.max) {
+                this._initiate();
+            }
+        },
+
+        _maxChanged: function () {
+            if (this.to && this.from) {
+                if (this.$.range.noUiSlider != undefined)
+                    this.$.range.noUiSlider.set([null, this.to]);
+            }
+        },
+
+    })
+</script>

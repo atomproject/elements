@@ -1,0 +1,233 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+<link rel="import" href="../iron-icons/editor-icons.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../t-text-container/travel-element-styles.html">
+<!--
+    `<t-header-search-recap>` is a polymer component that generates the car details/passengers/ Journey details in order.
+
+
+
+    Basic usage
+    `
+        <t-header-search-recap 
+            hide-icon
+            data="[[searchCriteria]]">
+        </t-header-search-recap>`
+-->
+<dom-module id="t-header-search-recap">
+    <style include="iron-flex"></style>
+    <style include="travel-element-styles">
+        :host {
+            display: block;
+            width: 100%;
+        }
+        
+        h6,
+        #detail {
+            line-height: var(--car-header-line-height, 20px);
+        }
+        
+        #pencil {
+            width: 9px;
+            height: 9px;
+            vertical-align: inherit;
+            margin-left: 5px;
+        }
+        
+        :host([center-align]) {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+        
+        :host([center-align]) h6 {
+            display: inline;
+        }
+    </style>
+    <template>        
+        <div class="layout vertical">
+            <template is="dom-if" if="[[itineraryName]]">
+                <h6 class="font-16 font-normal capitalize ellipsis">[[itineraryName]]</h6>
+            </template>
+            <template is="dom-if" if="[[!itineraryName]]">
+                <h6 class="font-16 font-normal capitalize ellipsis">[[startLocation]]&nbsp;
+                    <template is="dom-if" if="[[endLocation]]">
+                        <iron-icon icon="[[locationSeperatorIcon]]"></iron-icon>
+                        &nbsp;[[endLocation]]
+                    </template>
+                </h6>
+            </template>
+            
+            <p id="detail" on-click="_editSearch" class="layout horizontal center center-justified ellipsis font-12">                
+                [[startDate]]
+                <template is="dom-if" if="[[startTime]]">,&nbsp;[[startTime]]</template>
+                <template is="dom-if" if="[[endDate]]">&nbsp;-&nbsp;[[endDate]]<template is="dom-if" if="[[endTime]]">,&nbsp;[[endTime]]</template></template>
+                <template is="dom-if" if="[[additionalInfo]]">,&nbsp;[[additionalInfo]]</template>
+                <template is="dom-if" if="[[guestInfo]]">,&nbsp;[[guestInfo]]</template>
+                <iron-icon hidden$=[[hideEditIcon]] id="pencil" icon="[[editSearchIcon]]"></iron-icon>
+            </p>
+        </div>
+    </template>
+</dom-module>
+<script>
+    Polymer({
+
+        is: 't-header-search-recap',
+
+        observers:[
+            'updateHeader(recapData)',
+        ],
+
+        properties: {
+
+            /**
+             * Stores the recap object
+             * @type {Object}
+             */
+            recapData: {
+                type: Object,
+                notify: true
+            },
+
+            /**
+             * This property holds the name of selected itinerary
+             * @type {String}
+             */
+            itineraryName: {
+                type: String,
+                value: null
+            },
+
+            /**
+             * This is generic property which stores departure location of flight, hotel/activity location or car pick-up location
+             * @type {String}
+             */
+            startLocation: String,
+
+            /**
+             * This property stores arrival location of flight or car drop-off location
+             * @type {String}
+             */
+            endLocation: String,
+
+            /**
+             * Stores departure/check-in/pick-up/start date from search criteria
+             * @type {String}
+             */
+            startDate: String,
+
+            /**
+             * Stores arrival/check-out/drop-off/end date from search criteria
+             * @type {String}
+             */
+            endDate: String,
+
+            /**
+             * Stores departure/check-in/pick-up/start time from search criteria
+             * @type {String}
+             */
+            startTime: String,
+
+            /**
+             * Stores arrival/check-out/drop-off/end time from search criteria
+             * @type {String}
+             */
+            endTime: String,
+
+            /**
+             * Stores one-way/round-trip/arrow icon stating the relation between locations
+             * @type {String}
+             */
+            locationSeperatorIcon: {
+                type: String,
+                value: 'trending-flat'
+            },
+
+            /**
+             * Stores edit search icon
+             * @type {String}
+             */
+            editSearchIcon: {
+                type: String,
+                value: "editor:mode-edit"
+            },
+
+            /**
+             * This is used to hide the edit icon
+             * @type {Object}
+             */
+            hideEditIcon: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * Stores search page url
+             * @type {String}
+             */
+            searchPageUrl: String,
+
+            /**
+             * This stores the additional info such as count of nights of stay in hotel 
+             * @type {String}
+             */
+            additionalInfo: String,
+
+            /**
+             * This stores the adult, child, infant, senior count
+             * @type {String}
+             */
+            guestInfo: String,
+
+            /**
+             * Stores Map icon
+             * @type {String}
+             */
+            mapIcon: { 
+                type: String,
+                value: "maps:place"
+            },
+
+            /**
+             * Stores list icon
+             * @type {String}
+             */
+            listIcon: { 
+                type: String,
+                value: "icons:list"
+            }
+        },
+
+
+
+        /*Action to take user to search page if url is provided else raise an event 'editsearch'*/
+        _editSearch: function () {
+            if (this.searchPageUrl) {
+                window.location.href = this.searchPageUrl;
+            } 
+            this.fire('editsearch');
+        },
+
+        updateHeader: function (recapObject) {
+            //Location
+            this.startLocation = this.recapData.startLocation;
+            this.endLocation = this.recapData.endLocation;
+
+            //Date
+            this.startDate = this.recapData.startDate;
+            this.endDate = this.recapData.endDate;
+
+            //Time
+            this.startTime = this.recapData.startTime;
+            this.endTime = this.recapData.endTime;
+
+            this.additionalInfo = this.recapData.additionalInfo;
+
+            this.guestInfo = this.recapData.guestInfo;
+
+            this.fire('search-criteria-recap');
+        }
+    });
+</script>

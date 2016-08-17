@@ -1,0 +1,120 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../t-shared-lib/t-provider-behavior.html">
+
+<!--
+    `t-get-user-api` api component is used to get user secret key.
+
+    following events are fired by this component
+        1. 't-get-user-api-success' - fired om successful api call.
+        2. 't-get-user-api-error' - fired when api call is faield.
+
+    Uses TravelNxt.Behaviors.ProviderBehavior as its default behavior
+
+Example:
+        without event handlers
+        <t-get-user-api></t-get-user-api>
+
+        with event handlers
+        <t-get-user-api 
+            id="getUserApi" 
+            on-t-get-user-api-success="getUserSuccessEventHandler" 
+            on-t-get-user-api-error="getUserFailureEventHandler" 
+            api-base-url="http://dev-mystiquecode.tavisca.com/"
+            api-relative-url="api/user" 
+            auth-token="{{token.authenticationToken}}">
+        </t-get-user-api>-->
+
+<dom-module id="t-get-user-api">
+    <template>
+        <iron-ajax id="ajaxCall" method="GET" content-type="application/json" handle-as="json" verbose>
+        </iron-ajax>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "t-get-user-api",
+
+    behaviors: [TravelNxt.Behaviors.ProviderBehavior],
+
+    properties: {
+        
+        /*
+        If provided then that specific user details will be fetched, else will try to get logged in user details 
+         */
+        username: String,
+
+        /*
+        If provided then that specific user profile section will be fetched else will get full details
+         */
+        section: String
+
+    },
+
+    listeners: {
+        'ajaxCall.response': '_successCallback',
+        'ajaxCall.error': '_errorCallback'
+    },
+
+    getUser: function(data) {
+        //validate API meta before making a call
+        this.apiRelativeUrl = this._getRelativeUrl();
+        if (this._validateApiMeta()) {            
+            this.$.ajaxCall.url = this._getUrl();
+            this._setLoading(true);
+            this.$.ajaxCall.generateRequest();
+        }
+    },
+
+    onGetUser: function(e) {
+        this.username =  e.detail.username;
+        this.section =  e.detail.section;
+        this.getUser();
+    },
+
+    /* 
+     * This method retrieves secret question added in user profile if exists
+     * Returns empty string if secret question is not configured.
+     * Expects an object with userName property as required field.
+     */
+    
+    //TODO: get user sections api is not working, need to check with mystique team    
+    getSecretKey: function() {
+        this.apiRelativeUrl = "api/User/get/secretkey/" + this.username;
+        //validate API meta before making a call
+        if (this._validateApiMeta()) {            
+            this.$.ajaxCall.url = this._getUrl();
+            this._setLoading(true);
+            this.$.ajaxCall.generateRequest();
+        }
+    },
+
+    onGetSecretKey: function(e) {
+        this.username = e.detail.username;
+        this.getSecretKey();
+    },
+
+
+    _getRelativeUrl: function(){
+        var url = this.apiRelativeUrl || 'api/User/get/';
+        if(this.username){
+            url+= 'username/' + this.username+ '/';
+        }
+        if(this.section){
+            url+= this.section;
+        }
+        return url;
+    },
+
+    _successCallback: function(event) {
+        this._successHandler(event);
+        //api component specific changes go here
+    },
+
+    _errorCallback: function(event) {
+        this._errorHandler(event);
+        //api component specific changes go here
+    }
+
+});
+</script>

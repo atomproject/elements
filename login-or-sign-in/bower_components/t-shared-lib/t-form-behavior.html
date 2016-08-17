@@ -1,0 +1,60 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<script>
+TravelNxt = window.TravelNxt || {};
+TravelNxt.Behaviors = TravelNxt.Behaviors || {};
+
+/**
+* <h3>Details:</h3>
+*
+* Use `TravelNxt.Behaviors.FormBehavior` in your form component when you want to do validation of `required` fields and handle displaying of 
+* submission state.
+* It contains function like validation and showProgress (state) of the form. 
+* To handle the progress state of the form the component should have the submit button with id `search`.
+* You can import the file and add this behavior in the form like:
+*
+* `behaviors: [TravelNxt.Behaviors.FormBehavior]`
+* 
+* @polymerBehavior TravelNxt.Behaviors.FormBehavior
+**/
+TravelNxt.Behaviors.FormBehavior = {
+
+    properties: {
+      /**
+        * <p>Used to show button label when the searching is in progress</p>
+        */
+          productName: {    
+            type: String
+          }
+    },
+
+    /*
+     * <p>The validate function will call validate method of all the required fields</p>
+    */
+    validate: function() {
+        var check = true;
+        var requiredFields = this.querySelectorAll('[required]');
+        for (var i = 0; i < requiredFields.length; i++) {
+            if (requiredFields[i].validate && typeof requiredFields[i].validate === 'function' && !requiredFields[i].validate()) {
+                check = false;
+            }
+        }
+        return check;
+    },
+
+    /*
+     * <p>Pass true/false as parameter of the method to show the loading state of the button of the form</p>
+     * <p>It disables the button and chage the text of the button of the search page.</p>
+    */
+    showProgress: function(inProgress) {
+        if (inProgress) {
+            this.$.search.label = 'Searching ' + this.productName + 's...';
+            this.$.search.disabled = true;
+        } else {
+            this.$.search.label = 'Search ' + this.productName + 's';
+            this.$.search.disabled = false; 
+        }
+    }
+
+}
+</script>

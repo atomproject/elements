@@ -1,0 +1,222 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-ajax/iron-ajax.html" />
+<dom-module id="t-sessionstorage">
+    <template>
+        <iron-ajax id="ajaxComp" headers='{"accept": "application/json"}' content-type="application/json" handle-as="json" on-response="_ajaxSuccess" on-error="_ajaxError">
+        </iron-ajax>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "t-sessionstorage",
+
+    properties: {
+
+        /**
+         * Session key
+         */
+        key: String,
+
+        /**
+         * Session data
+         */
+        value: Object,
+
+        /**
+         * Session api url to use in case HTML5 session storage is not available
+         * Use SESSIONKEY placeholder to update key in  url
+         */
+        apiUrlFormat: String,
+
+        /**
+         * If true: do not convert value to JSON on save/load. Has no effect if no localStorage is available
+         */
+        useRaw: false,
+
+        /** 
+         * Flag to indicate whether already value is loaded or not from storage (either local or server) 
+         */
+        loaded: {
+            type: Boolean,
+            value: false,
+            notify: true
+        },
+
+        /**
+         * If true: data is either getting loaded from or saved to session api			 
+         */
+        inProgress: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            readOnly: true
+        },
+
+        /**
+         * If true: loads data upon initialization
+         * @type {[type]}
+         */
+        auto: Boolean,
+
+        /**
+         * If true: local session storage is available
+         */
+        localStorageAvailable: {
+            type: Boolean,
+            readOnly: true,
+            value: true
+        }
+    },
+
+    attached: function() {
+        try {
+            window.sessionStorage.setItem('test', 123);
+            this._setLocalStorageAvailable(true);
+        } catch (e) {
+            this._setLocalStorageAvailable(false);
+        }
+        if (this.auto) {
+            this.load();
+        }
+    },
+
+    load: function() {
+        //if data is already set internally or from outside || is already an attempt made to load data but value is empty
+        if (this.value || this.loaded)
+            return;
+
+        //inProgress - represents both load and save calls
+        //if is true because of save, no worries then as value is up to date so dont load
+        //if is true because of load, no worries as this new load call is nothing but duplicate call
+        if (this.inProgress)
+            return;
+
+        if (this.localStorageAvailable) {
+            var v = window.sessionStorage.getItem(this.key);
+            if (v) {
+                this._tryParseAndSetValue(v);
+                return;
+            }
+        }
+
+        if (window[this.key]) {
+            this._tryParseAndSetValue(window[this.key]);
+            return;
+        } else {
+            this.$.ajaxComp.method = 'GET';
+            this.$.ajaxComp.url = this.apiUrlFormat.replace('SESSIONKEY', this.key);
+            this.$.ajaxComp.generateRequest();
+
+            this._setInProgress(true);
+        }
+    },
+
+    save: function() {
+        if (this.localStorageAvailable) {
+            var v = this.useRaw ? this.value : JSON.stringify(this.value);
+            if (this.value === null || this.value === undefined) {
+                window.sessionStorage.removeItem(this.key);
+            } else {
+                window.sessionStorage.setItem(this.key, /** @type {string} */ (v));
+            }
+            this.fire('t-sessionstorage-save-success', {
+                isLocal: this.localStorageAvailable
+            });
+        } else {
+            var v = JSON.stringify(this.value);
+            this.$.ajaxComp.method = 'POST';
+            this.$.ajaxComp.url = this.apiUrlFormat.replace('SESSIONKEY', this.key);
+            this.$.ajaxComp.body = v;
+            this.$.ajaxComp.generateRequest();
+
+            this._setInProgress(true);
+        }
+    },
+
+    _tryParseAndSetValue: function(data) {
+        if (data) {
+            //raw data or stringified data applies only in local storage case
+            if (this.localStorageAvailable && !this.useRaw && !data.id) {
+                try { // parse value as JSON
+                    data = JSON.parse(data);
+                } catch (x) {
+                    console.error("could not parse local storage session value. key - " + this.key, data);
+                    data = null;
+                    this.fire('t-sessionstorage-load-error', {
+                        isLocal: this.localStorageAvailable
+                    });
+                    return;
+                }
+            }
+            this.value = data;
+        }
+        this.fire('t-sessionstorage-load-success', {
+            isLocal: this.localStorageAvailable
+        });
+        this.loaded = true;
+    },
+
+    _ajaxSuccess: function(e) {
+        //method type check is required as two ajax componets are not added and same is using for both load and save
+        //This is only required to handle if someone triggers either of actions load or save while another is in progress
+        if (this.$.ajaxComp.method == 'GET' && e.detail) {
+            this._tryParseAndSetValue(e.detail.response);
+        } else {
+            this.fire('t-sessionstorage-save-success', {
+                isLocal: this.localStorageAvailable
+            });
+        }
+        this._setInProgress(false);
+    },
+
+    _ajaxError: function(e) {
+        //method type check is required as two ajax componets are not added and same is using for both load and save
+        //This is only required to handle if someone triggers either of actions load or save while another is in progress
+        if (this.$.ajaxComp.method == 'GET') {
+            this.fire('t-sessionstorage-load-error', {
+                isLocal: this.localStorageAvailable
+            });
+            this.loaded = true;
+        } else {
+            this.fire('t-sessionstorage-save-error', {
+                isLocal: this.localStorageAvailable
+            });
+        }
+        this._setInProgress(false);
+    },
+
+
+
+    /**
+     * Fired when value loads from Storage either local or not.
+     *
+     * @event t-sessionstorage-load-success
+     * @param {{isLocal:boolean}} detail -
+     * isLocal: true if HTML5 session storage is supported
+     */
+
+    /**
+     * Fired when error in loading value from Storage either local or not.
+     *
+     * @event t-sessionstorage-load-fail
+     * @param {{isLocal:boolean}} detail -
+     * isLocal: true if HTML5 session storage is supported
+     */
+
+    /**
+     * Fired when save value succeeds
+     *
+     * @event t-sessionstorage-save-success
+     * @param {{isLocal:boolean}} detail -
+     * isLocal: true if HTML5 session storage is supported
+     */
+
+    /**
+     * Fired when save value fails
+     *
+     * @event t-sessionstorage-save-error
+     * @param {{isLocal:boolean}} detail -
+     * isLocal: true if HTML5 session storage is supported
+     */
+});
+</script>

@@ -1,0 +1,228 @@
+<link rel="import" href="../polymer/polymer.html" />
+<script>
+/*
+@polymerBehavior 
+*/
+Polymer.SearchPageBehaviour = {
+    properties: {
+
+        /*
+         * <p>This url is used as base api url for `t-autosuggest`</p>
+         */
+        name: {
+            type: String,
+            value: ''
+        },
+
+        /*
+         * <p>This url is used as base api url for `t-autosuggest`</p>
+         */
+        autosuggestApi: {
+            type: String,
+            value: ''
+        },
+
+        /*
+         * <p>This string is query string containing token value</p>
+         */
+        authToken: {
+            type: String,
+            value: ''
+        },
+
+        /*
+         * <p>This property holds the value of api base URL</p>
+         */
+        apiBaseUrl: {
+            type: String,
+            value: ''
+        },
+
+        /*
+         * <p>This property holds the value of web api URL format</p>
+         */
+        apiUrlFormat: {
+            type: String,
+            value: ''
+        },
+
+        searchId: {
+            type: String,
+            notify:true
+        },
+
+        visible: {
+            type: Boolean,
+            value:false,
+            notify:true,
+            observer: '_visibleChanged'
+        },
+
+        // Searched Data of the component.
+
+        searchedData: {
+            type: Object,
+            notify:true
+        },
+
+        /*
+         * <p>This property is collection of keys used to store data in session</p>
+         */
+        _sessionKeys: {
+            type: Object,
+            computed: '_computeSessionKeys(productName)',
+            readOnly: true
+        },
+    },
+
+
+    attached: function() {
+        //this._getFromSessionStore(this._sessionKeys.searchCriteria);
+    },
+
+    listeners: {
+        'change-section': '_getFromSessionStore'
+    },
+
+    _computeSessionKeys: function(productName) {
+        return {
+            searchCriteria: productName + '_Search_Criteria',
+            searchId: productName + '_Search_Id'
+        };
+    },
+
+    _visibleChanged: function(visible) {
+        if (visible) {
+            this._showProgress(false);
+            this.fire('change-section');
+        }
+    },
+    /*
+     * <p>This page component level method to save data in session</p>
+     * <p>This should be moved in page component behaviour</p>
+     */
+    _saveInSessionStore: function(key, value) {
+
+        if (!key || !value) {
+            return;
+        }
+
+        this.$.sessionStore.key = key;
+        this.$.sessionStore.value = value;
+
+        this.$.sessionStore.save();
+    },
+
+    /*
+     * <p>This is page component level method to get data from session</p>
+     * <p>This should be moved in page component behaviour</p>
+     */
+    _getFromSessionStore: function() {
+        this.$.sessionStore.key = this._sessionKeys.searchCriteria;
+        this.$.sessionStore.load();
+    },
+
+    _showProgress: function(inProgress) {
+        if (inProgress) {
+            this.$.searchView.$.search.label = 'Searching ' + this.productName + 's...';
+            this.$.searchView.$.search.disabled = true;
+        } else {
+            this.$.searchView.$.search.label = 'Search ' + this.productName + 's';
+            this.$.searchView.$.search.disabled = false;
+        }
+    },
+    /*
+     * <p>Event handler method called when `search` event is fired</p>
+     */
+    onSearch: function(e) {
+        this._showProgress(true);
+        this.searchedData = e.detail;
+        //this.$.searchApi.search(e.detail);
+        this._saveInSessionStore(this._sessionKeys.searchCriteria, e.detail);
+    },
+
+    /*
+     * <p>Event handler method called when `search-api-success` event is fired</p>
+     */
+    onSearchSuccess: function(e) {
+        if (!e.detail) {
+            this.$.notify.active = true;
+            this.$.notify.message = event.detail.code + ' - ' + event.detail.message;
+            console.error('something blew up!');
+            return;
+        }
+
+        this._saveInSessionStore(this._sessionKeys.searchId, e.detail.searchId);
+        
+        //setting the search Id global for all pages in app
+        this.searchId = e.detail.searchId;
+        
+        this.queryParams = {
+            searchId : this.searchId
+        };
+        
+        this.fire('search-page-success', {
+            product: this.productName,
+            data: this.searchedData,
+            searchId: e.detail.searchId
+        });
+        
+    },
+
+    /*
+     * <p>Event handler method called when `search-api-error` event is fired</p>
+     */
+    onSearchError: function(e) {
+        this._showProgress(false);
+        this.$.notify.active = true;
+        this.$.notify.message = event.detail.code + ' - ' + event.detail.message;
+        //console.error(e.detail);
+        this.fire('search-error', e.detail);
+    },
+
+    /*
+     * <p>Event handler method called when `t-sessionstorage-save-success` event is fired</p>
+     */
+    onSessionSave: function(e) {
+        if (this.$.sessionStore.key === this._sessionKeys.searchId) {
+            this.fire('search-success', {
+                searchId: this.searchId
+            });
+        }
+    },
+
+    /*
+     * <p>Event handler method called when `t-sessionstorage-load-success` event is fired</p>
+     */
+    onSessionLoad: function(e) {
+        if (this.$.sessionStore.key === this._sessionKeys.searchCriteria) {
+            this.resetView();
+            this.$.sessionStore.value = null;
+            this.$.sessionStore.key = this._sessionKeys.searchId;
+            this.$.sessionStore.load();
+        } else if (this.$.sessionStore.key === this._sessionKeys.searchId) {
+            this._setSearchId();
+        }
+    },
+    _setSearchId: function(){
+        this.searchId = this.$.sessionStore.value;
+    },
+    /*
+     * <p>This method resets the view by using saved data in session</p>
+     * <p>It calles child views' resetView method to propogate the reset event</p>
+     */
+    resetView: function() {
+        if (!this.$.sessionStore.value) {
+            return;
+        }
+        //this.searchedData = this.$.sessionStore.value;
+        var obj = this.$.sessionStore.value,
+            searchComp = this.$.searchView;
+        setTimeout(function() {
+            Object.keys(obj).forEach(function(key) {
+                searchComp.set(key, obj[key]);
+            });
+        },400);
+    }
+}
+</script>

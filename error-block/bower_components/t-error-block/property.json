@@ -1,0 +1,28 @@
+{
+    "name": "Error Block",
+    "properties": [{
+        "name": "Properties",
+            "fields": {
+            "active": {
+                "name":"Show Error",
+                "type": "boolean",
+                "value": true
+            },
+            "type": {
+                "name":"Error Heading",
+                "type": "string",
+                "value": "Error"
+            },
+            "backHref": {
+                "name":"Redirection URL",
+                "type": "string",
+                "value": "./"
+            },
+            "errorMessage": {
+                "name":"Error Message",
+                "type": "string",
+                "value": "Your booking failed."
+            }
+        }
+    }]
+}

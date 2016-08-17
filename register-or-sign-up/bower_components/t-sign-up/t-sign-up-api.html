@@ -1,0 +1,57 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../t-shared-lib/t-provider-behavior.html">
+<dom-module id="t-sign-up-api">
+    <template>
+        <iron-ajax id="ajaxCall" method="PUT" content-type="application/json" handle-as="json" verbose>
+        </iron-ajax>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "t-sign-up-api",
+
+    behaviors: [TravelNxt.Behaviors.ProviderBehavior],
+
+    listeners: {
+        'ajaxCall.response': '_successCallback',
+        'ajaxCall.error': '_errorCallback'
+    },
+
+    signUp: function(data) {
+        //validate API meta before making a call
+        if (this._validateApiMeta()) {
+            var request = {
+                userName: data.email,
+                password: data.password,
+                email: {
+                    isPrimary: true,
+                    value: data.email
+                },
+                name: {
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    title: ""
+                },
+                dateOfBirth: {
+                    date: new Date(data.dateOfBirth),
+                    "time": "12:00 AM"
+                }
+            };
+            this.$.ajaxCall.url = this._getUrl();
+            this.$.ajaxCall.body = JSON.stringify(request);
+            this._setLoading(true);
+            this.$.ajaxCall.generateRequest();
+        }
+    },
+
+    _successCallback: function(event) {
+        this._successHandler(event);
+    },
+
+    _errorCallback: function(event) {
+        this._errorHandler(event);
+    }
+
+});
+</script>

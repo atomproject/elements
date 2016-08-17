@@ -1,0 +1,23 @@
+{
+    "name": "App header",
+    "properties": [{
+        "name": "Properties",
+            "fields": {
+            "message": {
+                "name":"Message",
+                "type": "string",
+                "value": "Your password has been changed successfully."
+            },
+            "type": {
+                "name": "Notification Type",
+                "type": "string",
+                "value": "success"
+            },
+            "active": {
+                "name": "Active",
+                "type": "boolean",
+                "value": true
+            }
+        }
+    }]
+}

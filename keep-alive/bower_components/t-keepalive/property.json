@@ -1,0 +1,35 @@
+{
+    "name": "Keep Alive",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "apiInterval": {
+                    "name": "apiInterval",
+                    "type": "number",
+                    "value": 20000
+                },
+                "apiMethod": {
+                    "name": "apiMethod",
+                    "type": "string",
+                    "value": "POST"
+                },
+                "apiUrl": {
+                    "name": "apiUrl",
+                    "type": "string",
+                    "value": ""
+                },
+                "auto": {
+                    "name": "auto",
+                    "type": "boolean",
+                    "value": false
+                },
+                "timer": {
+                    "name": "timer",
+                    "type": "number",
+                    "value": null
+                }
+            }
+        }
+    ]
+}

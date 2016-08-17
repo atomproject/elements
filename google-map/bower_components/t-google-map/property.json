@@ -1,0 +1,49 @@
+{
+    "name": "Google Map",
+    "properties": [{
+        "name": "Data",
+        "fields": {
+            "latitude": {
+                "name":"Latitude",
+                "type": "number",
+                "value": 37.779
+            },
+            "longitude": {
+                "name":"Longitude",
+                "type": "number",
+                "value": -122.3892
+            },
+            "mapType": {
+                "name":"Select Map Type",
+                "type": "options",
+                "values": ["roadmap", "satellite", "hybrid", "terrain"],
+                "value":"roadmap"
+            }
+        }
+    },
+    {
+        "name": "Properties",
+        "fields": {
+            "disableZoom": {
+                "name":"Disable Zoom",
+                "type": "Boolean",
+                "value": false
+            },
+            "minZoom": {
+                "name":"Min. Zoom Level",
+                "type": "number",
+                "value": 5
+            },
+            "maxZoom": {
+                "name":"Max. Zoom Level",
+                "type": "number",
+                "value": 15
+            },
+            "zoom": {
+                "name":"Default Zoom Level",
+                "type": "number",
+                "value": 10
+            }
+        }
+    }]
+}

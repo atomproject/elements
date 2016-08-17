@@ -1,0 +1,45 @@
+{
+  "name": "t-map-nearby-search",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/travelnxtElements/t-map-nearby-search",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "google-map": "GoogleWebComponents/google-map#^1.1.7",
+    "google-apis": "GoogleWebComponents/google-apis#^1.1.1"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "~0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#~1.0.6"
+  },
+  "_release": "88709a08cd",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "88709a08cdc51a7e078a2d7d8f38734eca5b7cad"
+  },
+  "_source": "git://github.com/travelnxtElements/t-map-nearby-search.git",
+  "_target": "master",
+  "_originalSource": "travelnxtElements/t-map-nearby-search",
+  "_direct": true
+}

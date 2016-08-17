@@ -1,0 +1,20 @@
+{
+    "name" : "Progress Bar",
+    "properties": [{
+        "name": "Properties",
+        "fields": {
+            "value": {
+                "name":"Default Value",
+                "type": "number",
+                "value": 0,
+                "min": 0,
+                "max": 100
+            },
+            "indeterminate": {
+                "name":"Interminant behavior",
+                "type": "Boolean",
+                "value": false
+            }
+        }
+    }]
+}

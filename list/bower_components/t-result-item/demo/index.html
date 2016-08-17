@@ -1,0 +1,674 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <title>t-result-item demo</title>
+    <script src="../bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="../t-result-item.html">
+</head>
+
+<body>
+    <t-result-item show-twelve-hour-clock></t-result-item>
+    <script>
+    window.addEventListener('WebComponentsReady',function(){
+    document.querySelector('t-result-item').itinerary = {
+        "type": "Flight",
+        "isTripFare": false,
+        "departureTime": {
+            "date": "Wed, 17 Feb, 2016",
+            "time": "8:45 AM",
+            "systemDateTime": "2016-02-17T08:45:00"
+        },
+        "arrivalTime": {
+            "date": "Thu, 25 Feb, 2016",
+            "time": "4:37 PM",
+            "systemDateTime": "2016-02-25T16:37:00"
+        },
+        "duration": {
+            "onward": 66,
+            "return": 62,
+            "journey": 128
+        },
+        "totalStops": 0,
+        "minFare": {
+            "areRatesAvailable": true,
+            "fare": {
+                "amount": 116.2,
+                "currency": "USD",
+                "displayAmount": "$116.20",
+                "type": "USD"
+            },
+            "equivalentFares": [{
+                "amount": 464.8,
+                "currency": "Points",
+                "displayAmount": "Points 464.8",
+                "type": "Redemption"
+            }],
+            "equivalents": [{
+                "currency": "Points",
+                "factor": 0.25,
+                "type": "Redemption"
+            }]
+        },
+        "passengerFares": [{
+            "fare": {
+                "type": null,
+                "code": null,
+                "isRefundable": false,
+                "components": [{
+                    "money": {
+                        "amount": 81.84,
+                        "currency": "USD",
+                        "displayAmount": "$81.84",
+                        "type": "USD"
+                    },
+                    "components": null,
+                    "type": "BaseFare",
+                    "properties": []
+                }, {
+                    "money": {
+                        "amount": 34.36,
+                        "currency": "USD",
+                        "displayAmount": "$34.36",
+                        "type": "USD"
+                    },
+                    "components": null,
+                    "type": "Tax",
+                    "properties": [{
+                        "key": "Type",
+                        "value": null
+                    }, {
+                        "key": "Code",
+                        "value": null
+                    }, {
+                        "key": "Description",
+                        "value": null
+                    }]
+                }, {
+                    "money": {
+                        "amount": 116.2,
+                        "currency": "USD",
+                        "displayAmount": "$116.20",
+                        "type": "USD"
+                    },
+                    "components": null,
+                    "type": "TotalFare",
+                    "properties": []
+                }, {
+                    "money": {
+                        "amount": 0,
+                        "currency": null,
+                        "displayAmount": "$0.00",
+                        "type": null
+                    },
+                    "components": null,
+                    "type": "TotalFee",
+                    "properties": []
+                }, {
+                    "money": {
+                        "amount": 34.36,
+                        "currency": "USD",
+                        "displayAmount": "$34.36",
+                        "type": "USD"
+                    },
+                    "components": null,
+                    "type": "TotalTax",
+                    "properties": []
+                }, {
+                    "money": {
+                        "amount": 0,
+                        "currency": null,
+                        "displayAmount": "$0.00",
+                        "type": null
+                    },
+                    "components": null,
+                    "type": "TotalCommission",
+                    "properties": []
+                }, {
+                    "money": {
+                        "amount": 0,
+                        "currency": null,
+                        "displayAmount": "$0.00",
+                        "type": null
+                    },
+                    "components": null,
+                    "type": "TotalDiscount",
+                    "properties": []
+                }],
+                "equivalents": null
+            },
+            "maxAge": -1,
+            "minAge": -1,
+            "passengerType": "Adult",
+            "quantity": 1,
+            "displayPassengerType": "Adult",
+            "singlePassengerType": "Adult",
+            "multiplePassengerType": "Adults",
+            "fareDetails": [{
+                "cabin": "Unknown",
+                "classOfService": "R",
+                "fareBasisCode": "RA21NR",
+                "flightCode": "NK-NK-866-1702160845-1702160951",
+                "refKey": null
+            }, {
+                "cabin": "Unknown",
+                "classOfService": "R",
+                "fareBasisCode": "RA21NR",
+                "flightCode": "NK-NK-720-2502161535-2502161637",
+                "refKey": null
+            }]
+        }],
+        "legs": [{
+            "segments": [{
+                "aircraftType": "AIRBUS INDUSTRIE A319",
+                "airline": {
+                    "code": "NK",
+                    "name": "Spirit Airlines",
+                    "imageUrl": "http://d1o2mbjkynteqw.cloudfront.net/Airlines/30x30/NK.JPG"
+                },
+                "arrivalAirport": {
+                    "name": "Los Angeles International Airport",
+                    "geoCode": "33.9442,-118.403",
+                    "type": "Airport",
+                    "code": "LAX",
+                    "cityName": "Los Angeles",
+                    "countryCode": "US",
+                    "countryName": "United States",
+                    "stateCode": "CA",
+                    "stateName": null,
+                    "zipCode": null,
+                    "additionalInfo": null,
+                    "formattedAddress": "Los Angeles, CA, United States - Los Angeles International Airport (LAX)",
+                    "gmtOffsetMinutes": 0,
+                    "radius": null
+                },
+                "arrivalTerminal": "3",
+                "arrivalTime": {
+                    "date": "Wed, 17 Feb, 2016",
+                    "time": "9:51 AM",
+                    "systemDateTime": "2016-02-17T09:51:00"
+                },
+                "cabinType": "Premiere Premiere Economy",
+                "departureAirport": {
+                    "name": "McCarran International Airport",
+                    "geoCode": "36.0854,-115.15",
+                    "type": "Airport",
+                    "code": "LAS",
+                    "cityName": "Las Vegas",
+                    "countryCode": "US",
+                    "countryName": "United States",
+                    "stateCode": "NV",
+                    "stateName": null,
+                    "zipCode": null,
+                    "additionalInfo": null,
+                    "formattedAddress": "Las Vegas, NV, United States - McCarran International Airport (LAS)",
+                    "gmtOffsetMinutes": 0,
+                    "radius": null
+                },
+                "departureTerminal": "1",
+                "departureTime": {
+                    "date": "Wed, 17 Feb, 2016",
+                    "time": "8:45 AM",
+                    "systemDateTime": "2016-02-17T08:45:00"
+                },
+                "flightDuration": 66,
+                "flightNumber": "866",
+                "mileage": {
+                    "amount": 236.12,
+                    "from": "Address",
+                    "unit": "Mile",
+                    "displayAmount": "236.00km"
+                },
+                "numberOfStops": 0,
+                "onTimePercentage": 0,
+                "operatingAirline": {
+                    "code": "NK",
+                    "name": "Spirit Airlines",
+                    "imageUrl": "http://d1o2mbjkynteqw.cloudfront.net/Airlines/30x30/NK.JPG"
+                },
+                "noOfSeatsLeft": 0,
+                "isMarried": false,
+                "marriageGroupCode": null,
+                "airlinePNR": null,
+                "id": 42,
+                "index": 1,
+                "layoverInfo": null,
+                "changeOfGaugeInfo": null
+            }],
+            "id": 42,
+            "index": 2,
+            "type": null,
+            "airline": {
+                "code": "NK",
+                "name": "Spirit Airlines",
+                "imageUrl": "http://d1o2mbjkynteqw.cloudfront.net/Airlines/30x30/NK.JPG"
+            },
+            "operatingAirlines": [],
+            "departureTime": {
+                "date": "Wed, 17 Feb, 2016",
+                "time": "8:45 AM",
+                "systemDateTime": "2016-02-17T08:45:00"
+            },
+            "arrivalTime": {
+                "date": "Wed, 17 Feb, 2016",
+                "time": "9:51 AM",
+                "systemDateTime": "2016-02-17T09:51:00"
+            },
+            "departureLocation": {
+                "name": "McCarran International Airport",
+                "geoCode": "36.0854,-115.15",
+                "type": "Airport",
+                "code": "LAS",
+                "cityName": "Las Vegas",
+                "countryCode": "US",
+                "countryName": "United States",
+                "stateCode": "NV",
+                "stateName": null,
+                "zipCode": null,
+                "additionalInfo": null,
+                "formattedAddress": "Las Vegas, NV, United States - McCarran International Airport (LAS)",
+                "gmtOffsetMinutes": 0,
+                "radius": null
+            },
+            "arrivalLocation": {
+                "name": "Los Angeles International Airport",
+                "geoCode": "33.9442,-118.403",
+                "type": "Airport",
+                "code": "LAX",
+                "cityName": "Los Angeles",
+                "countryCode": "US",
+                "countryName": "United States",
+                "stateCode": "CA",
+                "stateName": null,
+                "zipCode": null,
+                "additionalInfo": null,
+                "formattedAddress": "Los Angeles, CA, United States - Los Angeles International Airport (LAX)",
+                "gmtOffsetMinutes": 0,
+                "radius": null
+            },
+            "cabinType": "Premiere Economy",
+            "noOfStops": 0,
+            "totalJourneyDuration": 66,
+            "layoverDuration": 0
+        }, {
+            "segments": [{
+                "aircraftType": "AIRBUS INDUSTRIE A319",
+                "airline": {
+                    "code": "NK",
+                    "name": "Spirit Airlinessssssssssssssssssssssssssssssssssssss",
+                    "imageUrl": "http://d1o2mbjkynteqw.cloudfront.net/Airlines/30x30/NK.JPG"
+                },
+                "arrivalAirport": {
+                    "name": "McCarran International Airport",
+                    "geoCode": "36.0854,-115.15",
+                    "type": "Airport",
+                    "code": "LAS",
+                    "cityName": "Las Vegas",
+                    "countryCode": "US",
+                    "countryName": "United States",
+                    "stateCode": "NV",
+                    "stateName": null,
+                    "zipCode": null,
+                    "additionalInfo": null,
+                    "formattedAddress": "Las Vegas, NV, United States - McCarran International Airport (LAS)",
+                    "gmtOffsetMinutes": 0,
+                    "radius": null
+                },
+                "arrivalTerminal": "1",
+                "arrivalTime": {
+                    "date": "Thu, 25 Feb, 2016",
+                    "time": "4:37 PM",
+                    "systemDateTime": "2016-02-25T16:37:00"
+                },
+                "cabinType": "Premiere Economy",
+                "departureAirport": {
+                    "name": "Los Angeles International Airport",
+                    "geoCode": "33.9442,-118.403",
+                    "type": "Airport",
+                    "code": "LAX",
+                    "cityName": "Los Angeles",
+                    "countryCode": "US",
+                    "countryName": "United States",
+                    "stateCode": "CA",
+                    "stateName": null,
+                    "zipCode": null,
+                    "additionalInfo": null,
+                    "formattedAddress": "Los Angeles, CA, United States - Los Angeles International Airport (LAX)",
+                    "gmtOffsetMinutes": 0,
+                    "radius": null
+                },
+                "departureTerminal": "3",
+                "departureTime": {
+                    "date": "Thu, 25 Feb, 2016",
+                    "time": "3:35 PM",
+                    "systemDateTime": "2016-02-25T15:35:00"
+                },
+                "flightDuration": 62,
+                "flightNumber": "720",
+                "mileage": {
+                    "amount": 236.12,
+                    "from": "Address",
+                    "unit": "Mile",
+                    "displayAmount": "236.00km"
+                },
+                "numberOfStops": 0,
+                "onTimePercentage": 0,
+                "operatingAirline": {
+                    "code": "NK",
+                    "name": "Spirit Airlinessssssssssssssssssssssssssssssssssssss",
+                    "imageUrl": "http://d1o2mbjkynteqw.cloudfront.net/Airlines/30x30/NK.JPG"
+                },
+                "noOfSeatsLeft": 0,
+                "isMarried": false,
+                "marriageGroupCode": null,
+                "airlinePNR": null,
+                "id": 43,
+                "index": 1,
+                "layoverInfo": null,
+                "changeOfGaugeInfo": null
+            }],
+            "id": 42,
+            "index": 3,
+            "type": null,
+            "airline": {
+                "code": "NK",
+                "name": "Spirit Airlines",
+                "imageUrl": "http://d1o2mbjkynteqw.cloudfront.net/Airlines/30x30/NK.JPG"
+            },
+            "operatingAirlines": [],
+            "departureTime": {
+                "date": "Thu, 25 Feb, 2016",
+                "time": "3:35 PM",
+                "systemDateTime": "2016-02-25T15:35:00"
+            },
+            "arrivalTime": {
+                "date": "Thu, 25 Feb, 2016",
+                "time": "4:37 PM",
+                "systemDateTime": "2016-02-25T16:37:00"
+            },
+            "departureLocation": {
+                "name": "Los Angeles International Airport",
+                "geoCode": "33.9442,-118.403",
+                "type": "Airport",
+                "code": "LAX",
+                "cityName": "Los Angeles",
+                "countryCode": "US",
+                "countryName": "United States",
+                "stateCode": "CA",
+                "stateName": null,
+                "zipCode": null,
+                "additionalInfo": null,
+                "formattedAddress": "Los Angeles, CA, United States - Los Angeles International Airport (LAX)",
+                "gmtOffsetMinutes": 0,
+                "radius": null
+            },
+            "arrivalLocation": {
+                "name": "McCarran International Airport",
+                "geoCode": "36.0854,-115.15",
+                "type": "Airport",
+                "code": "LAS",
+                "cityName": "Las Vegas",
+                "countryCode": "US",
+                "countryName": "United States",
+                "stateCode": "NV",
+                "stateName": null,
+                "zipCode": null,
+                "additionalInfo": null,
+                "formattedAddress": "Las Vegas, NV, United States - McCarran International Airport (LAS)",
+                "gmtOffsetMinutes": 0,
+                "radius": null
+            },
+            "cabinType": "Premiere Economy",
+            "noOfStops": 0,
+            "totalJourneyDuration": 62,
+            "layoverDuration": 0
+        }],
+        "itineraryType": "RoundTrip",
+        "legGroupRph": 0,
+        "isFareRefundable": false,
+        "isPassportRequired": false,
+        "isSeatMapAvailable": true,
+        "isCancellable": false,
+        "allPassengersInfoRequired": true,
+        "isGuaranteeRequired": true,
+        "id": "MF9fMTE2LjIw",
+        "name": null,
+        "fare": {
+            "type": "Published",
+            "code": null,
+            "isRefundable": false,
+            "components": [{
+                "money": {
+                    "amount": 81.84,
+                    "currency": "USD",
+                    "displayAmount": "$81.84",
+                    "type": "USD"
+                },
+                "components": [{
+                    "amount": 327.36,
+                    "currency": "Points",
+                    "displayAmount": "Points 327.36",
+                    "type": "Redemption"
+                }],
+                "type": "BaseFare",
+                "properties": []
+            }, {
+                "money": {
+                    "amount": 34.36,
+                    "currency": "USD",
+                    "displayAmount": "$34.36",
+                    "type": "USD"
+                },
+                "components": [{
+                    "amount": 137.44,
+                    "currency": "Points",
+                    "displayAmount": "Points 137.44",
+                    "type": "Redemption"
+                }],
+                "type": "Tax",
+                "properties": [{
+                    "key": "Type",
+                    "value": null
+                }, {
+                    "key": "Code",
+                    "value": null
+                }, {
+                    "key": "Description",
+                    "value": null
+                }]
+            }, {
+                "money": {
+                    "amount": 116.2,
+                    "currency": "USD",
+                    "displayAmount": "$116.20",
+                    "type": "USD"
+                },
+                "components": [{
+                    "amount": 464.8,
+                    "currency": "Points",
+                    "displayAmount": "Points 464.8",
+                    "type": "Redemption"
+                }],
+                "type": "TotalFare",
+                "properties": []
+            }, {
+                "money": {
+                    "amount": 0,
+                    "currency": null,
+                    "displayAmount": "$0.00",
+                    "type": null
+                },
+                "components": [{
+                    "amount": 0,
+                    "currency": "Points",
+                    "displayAmount": "Points 0",
+                    "type": "Redemption"
+                }],
+                "type": "TotalFee",
+                "properties": []
+            }, {
+                "money": {
+                    "amount": 34.36,
+                    "currency": "USD",
+                    "displayAmount": "$34.36",
+                    "type": "USD"
+                },
+                "components": [{
+                    "amount": 137.44,
+                    "currency": "Points",
+                    "displayAmount": "Points 137.44",
+                    "type": "Redemption"
+                }],
+                "type": "TotalTax",
+                "properties": []
+            }, {
+                "money": {
+                    "amount": 0,
+                    "currency": null,
+                    "displayAmount": "$0.00",
+                    "type": null
+                },
+                "components": [{
+                    "amount": 0,
+                    "currency": "Points",
+                    "displayAmount": "Points 0",
+                    "type": "Redemption"
+                }],
+                "type": "TotalDiscount",
+                "properties": []
+            }],
+            "equivalents": [{
+                "currency": "Points",
+                "factor": 0.25,
+                "type": "Redemption"
+            }]
+        },
+        "fareWithAddOns": {
+            "type": "Published",
+            "code": null,
+            "isRefundable": false,
+            "components": [{
+                "money": {
+                    "amount": 81.84,
+                    "currency": "USD",
+                    "displayAmount": "$81.84",
+                    "type": "USD"
+                },
+                "components": [{
+                    "amount": 327.36,
+                    "currency": "Points",
+                    "displayAmount": "Points 327.36",
+                    "type": "Redemption"
+                }],
+                "type": "BaseFare",
+                "properties": []
+            }, {
+                "money": {
+                    "amount": 34.36,
+                    "currency": "USD",
+                    "displayAmount": "$34.36",
+                    "type": "USD"
+                },
+                "components": [{
+                    "amount": 137.44,
+                    "currency": "Points",
+                    "displayAmount": "Points 137.44",
+                    "type": "Redemption"
+                }],
+                "type": "Tax",
+                "properties": [{
+                    "key": "Type",
+                    "value": null
+                }, {
+                    "key": "Code",
+                    "value": null
+                }, {
+                    "key": "Description",
+                    "value": null
+                }]
+            }, {
+                "money": {
+                    "amount": 116.2,
+                    "currency": "USD",
+                    "displayAmount": "$116.20",
+                    "type": "USD"
+                },
+                "components": [{
+                    "amount": 464.8,
+                    "currency": "Points",
+                    "displayAmount": "Points 464.8",
+                    "type": "Redemption"
+                }],
+                "type": "TotalFare",
+                "properties": []
+            }, {
+                "money": {
+                    "amount": 0,
+                    "currency": null,
+                    "displayAmount": "$0.00",
+                    "type": null
+                },
+                "components": [{
+                    "amount": 0,
+                    "currency": "Points",
+                    "displayAmount": "Points 0",
+                    "type": "Redemption"
+                }],
+                "type": "TotalFee",
+                "properties": []
+            }, {
+                "money": {
+                    "amount": 34.36,
+                    "currency": "USD",
+                    "displayAmount": "$34.36",
+                    "type": "USD"
+                },
+                "components": [{
+                    "amount": 137.44,
+                    "currency": "Points",
+                    "displayAmount": "Points 137.44",
+                    "type": "Redemption"
+                }],
+                "type": "TotalTax",
+                "properties": []
+            }, {
+                "money": {
+                    "amount": 0,
+                    "currency": null,
+                    "displayAmount": "$0.00",
+                    "type": null
+                },
+                "components": [{
+                    "amount": 0,
+                    "currency": "Points",
+                    "displayAmount": "Points 0",
+                    "type": "Redemption"
+                }],
+                "type": "TotalDiscount",
+                "properties": []
+            }],
+            "equivalents": [{
+                "currency": "Points",
+                "factor": 0.25,
+                "type": "Redemption"
+            }]
+        },
+        "isPostPaid": false,
+        "isSoldOut": false,
+        "isPreferred": false,
+        "addOns": null,
+        "preferredSortOrder": 0,
+        "source": {
+            "inventoryId": "MF9fMTE2LjIw",
+            "id": 20021,
+            "name": "AmadeusWS"
+        },
+        "restrictions": null
+    }});
+    </script>
+</body>
+
+</html>

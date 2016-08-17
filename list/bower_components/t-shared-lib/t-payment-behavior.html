@@ -1,0 +1,167 @@
+<script>
+	(function () {
+
+		'use strict'
+
+		var TravelNxt = window.TravelNxt || {};
+		TravelNxt.Behaviors = window.TravelNxt.Behaviors || {};
+        /*
+        @polymerBehavior 
+        */
+		TravelNxt.Behaviors.PaymentBehavior = {
+            
+			properties:{
+
+                /*
+                 * <p>This property holds the value of booked itinerary</p>
+                */
+                bookedItinerary: {
+                    type: Object,
+                    notify: true
+                },
+
+                /*
+                 * <p>This is the timer value in milliseconds which is used to alter the processing message</p>
+                */
+                paymentTimer: {
+                    type: String,
+                    value: '10000'
+                },
+
+                /*
+                 * <p>This is the processing message</p>
+                */
+                _processingMsg: {
+                    type: Boolean,
+                    value: false
+                },
+
+                /*
+                 * <p>This is the long processing message</p>
+                 * <p>It gets displayed when `paymentTimer` is exceeded</p>
+                */
+                _longProcessingMsg: {
+                    type: Boolean,
+                    value: true
+                },
+
+                /*
+                 * <p>This flag toggles visibility of full page loader</p>
+                */
+                _showFullPageLoader: {
+                    type: Boolean,
+                    value: false
+                }
+			},
+
+            observers:[
+                '_visibleChange(visible)',
+                '_pageLoad(authToken, passengerInfo, apiBaseUrl)'
+            ],
+
+            listeners: {
+                'policy-click': '_showPolicies'
+            },
+
+            /*
+             * <p>this method gets called when page becomes visible</p>
+             * <p>`go-to-search` event is fired if `bookedItinerary` property is not set.</p>
+            */
+            _visibleChange: function (visible) {
+
+                this.$.notify.active = false;
+
+                this.$.acceptance.checked = false;
+                
+                if (visible && (!this.passengerInfo  || !this.apiBaseUrl || !this.authToken)) {
+                    this.fire('go-to-search');
+                }
+
+                //initiate policy component
+                this.$.policy.initiatePolicyView();
+            },
+
+            /*
+             * <p>this method gets called when policy link in `t-car-itinerary-details` component is clicked.</p>
+             * <p>It is triggered by the `policy-click` listener.</p>
+            */
+            _showPolicies: function () {
+                this.$.policy.initiatePolicyCall();
+            },
+
+            /*
+             * <p>This method envokes country call to populate countrie in dropdown</p>
+             * <p>It is envoked only when payment is prepaid</p>
+            */
+            _countryCall: function () {
+                if(!this.itinerary || this.itinerary.isPostPaid || !this.passengerInfo) {
+                    return;
+                }
+                this.$$('#address').pullCountryList();
+                this.$$('#address').$.phoneNumber.value = this.passengerInfo.phone;
+                this.$$('#creditCard').$.securityCode.value = '';
+            },
+
+            /*
+             * <p>Session storage save event handler</p>
+            */
+            _onSessionSave: function () {
+                this.bookedItinerary = this.$.sessionStore.value;
+                this.fire('book-success', this.$.sessionStore.value);
+            },
+
+            /*
+             * <p>This method collects credit card information.</p>
+            */
+            _getCreditCardInfo: function () {
+                var address = this.$$('#address').getAddress();
+                var payment = this.$$('#creditCard').getInfo();
+                payment.billingAddress = address;
+
+                return payment;
+            },
+
+            /*
+             * <p>This is a translator method to set fare details data</p>
+            */
+            _setFareDetails: function (baseFareLabel) {
+                if (!this.itinerary || !this.searchCriteria) {
+                    return;
+                }
+
+                var formattedDate = this._getDateComponents(this.searchCriteria.pickupDate);
+                var pickupDate = formattedDate.date + ' ' + formattedDate.shortMonth + ' ' + this.searchCriteria.pickupTime;
+
+                formattedDate = this._getDateComponents(this.searchCriteria.dropoffDate);
+                var dropoffDate = formattedDate.date + ' ' + formattedDate.shortMonth + ' ' + this.searchCriteria.dropoffTime;
+
+                this.$.fareDetails.baseFareLabel = baseFareLabel + this._dateDiff(pickupDate, dropoffDate);
+
+                if (this.itinerary.fare && this.itinerary.fare.components) {
+                    this.$.fareDetails.data = this.itinerary.fare.components;
+                }
+            },
+
+            /*
+             * <p>handler for booking message timer calculation</p>
+            */
+            _bindTimer: function () {
+
+                var _timer = setTimeout(function () {
+                    this._processingMsg = true;
+                    this._longProcessingMsg = false;
+                }.bind(this), parseInt(this.paymentTimer));
+            },
+            
+            /*
+             * <p>handler to make terms and condition clickable & checks the checkbox</p>
+            */
+            _checkBoxCheck: function (e) {
+                if (e.srcElement.tagName.toLowerCase() !== 'a') {
+                    this.checked = !this.checked;
+                }
+            }
+		};
+		
+	})();
+</script>

@@ -1,0 +1,115 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../iron-dropdown/iron-dropdown-scroll-manager.html">
+<link rel="import" href="../t-button/t-button.html" />
+<link rel="import" href="../t-header/t-header.html" />
+
+<dom-module id="t-overlay">
+	<template>
+		<style include="iron-flex">
+		:host{
+			position: fixed;
+	        top: 0;
+	        bottom: 0;
+	        left: 0;
+	        right: 0;
+	        z-index: 99;
+	        background: #fff;
+	        -webkit-tap-highlight-color: transparent;
+	        display: none;
+		}
+		:host([active]){
+			display: block;
+		}
+		.body{
+			height: 100%;
+		}
+		.overflow{
+			overflow: auto;
+		}
+		.buttons{
+			padding: 10px;
+		}
+		</style>
+		<div class="layout vertical body">
+			<t-header icon="[[icon]]" normal-heading label="[[header]]" on-click="closeModal">
+        	</t-header>
+        	<div class="flex overflow">
+        		<content select="*"></content>
+        	</div>
+        	<template is="dom-if" if="{{confirmation}}">
+	        	<div class="layout horizontal justified center buttons">
+	        		<t-button class="primary" label="Ok" on-click="_okClick"></t-button>
+	        		<t-button class="primary" label="Cancel" on-click="_cancelClick"></t-button>
+	        	</div>
+        	</template>
+        </div>
+	</template>
+</dom-module>
+
+<script>
+	Polymer({
+		is: "t-overlay",
+
+		properties:{
+
+			/**
+             * The icon of the header back by default it is the back arrow
+             */
+			icon:String,
+				
+
+			/**
+             * The header text of the overlay. this doesnt not accept content because 
+             * it has a generic style to put.
+             */
+			header:{
+				type:String,
+				value:'Overlay'
+			},
+
+			/**
+             * This determines the active and inactive state of modal.
+             */
+			active:{
+				type:Boolean,
+				value:false,
+				reflectToAttribute:true,
+				observer:'_handlePageScroll'
+			},
+
+			/**
+             * This determines if the modal is for confirmation ie: there will be two button firinng
+             * events of ok or cancel
+             */
+			confirmation :{
+				type:Boolean,
+				value:false
+			}
+		},
+
+		closeModal:function(){
+			this.active = false;
+			this.fire('t-overlay-closed');
+		},
+
+		_okClick:function(){
+			this.closeModal();
+			this.fire('click-ok');
+		},
+
+		_cancelClick:function(){
+			this.closeModal();
+			this.fire('click-cancel');
+		},
+
+		_handlePageScroll:function(){
+			if(!this.active){
+            	Polymer.IronDropdownScrollManager.removeScrollLock(this);
+			}else{
+                Polymer.IronDropdownScrollManager.pushScrollLock(this);
+			}
+		}	
+
+	});	
+</script>

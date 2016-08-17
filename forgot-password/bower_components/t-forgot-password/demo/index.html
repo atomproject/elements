@@ -1,0 +1,160 @@
+    <!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <title>t-forgot-password demo</title>
+    <link rel="import" href="../../polymer/polymer.html">
+    <link rel="import" href="../t-get-user-api.html">
+    <link rel="import" href="../t-verify-secret-key-api.html">
+    <link rel="import" href="../t-reset-password-api.html">
+    <link rel="import" href="../t-reset-password-mail-api.html">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../t-shared-components/theme.html">
+    <link rel="import" href="../t-forgot-password.html">
+    <link rel="import" href="../../t-mystique-auth/t-mystique-auth.html">
+    <link rel="import" href="../../t-loader/t-loader.html">
+    <style>
+    html, body {
+        font-family: 'Open sans';
+        height: 100%;
+        width: 100%;
+        margin: 0;
+    }
+
+    t-loader{
+        left: 50%;
+        top: 50%;
+        position: absolute;
+    }
+    </style>
+</head>
+
+<body>
+    <template is="dom-bind" id="app">
+
+        <t-loader id="loader"></t-loader>
+        <paper-toast id="toast"></paper-toast>
+
+        <t-mystique-auth 
+            id="tokenCall"            
+            name="nxtb2bsite"
+            url="http://qa-mystiquecode.tavisca.com/api/authentication/authenticate/context"
+            token-response="{{token}}">
+        </t-mystique-auth> 
+
+        <!-- <t-mystique-auth 
+            id="tokenCall"            
+            name="mystiquedemo"
+            url="http://demo.travelnxt.com/api/authentication/authenticate/context"
+            token-response="{{token}}">
+        </t-mystique-auth> -->
+
+        <t-get-user-api 
+            id="getUserApi" 
+            on-t-get-user-api-success="getUserSuccessEventHandler" 
+            on-t-get-user-api-error="getUserFailureEventHandler"
+            api-base-url="http://qa-mystiquecode.tavisca.com/"
+            api-relative-url="api/user" 
+            sections-requried=""
+            auth-token="{{token.authenticationToken}}">
+        </t-get-user-api>
+
+        <t-verify-secret-key-api 
+            id="verifySecret" 
+            on-t-verify-secret-key-api-success="verifySecretSuccessEventHandler" 
+            on-t-verify-secret-key-api-error="verifySecretFailureEventHandler" 
+            api-base-url="http://qa-mystiquecode.tavisca.com/"
+            api-relative-url="api/user" 
+            auth-token="{{token.authenticationToken}}">
+        </t-verify-secret-key-api>
+
+        <t-reset-password-api
+            id="updatePassword" 
+            on-t-reset-password-api-success="updatePasswordSuccessEventHandler" 
+            on-t-reset-password-api-error="updatePasswordFailureEventHandler" 
+            api-base-url="http://qa-mystiquecode.tavisca.com/"
+            api-relative-url="api/user" 
+            auth-token="{{token.authenticationToken}}">
+        </t-reset-password-api>
+
+        <t-reset-password-mail-api
+            id="sendMail" 
+            on-t-reset-password-mail-api-success="sendMailSuccessEventHandler" 
+            on-t-reset-password-mail-api-error="sendMailFailureEventHandler" 
+            api-base-url="http://qa-mystiquecode.tavisca.com/"
+            api-relative-url="api/user" 
+            auth-token="{{token.authenticationToken}}">
+        </t-reset-password-mail-api>
+
+        <t-forgot-password
+            id="fgtPassword"
+            on-t-forgot-password-send-email="sendMailEventHandler"
+            on-t-forgot-password-update-password="updatePasswordEventHandler"
+            on-t-forgot-password-verify-secret="verifySecretEventHandler"
+            on-t-forgot-password-get-user="getUserEventHandler">
+        </t-forgot-password>
+    </template>
+</body>
+<script>
+(function(undefined) {
+    var template = document.querySelector('#app');
+
+    template.getUserEventHandler =function (e, data) {
+        this.$.loader.active = true;
+        this.$.getUserApi.onGetSecretKey(e);
+    };
+    template.getUserSuccessEventHandler =function (e, response) {
+        this.$.loader.active = false;
+        this.$.fgtPassword.onGetUserSuccess(response);
+    };
+    template.getUserFailureEventHandler =function (e, response) {
+        this.$.loader.active = false;
+        this.$.fgtPassword.onGetUserFailure(response);
+    };
+
+    template.verifySecretEventHandler =function (e, data) {
+        this.$.loader.active = true;
+        this.$.verifySecret.verifyAnswer(data);
+    };
+    template.verifySecretSuccessEventHandler =function (e, response) {
+        this.$.loader.active = false;
+        this.$.fgtPassword.onGetSecretAnswerSuccess(response);
+    };
+    template.verifySecretFailureEventHandler =function (e, response) {
+        this.$.loader.active = false;
+        this.$.fgtPassword.onGetSecretAnswerFailure(response);
+    };
+
+
+    template.updatePasswordEventHandler =function (e, data) {
+        this.$.loader.active = true;
+        this.$.updatePassword.updatePassword(data);
+    };
+    template.updatePasswordSuccessEventHandler =function (e, response) {
+        this.$.loader.active = false;
+        this.$.fgtPassword.onPasswordResetSuccess(response);
+    };
+    template.updatePasswordFailureEventHandler =function (e, response) {
+        this.$.loader.active = false;
+        this.$.fgtPassword.onPasswordResetFailure(response);
+    };
+
+    template.sendMailEventHandler =function (e, data) {
+        this.$.loader.active = true;
+        this.$.sendMail.sendMail(data);
+    };
+    template.sendMailSuccessEventHandler =function (e, response) {
+        this.$.loader.active = false;
+        this.$.fgtPassword.onPasswordResetLinkSuccess(response);
+    };
+    template.sendMailFailureEventHandler =function (e, response) {
+        this.$.loader.active = false;
+        this.$.fgtPassword.onPasswordResetLinkFailure(response);
+    };
+})();
+</script>
+
+</html>

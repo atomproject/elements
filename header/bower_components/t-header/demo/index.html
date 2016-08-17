@@ -1,0 +1,229 @@
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../t-header.html">
+    <link rel="import" href="../t-header-search-recap.html">
+    <link rel="import" href="../t-flight-search-decorator.html">
+    <link rel="import" href="../t-hotel-search-decorator.html">
+    <link rel="import" href="../t-car-search-decorator.html">
+    <link rel="import" href="../t-activity-search-decorator.html">
+
+     <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+
+        t-header .body.t-header {
+            background: #0099cc;
+            height: 48px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <t-header>
+        <t-flight-header></t-flight-header>
+    </t-header>
+    
+    <t-header normal-heading></t-header> -->
+    <template is="dom-bind" id="domBindTemplate">
+        <t-header icon="arrow-back">
+            <t-header-search-recap location-seperator-icon="swap-horiz" recap-data="{{flightRecapData}}">
+            </t-header-search-recap>
+            <t-flight-search-decorator id="flightSearchCriteriaRecap" output="{{flightRecapData}}"></t-flight-search-decorator>
+        </t-header>
+        <t-header icon="arrow-back">
+            <t-header-search-recap recap-data="{{hotelRecapData}}">
+            </t-header-search-recap>
+            <t-hotel-search-decorator id="hotelSearchCriteriaRecap" output="{{hotelRecapData}}"></t-hotel-search-decorator>
+        </t-header>
+        <t-header icon="arrow-back">
+            <t-header-search-recap recap-data="{{carRecapData}}">
+            </t-header-search-recap>
+            <t-car-search-decorator id="carSearchCriteriaRecap" output="{{carRecapData}}"></t-car-search-decorator>
+        </t-header>
+        <t-header icon="arrow-back">
+            <t-header-search-recap recap-data="{{activityRecapData}}">
+            </t-header-search-recap>
+            <t-activity-search-decorator id="activitySearchCriteriaRecap" output="{{activityRecapData}}"></t-activity-search-decorator>
+        </t-header>
+    </template>
+
+    <!-- <t-header right-icon="arrow-forward">
+        <t-hotel-search-recap hotel-name="Hyatt Whatever">
+        </t-hotel-search-recap>
+    </t-header> -->
+</body>
+
+<script>
+    window.addEventListener('WebComponentsReady', function(e) {
+        var carSearchCriteria = {
+                                    "pickupLocation": {
+                                        "code": "LAS",
+                                        "name": "McCarran International Airport",
+                                        "cityName": "Las Vegas",
+                                        "countryCode": "US",
+                                        "countryName": "United States",
+                                        "geoCode": "36.0854,-115.15",
+                                        "id": 2102,
+                                        "stateCode": "NV",
+                                        "stateName": "Nevada",
+                                        "type": "Airport",
+                                        "additionalInfo": null,
+                                        "formattedAddress": "Las Vegas, NV, United States - McCarran International Airport (LAS)"
+                                    },
+                                    "pickupDate": "08/30/2016",
+                                    "dropoffLocation": {
+                                        "code": "LAS",
+                                        "name": "McCarran International Airport",
+                                        "cityName": "Las Vegas",
+                                        "countryCode": "US",
+                                        "countryName": "United States",
+                                        "geoCode": "36.0854,-115.15",
+                                        "id": 2102,
+                                        "stateCode": "NV",
+                                        "stateName": "Nevada",
+                                        "type": "Airport",
+                                        "additionalInfo": null,
+                                        "formattedAddress": "Las Vegas, NV, United States - McCarran International Airport (LAS)"
+                                    },
+                                    "dropoffDate": "09/06/2016",
+                                    "isDropoffLocationSame": true,
+                                    "pickupTime": "11:00 AM",
+                                    "dropoffTime": "11:00 AM"
+                                };
+        var hotelSearchCriteria = {
+                                    "location": {
+                                        "code": "LAS",
+                                        "name": "McCarran International Airport",
+                                        "cityName": "Las Vegas",
+                                        "countryCode": "US",
+                                        "countryName": "United States",
+                                        "geoCode": "36.0854,-115.15",
+                                        "id": 2178,
+                                        "stateCode": "NV",
+                                        "stateName": "Nevada",
+                                        "type": "Airport",
+                                        "additionalInfo": null,
+                                        "formattedAddress": "Las Vegas, NV, United States - McCarran International Airport (LAS)"
+                                    },
+                                    "checkIn": "08/16/2016",
+                                    "checkOut": "08/23/2016",
+                                    "adultCount": 1,
+                                    "childCount": 0,
+                                    "childAges": []
+                                };
+        var flightSearchCriteria = {
+                                        "preferences": {
+                                            "includeAirlineCodes": null,
+                                            "excludeAirlineCodes": null,
+                                            "nonStopOnly": false,
+                                            "singleAirlineOnly": false,
+                                            "cabinType": "Economy"
+                                        },
+                                        "passengers": [{
+                                            "quantity": 1,
+                                            "type": "Adult",
+                                            "ages": []
+                                        },{
+                                            "quantity": 2,
+                                            "type": "Child",
+                                            "ages": []
+                                        }],
+                                        "legs": [{
+                                            "departureLocation": {
+                                                "additionalInfo": null,
+                                                "cityName": "Las Vegas",
+                                                "code": "LAS",
+                                                "codeContext": null,
+                                                "countryCode": "US",
+                                                "countryName": "United States",
+                                                "formattedAddress": "Las Vegas, NV, United States - McCarran International Airport (LAS)",
+                                                "geoCode": "36.0854,-115.15",
+                                                "gmtOffsetMinutes": 0,
+                                                "id": 0,
+                                                "name": "McCarran International Airport",
+                                                "radius": null,
+                                                "searchType": null,
+                                                "stateCode": "NV",
+                                                "stateName": "Nevada",
+                                                "type": "Airport",
+                                                "zipCode": null
+                                            },
+                                            "includeNearByAirportsForDeparture": false,
+                                            "arrivalLocation": {
+                                                "additionalInfo": null,
+                                                "cityName": "Los Angeles",
+                                                "code": "LAX",
+                                                "codeContext": null,
+                                                "countryCode": "US",
+                                                "countryName": "United States",
+                                                "formattedAddress": "Los Angeles, CA, United States - Los Angeles International Airport (LAX)",
+                                                "geoCode": "33.9442,-118.403",
+                                                "gmtOffsetMinutes": 0,
+                                                "id": 0,
+                                                "name": "Los Angeles International Airport",
+                                                "radius": null,
+                                                "searchType": null,
+                                                "stateCode": "CA",
+                                                "stateName": "California",
+                                                "type": "Airport",
+                                                "zipCode": null
+                                            },
+                                            "includeNearByAirportsForArrival": false,
+                                            "travelDate": {
+                                                "date": "Thursday, 09/22/2016",
+                                                "systemDateTime": "2016-09-22T00:00:00",
+                                                "time": "12:00 AM"
+                                            }
+                                        }],
+                                        "productType": "Flight",
+                                        "itineraryType": "OneWay",
+                                        "IsRoundTrip": false,
+                                        "currency": null,
+                                        "culture": null,
+                                        "generatedOn": {
+                                            "date": "Monday, 08/01/2016",
+                                            "systemDateTime": "2016-08-01T14:18:38.7376954+05:30",
+                                            "time": "2:18 PM"
+                                        },
+                                        "searchId": "dc93f856-2b95-44c2-998a-7d6e3586f2cc",
+                                        "isSuccessful": false,
+                                        "responseContentType": null,
+                                        "attributes": null
+                                    };
+        var activitySearchCriteria = {
+                                        "location": {
+                                            "code": "LAS",
+                                            "name": "McCarran International Airport",
+                                            "cityName": "Las Vegas",
+                                            "countryCode": "US",
+                                            "countryName": "United States",
+                                            "geoCode": "36.0854,-115.15",
+                                            "id": 2178,
+                                            "stateCode": "NV",
+                                            "stateName": "Nevada",
+                                            "type": "Airport",
+                                            "additionalInfo": null,
+                                            "formattedAddress": "Las Vegas, NV, United States - McCarran International Airport (LAS)"
+                                        },
+                                        "fromDate": "08/31/2016",
+                                        "toDate": "09/02/2016"
+                                    };
+        var templatizer = document.getElementById('domBindTemplate');
+        templatizer.$.carSearchCriteriaRecap.input = carSearchCriteria;
+        templatizer.$.hotelSearchCriteriaRecap.input = hotelSearchCriteria;
+        templatizer.$.flightSearchCriteriaRecap.input = flightSearchCriteria;
+        templatizer.$.activitySearchCriteriaRecap.input = activitySearchCriteria;
+    });
+</script>
+
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+  <title>dynamic-data-source demo</title>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../dynamic-data-source.html">
+  <link rel="import" href="../../t-shared-components/theme.html">
+  <link rel="import" href="../../t-input/t-input.html">
+  <link rel="import" href="../../t-table/t-table.html">
+
+  <style>
+    .container {
+      width: 600px;
+      margin: 20px auto;
+    }
+
+    t-input {
+      margin-bottom: 50px;
+    }
+  </style>
+
+</head>
+<body>
+
+  <div class="container layout vertical">
+    <!-- template is only used to bind the url -->
+    <template id="wrapper" is="dom-bind" url="http://www.json-generator.com/api/json/get/bQODrtAkHS?indent=2">
+      <t-input label="URL" value="{{url}}"></t-input>
+      <dynamic-data-source target="#target" property-name="seedData" url="{{url}}"
+        transform="function transform(inp) {
+          var columns = ['Name', 'Gender', 'Age'];
+          var out = inp.map(function(obj) {
+            return [obj.name, obj.gender, obj.age];
+          });
+
+          out.unshift(columns);
+
+          return out;
+        }">
+      </dynamic-data-source>
+      <t-table id="target" first-row-as-headers banded-rows></t-table>
+    </template>
+  </div>
+
+</body>
+</html>

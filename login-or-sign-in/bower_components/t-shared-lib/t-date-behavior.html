@@ -1,0 +1,169 @@
+<script>
+(function() {
+    TravelNxt = window.TravelNxt || {};
+    TravelNxt.Behaviors = TravelNxt.Behaviors || {};
+    /*
+    @polymerBehavior 
+    */
+    TravelNxt.Behaviors.DateBehavior = {
+
+        properties: {
+
+        },
+
+        _dateDiff: function(fromDate, toDate, skipSameDay) {
+            if (!fromDate || !toDate)
+                return 0;
+
+            if (typeof fromDate == 'string') {
+                fromDate = new Date(fromDate);
+            }
+
+            if (typeof toDate == 'string') {
+                toDate = new Date(toDate);
+            }
+
+            var diff = toDate - fromDate;
+            var divideBy = (24 * 60 * 60 * 1000);
+
+            diff = Math.floor(diff / divideBy);
+
+            if (!skipSameDay) {
+                diff = diff > 0 ? diff : 1;
+            }
+
+            return diff;
+        },
+
+        _getTimeDiff: function(fromTime, toTime, is24Hour) {
+
+            if (!fromTime || !toTime) {
+                console.error('fromTime & toTime are mandatory values!');
+            }
+
+            if (!is24Hour) {
+
+                if ((fromTime.toLowerCase().indexOf('am') < 0 && fromTime.toLowerCase().indexOf('pm') < 0) ||
+                    (toTime.toLowerCase().indexOf('am') < 0 && toTime.toLowerCase().indexOf('pm') < 0)) {
+                    console.error('Invalid time format!');
+                }
+
+                if (fromTime.toLowerCase().indexOf('am')) {
+                    fromTime = fromTime.toLowerCase().split('am')[0].trim();
+                    fromTime = parseFloat(fromTime) + 12;
+                } else {
+                    fromTime = fromTime.toLowerCase().split('pm')[0].trim();
+                    fromTime = parseFloat(fromTime)
+                }
+
+                if (toTime.toLowerCase().indexOf('am')) {
+                    toTime = toTime.toLowerCase().split('am')[0].trim();
+                    toTime = parseFloat(toTime) + 12;
+                } else {
+                    toTime = toTime.toLowerCase().split('pm')[0].trim();
+                    toTime = parseFloat(toTime)
+                }
+            }
+
+            if (isNaN(fromTime) || isNaN(toTime)) {
+                console.error('Invalid time format!');
+            }
+
+            return toTime - fromTime;
+        },
+
+        _getDateComponents: function(dateString) {
+
+            if (!dateString || dateString.constructor.name !== "DateString") {
+                try {
+                    dateString = new Date(dateString);
+                } catch (e) {
+                    return null;
+                }
+            }
+
+            var date = dateString.getDate();
+            var day = daysOfWeek[dateString.getDay()];
+            var month = monthMapping[dateString.getMonth()];
+            var year = dateString.getFullYear();
+
+            return {
+                day: day,
+                date: date,
+                shortMonth: month.short,
+                fullMonth: month.full,
+                monthIndex: month.index,
+                year: year
+            };
+        },
+        
+        _getDate: function(val) {
+            var dateObj = new Date(val);
+            var date = dateObj.getDate() < 10 ? '0' + dateObj.getDate() : dateObj.getDate();
+            var month = dateObj.toDateString().substr(3, 5);
+            return (date + " " + month).trim();
+        }
+    };
+
+    var monthMapping = [{
+        short: 'Jan',
+        full: 'January',
+        index:'01'
+    }, {
+        short: 'Feb',
+        full: 'February',
+        index:'02'
+    }, {
+        short: 'Mar',
+        full: 'March',
+        index:'03'
+    }, {
+        short: 'Apr',
+        full: 'April',
+        index:'04'
+    }, {
+        short: 'May',
+        full: 'May',
+        index:'05'
+    }, {
+        short: 'Jun',
+        full: 'June',
+        index:'06'
+    }, {
+        short: 'Jul',
+        full: 'July',
+        index:'07'
+    }, {
+        short: 'Aug',
+        full: 'August',
+        index:'08'
+    }, {
+        short: 'Sep',
+        full: 'September',
+        index:'09'
+    }, {
+        short: 'Oct',
+        full: 'October',
+        index:'10'
+    }, {
+        short: 'Nov',
+        full: 'November',
+        index:'11'
+    }, {
+        short: 'Dec',
+        full: 'December',
+        index:'12'
+    }];
+
+    var daysOfWeek = [
+        "Sunday",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+    ];
+
+})();
+</script>

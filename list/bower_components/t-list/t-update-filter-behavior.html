@@ -1,0 +1,229 @@
+<script>
+TravelNxt = window.TravelNxt || {};
+TravelNxt.Behaviors = TravelNxt.Behaviors || {};
+TravelNxt.Behaviors.UpdateFiltersBehavior = {
+    properties: {
+        _productType: {
+            type: String,
+            value: 'Car'
+        },
+
+        _allowedFilterCategories: {
+            tyepe: Array,
+            value: ['Category']
+        }
+    },
+
+    modifyFilters: function (inventories, filters, inputFilters, productType) {
+        //Map filters with inventory objects
+        if (inputFilters) {
+            for (var i = 0; i < inputFilters.length; i++) {
+                if (this._allowedFilterCategories.indexOf(inputFilters[i].category) < 0) {
+                    return null;
+                }
+            }
+        }
+
+        var filtersMapping = this._getInverntoryObjectsVsFilterTypeMapping();
+        var buildFilters = {};
+
+        if (productType) {
+            this._productType = productType;
+        }
+
+        //Find new values of filters from current results set
+        var behavior = this;
+        inventories.forEach(function(inventory) {
+            Object.keys(filtersMapping).forEach(function(filterItem) {
+                var mappedData = filtersMapping[filterItem];
+                var context, totalFareComponent;
+
+                if (mappedData.hierarchy) {
+                    context = behavior._traverseToHierarchy(mappedData.hierarchy, inventory);
+                } else {
+                    context = inventory;
+                }
+
+                if (mappedData.executeFunctionName) {
+                    totalFareComponent = behavior._executeFunctionByName(mappedData.executeFunctionName, behavior, context, mappedData, buildFilters);
+                }
+            });
+        });
+
+        //update Filters existing filters
+        filters.forEach(function(filter) {
+            var buildFilter = buildFilters[filter.category];
+
+            if (buildFilter && filter.type === "Range") {
+                filter.items[0].value = buildFilter.min.value
+                filter.items[0].displayValue = buildFilter.min.displayValue
+                filter.items[1].value = buildFilter.max.value
+                filter.items[1].displayValue = buildFilter.max.displayValue
+            }
+            else if (buildFilter && filter.type === "Options") {
+                filter.items.forEach(function(item) {
+                    var itemCount = null;
+                    Object.keys(buildFilter).forEach(function (filterItem) {
+                        if(filterItem.toLowerCase() == item.label.toLowerCase()){
+                            itemCount = buildFilter[filterItem];
+                        }
+                    });
+
+                    if (item.additionalInfo && item.additionalInfo.length) {
+                          item.additionalInfo[0].value = itemCount ? itemCount : "0";
+                    }
+                });
+            }
+        });
+
+        //Pass on new filters to t-filters
+        return filters;
+    },
+
+    _buildPriceFilter: function (context, mappedData, buildFilters) {
+                
+        totalFareComponent = context[mappedData.objectNames[0]].filter(function(component){
+            return component.type == "TotalFare";
+        })[0];
+
+        if (!buildFilters.Price) {
+            buildFilters.Price = {};
+        }
+
+        if (totalFareComponent) {
+            if (buildFilters.Price.min && buildFilters.Price.max) {
+                if (buildFilters.Price.min.value > totalFareComponent.money.amount) {
+                    buildFilters.Price.min.value = totalFareComponent.money.amount;
+                    buildFilters.Price.min.displayValue = totalFareComponent.money.displayAmount;
+                }
+                if (buildFilters.Price.max.value < totalFareComponent.money.amount) {
+                    buildFilters.Price.max.value = totalFareComponent.money.amount;
+                    buildFilters.Price.max.displayValue = totalFareComponent.money.displayAmount;
+                }
+            } else {
+                buildFilters.Price.min = {
+                    displayValue: totalFareComponent.money.displayAmount,
+                    value: totalFareComponent.money.amount
+                };
+                buildFilters.Price.max = {
+                    displayValue: totalFareComponent.money.displayAmount,
+                    value: totalFareComponent.money.amount
+                };
+            }
+        }
+    },
+
+    _buildCarLocationFilter: function (context, mappedData, buildFilters) {
+        //car locations are in terminal, at airport which are provided in itinerary level
+        
+        if (!buildFilters.Location) {
+            buildFilters.Location = {
+                "In terminal": 0,
+                "Off terminal": 0,
+                "At airport": 0,
+                "Off airport": 0
+            }
+        }
+
+        for (var i = 0; i < mappedData.objectNames.length; i++) {
+            if (context[mappedData.objectNames[i]]) {
+                mappedData.objectNames[i] == "atAirport" ? buildFilters.Location["At airport"]++ : buildFilters.Location["In terminal"]++
+            } else if (mappedData.objectNames[i] == "inTerminal"){
+                buildFilters.Location["Off terminal"]++ ;
+            } else if (mappedData.objectNames[i] == "atAirport"){
+                buildFilters.Location["Off airport"]++ ;
+            }
+        }
+    },
+
+    _buildOptionsFilter: function (context, mappedData, buildFilters) {
+        if (!buildFilters[mappedData.filterName]) {
+            buildFilters[mappedData.filterName] = {};
+        }
+
+        if (!buildFilters[mappedData.filterName][context[mappedData.objectNames[0]]]) {
+            buildFilters[mappedData.filterName][context[mappedData.objectNames[0]]] = 1;
+        } else {
+            buildFilters[mappedData.filterName][context[mappedData.objectNames[0]]]++ ;
+        }
+    },
+
+    _buildCarFeaturesFilter: function (context, mappedData, buildFilters) {
+        if (!buildFilters.Features) {
+            buildFilters.Features = {
+                "Air conditioned": 0,
+                "Auto transmission": 0,
+                "Unlimited mileage": 0,
+                "Manual transmission": 0
+            }
+        }
+
+        for (var i = 0; i < mappedData.objectNames.length; i++) {
+            if (mappedData.objectNames[i] == "airConditioning") {
+                if (context[mappedData.objectNames[i]] && typeof context[mappedData.objectNames[i]] == "string" && context[mappedData.objectNames[i]].toLowerCase() == "yes") {
+                    buildFilters.Features["Air conditioned"] ++;
+                }
+            } else if(mappedData.objectNames[i] == "transmission"){
+                if (context[mappedData.objectNames[i]] && typeof context[mappedData.objectNames[i]] == "string" && context[mappedData.objectNames[i]].toLowerCase() == "automatic") {
+                    buildFilters.Features["Auto transmission"] ++;
+                } else {
+                    buildFilters.Features["Manual transmission"]++;
+                }
+            } else if(mappedData.objectNames[i] == "mileage"){
+                if (context[mappedData.objectNames[i]] && context[mappedData.objectNames[i]].isUnlimited) {
+                    buildFilters.Features["Unlimited mileage"] ++;
+                }
+            }
+        }
+    },
+
+    _traverseToHierarchy: function (hierarchy, context) {
+        var namespaces = hierarchy.split(".");
+        if (namespaces) {
+            for (var i = 0; i < namespaces.length; i++) {
+                context = context[namespaces[i]];
+            }
+        }
+        return context;
+    },
+
+    _executeFunctionByName: function (functionName, context /*, args */) {
+        var args = [].slice.call(arguments, 2);
+        var namespaces = functionName.split(".");
+        var func = namespaces.pop();
+        for(var i = 0; i < namespaces.length; i++) {
+            context = context[namespaces[i]];
+        }
+        return context[func].apply(context, args);
+    },
+
+    _getInverntoryObjectsVsFilterTypeMapping: function () {
+        var carFiltersMapping = {
+            "Price" : {
+                objectNames: ["components"],
+                hierarchy: "fare",
+                executeFunctionName: "_buildPriceFilter"
+            },
+            "Location" : {
+                objectNames: ["atAirport", "inTerminal"],
+                hierarchy: "pickupInfo",
+                executeFunctionName: "_buildCarLocationFilter"
+            },
+            "Brand" : {
+                objectNames: ["name"],
+                hierarchy: "brand",
+                executeFunctionName: "_buildOptionsFilter",
+                filterName: "Brand"
+            },
+            "Features" : {
+                objectNames: ["airConditioning", "transmission", "mileage"],
+                executeFunctionName: "_buildCarFeaturesFilter"
+            }
+        }
+
+        if (this._productType === "Car") {
+            return carFiltersMapping;
+        }
+    },
+};
+</script>

@@ -1,0 +1,25 @@
+{
+    "name": "Pagination",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "pageCount": {
+                    "name": "pageCount",
+                    "type": "number",
+                    "value": 1
+                },
+                "pageNumber": {
+                    "name": "pageNumber",
+                    "type": "number",
+                    "value": 1
+                },
+                "pageSize": {
+                    "name": "pageSize",
+                    "type": "number",
+                    "value": 10
+                }
+            }
+        }
+    ]
+}

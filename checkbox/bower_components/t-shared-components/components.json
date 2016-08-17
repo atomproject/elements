@@ -1,0 +1,166 @@
+[
+	{
+		"category": "dataComponents",
+		"DisplayName": "Data Elements",
+		"components":[
+			{
+				"name": "t-table",
+				"displayName": "Table",
+				"icon": "Table"
+			}
+		]
+	},
+	{
+		"category": "formComponents",
+		"DisplayName": "Form Basic Elements",
+		"components":[
+			{
+				"name": "t-input",
+				"displayName": "Input Field",
+				"icon": "Input_Field"
+
+			},
+			{
+				"name": "t-button",
+				"displayName": "Button",
+				"icon": "Button"
+
+			},
+			{
+				"name": "t-radio-group",
+				"displayName": "Radio List",
+				"icon": "Radio_List"
+
+			},
+			{
+				"name": "t-checkbox-group",
+				"displayName": "Checkbox List",
+				"icon": "Checkbox"
+
+			},
+			{
+				"name": "t-dropdown",
+				"displayName": "Dropdown",
+				"icon": "Dropdown"
+
+			},
+			{
+				"name": "t-slider",
+				"displayName": "Slider",
+				"icon": "Slider"
+			},
+			{
+				"name": "t-colorpicker",
+				"displayName": "Color Picker",
+				"icon": "Color_Palette"
+			},
+			{
+				"name": "t-autosuggest",
+				"displayName": "Auto Suggest",
+				"icon": "Autosuggest"
+			},
+			{
+				"name": "t-section-header",
+				"displayName": "Section Header",
+				"icon": "Section_Header"
+			},
+			{
+				"name": "t-calendar",
+				"displayName": "Calendar",
+				"icon": "Calendar"
+			},
+			{
+				"name": "t-stepper",
+				"displayName": "Stepper",
+				"icon": "Calendar"
+			}
+		]
+	},
+	{
+		"category": "compositeformComponents",
+		"DisplayName": "Form Composite Elements",
+		"components":[]
+	},
+	{
+		"category": "pageComponents",
+		"DisplayName": "Page Elements",
+		"components":[
+			{
+				"name": "t-loader",
+				"displayName": "Loader",
+				"icon": "Loader"
+			},
+			{
+				"name": "t-progress",
+				"displayName": "Progress Bar",
+				"icon": "Progress_bar"
+			},
+			{
+				"name": "t-image",
+				"displayName": "Image",
+				"icon": "Image"
+			},
+			{
+				"name": "google-youtube",
+				"displayName": "Youtube Video",
+				"icon": "Video"
+			},
+			{
+				"name": "google-map",
+				"displayName": "Google Map",
+				"icon": "Map"
+			},
+			{
+				"name": "t-tabs",
+				"displayName": "Tabs",
+				"icon": "Map"
+			},
+			{
+				"name": "t-list",
+				"displayName": "List",
+				"icon": "List"
+			},
+			{
+				"name": "device-view",
+				"displayName": "Device view",
+				"icon": "Calendar"
+			}
+		]
+	},
+	{
+		"category": "travelComponents",
+		"DisplayName": "Travel Elements",
+		"components":[
+			{
+				"name": "t-air-search",
+				"displayName": "AirSearch",
+				"icon": "Flight"
+			},
+			{
+				"name": "t-home-header",
+				"displayName": "App header",
+				"icon": "Calendar"
+			},
+			{
+				"name": "t-app-footer",
+				"displayName": "App footer",
+				"icon": "Calendar"
+			},
+			{
+				"name": "t-creditcard",
+				"displayName": "Payment form",
+				"icon": "Calendar"
+			},
+			{
+				"name": "t-result-item",
+				"displayName": "Flight Item",
+				"icon": "Flight"
+			},
+			{
+				"name": "t-faredetails",
+				"displayName": "Fare details",
+				"icon": "Calendar"
+			}
+		]		
+	}
+]

@@ -1,0 +1,79 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../t-shared-lib/t-date-behavior.html">
+<!--
+    `<t-activity-search-decorator>` is a polymer component that generates the activity details in order.
+
+
+
+    Basic usage
+    `
+        <t-activity-search-decorator hide-icon
+            activity-name="{{selectedActivity.name}}"
+            check-in="{{parseDate(searchCriteria.startDate.date)}}"
+            check-out="{{parseDate(searchCriteria.endDate.date)}}">
+        </t-activity-search-decorator>`
+-->
+<dom-module id="t-activity-search-decorator">
+    <style>
+    </style>
+    <template>        
+    </template>
+</dom-module>
+<script>
+    Polymer({
+
+        is: 't-activity-search-decorator',
+
+        behaviors: [
+            TravelNxt.Behaviors.DateBehavior
+        ],
+
+        observers:[
+            'compileActivitySearchCriteria(input)'
+        ],
+
+        properties: {
+            //the data object to bind to populate data
+            input: {
+                type: Object
+            },
+
+            /**
+             * Stores output of the decorator
+             * @type {Object}
+             */
+            output: {
+                type: Object,
+                notify: true
+            }
+        },
+
+        compileActivitySearchCriteria: function (searchCriteria) {
+
+            if (!searchCriteria || !searchCriteria.location) {
+                return;
+            }
+
+            var modifiedObject = {};
+
+            //Location
+            modifiedObject.startLocation = searchCriteria.location.name;
+
+            if (searchCriteria.location.stateCode && searchCriteria.location.stateCode.length) {
+                modifiedObject.startLocation += ", " + searchCriteria.location.stateCode;
+            }
+
+            if (searchCriteria.location.countryCode && searchCriteria.location.countryCode.length) {
+                modifiedObject.startLocation += ", " + searchCriteria.location.countryCode;
+            }
+
+            //Date
+            modifiedObject.startDate = this._getDate(searchCriteria.fromDate);
+            modifiedObject.endDate = this._getDate(searchCriteria.toDate);
+
+            this.output = modifiedObject;
+        }
+
+        
+    });
+</script>

@@ -1,0 +1,25 @@
+{
+    "name": "Address",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "baseGeoApi": {
+                    "name": "baseGeoApi",
+                    "type": "string",
+                    "value": "http://demo.travelnxt.com/api/Content"
+                },
+                "countryApi": {
+                    "name": "countryApi",
+                    "type": "string",
+                    "value": "http://demo.travelnxt.com/api/Content/countries"
+                },
+                "queryParams": {
+                    "name": "queryParams",
+                    "type": "string",
+                    "value": "?cid=mystiquedemo&token=w1q3rbau2uswx4awygaf4ell"
+                }
+            }
+        }
+    ]
+}

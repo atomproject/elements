@@ -1,0 +1,308 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../t-button/t-button.html" />
+<link rel="import" href="../iron-icons/iron-icons.html" />
+<link rel="import" href="swipe.html" />
+<dom-module id="t-carousel">
+
+<template>
+<style include="iron-positioning"></style>
+<style include="iron-flex">
+    :host{
+        display: block;
+        position: relative;
+    }
+    :host[zoomed]{
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1;
+        height: 100%;
+        width: 100%;
+        background: rgba(0,0,0,0.5);
+    }
+    :host[zoomed] .container{
+       position: absolute;
+       top: 50%;
+       width: 100%;
+       -webkit-transform: translateY(-50%);
+       -ms-transform: translateY(-50%);
+       -o-transform: translateY(-50%);
+       transform: translateY(-50%);
+    }
+
+    .swipe {
+      overflow: hidden;
+      visibility: hidden;
+      position: relative;
+    }
+    .swipe-wrap {
+      overflow: hidden;
+      position: relative;
+    }
+    .swipe-wrap ::content > * {
+      width:100%;
+      position: relative;
+    }
+    .arrow{
+        position: absolute;
+        top: 50%;
+        -webkit-transform: translate(0, -50%);
+        -ms-transform: translate(0, -50%);
+        -o-transform: translate(0, -50%);
+        transform: translate(0, -50%);
+        z-index: 1;
+    }
+    .arrow.left{
+        left: 0;
+    }
+    .arrow.right{
+        right: 0;
+    }
+    t-button[only-icon],
+    .pagination{
+        background: rgba(0,0,0,0.5);
+    }
+    t-button ::content iron-icon,.pagination{
+        color: var(--grey-two,#bbbbbb);
+    }
+    .pagination{
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-weight: 100;
+        font-size: var(--font-12,12px);
+        z-index: 1;
+    }
+    #backoverlay{
+        display: none;
+    }
+    :host[zoomed] #backoverlay{
+        display: block;
+        z-index:-1;
+        background: rgba(0,0,0,0.8);
+    }
+</style>
+<div class="container">
+    
+    <div id="mySwipe" class="swipe" >
+      <div class="layout horizontal swipe-wrap" on-click='_checkLightBox'>
+        <content id="contentTag" select="*"></content>
+      </div>
+    </div>
+    <template is="dom-if" if="{{checkDistributedNodes(totalSlides)}}">
+        <template is="dom-if" if="[[!noPagination]]">
+            <div class="pagination">
+                <span>{{_getSelected(selected)}}</span>&nbsp;/&nbsp;<span>{{totalSlides}}</span>
+            </div>
+        </template>
+        <template is="dom-if" if="[[!noArrow]]">
+              <t-button class="arrow left" only-icon ico="icons:chevron-left" on-click="prev">prev</t-button>
+              
+              <t-button class="arrow right" only-icon ico="icons:chevron-right" on-click="next">next</t-button>
+        </template>
+    </template>
+</div>
+<div id="backoverlay" class="fit " on-click='_checkLightBox'>
+</div>
+
+</template>
+</dom-module>
+
+<script>
+    Polymer({
+        is: "t-carousel",
+
+        properties: {
+
+            /**
+             * Integer (default:0) - index position Swipe should start at
+             */
+            startSlide: {
+                type: Number,
+                value: 0
+            },
+
+            /**
+             * Integer (default:300) - speed of prev and next transitions in milliseconds.
+             */
+            speed: {
+                type: Number,
+                value: 300
+            },
+
+            /**
+             * Integer - slide show interval time & should be grater than zero (time in milliseconds between slides)
+             */
+            autoSlideInterval: {
+                type: Number,
+                value: 10000
+            },
+
+            /**
+             * Boolean to turn on the zoom
+             */
+            lightBox: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * Boolean to turn on the zoom
+             */
+            zoomed: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute:true,
+                notify: true
+            },
+
+            /**
+             * Boolean (default:true) - create an infinite feel with no endpoints
+             */
+            continuous: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * Boolean (default:false) - stop any touches on this container from scrolling the page
+             */
+            disableScroll: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * Boolean (default:false) - remove arrow from the slide
+             */
+            noArrow: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * Boolean (default:false) - remove arrow from the slide
+             */
+            noPagination: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * Boolean (default:false) - stop event propagation
+             */
+            stopPropagation: {
+                type: Boolean,
+                value: false
+            },
+
+            mySwipe: {
+                type: Object,
+                value: function () {
+                    return null;
+                },
+                notify: true
+            },
+
+            selected: {
+                type: Number,
+                notify: true
+            },
+
+            totalSlides: {
+                type: Number,
+                notify: true
+            },
+
+            /*
+                If true, will setup carousel on element attached event
+             */
+            autoSetupCarousel: {
+                type: Boolean,
+                value: false
+            }
+        },
+
+        checkDistributedNodes: function(totalSlides){
+            return Polymer.dom(this.$.contentTag).getDistributedNodes().length > 1;
+        },
+
+        attached: function () {
+            if(this.autoSetupCarousel){
+                this.setUpCarousel();
+            }
+        },
+
+        _checkLightBox:function(){
+            if(this.lightBox){
+                this.zoomed = !this.zoomed;
+                this.mySwipe.setup();
+            }
+        },
+
+        _getSelected: function (selected) {
+            return selected + 1;
+        },
+
+        _setSelected: function () {
+            this.selected = this.mySwipe.getPos();
+        },
+
+        /**
+         * Function - Setup carousel
+         */
+        setUpCarousel:function(){
+            var component = this;
+            this.selected = this.startSlide;
+            this.mySwipe = new Swipe(component.$.mySwipe, {
+                startSlide: this.startSlide,
+                speed: this.speed,
+                auto: this.autoSlideInterval,
+                continuous: this.continuous,
+                disableScroll: this.disableScroll,
+                stopPropagation: this.stopPropagation,
+                callback: function (index, elem) {
+
+                    /**
+                     * Function - runs at slide change.
+                     */
+                    component.fire('slide-change', index, elem);
+                    component._setSelected();
+                },
+                transitionEnd: function (index, elem) {
+
+                    /**
+                     * Function - runs at the end slide transition.
+                     */
+                    component.fire('slide-finish', index, elem);
+                }
+            });
+
+            this.totalSlides = this.mySwipe.getNumSlides();
+        },
+
+        /**
+         * Function - slide to prev
+         */
+        prev: function () {
+            this.mySwipe.prev()
+        },
+
+        /**
+         * Function - slide to next
+         */
+        next: function () {
+            this.mySwipe.next()
+        },
+
+        /**
+         * Function slide to set index position (duration: speed of transition in milliseconds)
+         */
+        slide: function (index, duration) {
+            this.mySwipe.slide(index, duration);
+        }
+    });
+</script>

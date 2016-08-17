@@ -1,0 +1,50 @@
+{
+  "name": "t-autosuggest",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-autosuggest",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-dropdown": "PolymerElements/iron-dropdown#^1.0.5",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.3",
+    "t-input": "atomelements/t-input#^1.0.0",
+    "paper-material": "PolymerElements/paper-material#^1.0.2",
+    "t-loader": "atomelements/t-loader#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "^0.7.14",
+    "t-shared-components": "atomelements/t-shared-components#^1.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6"
+  },
+  "_release": "346e4fabe1",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "346e4fabe128b2a3a88734894f17d503529d89f2"
+  },
+  "_source": "git://github.com/atomelements/t-autosuggest.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-autosuggest",
+  "_direct": true
+}

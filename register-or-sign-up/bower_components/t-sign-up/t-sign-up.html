@@ -1,0 +1,254 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-notify/t-notify.html">
+<link rel="import" href="../t-loader/t-loader.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../t-input/t-input.html">
+<link rel="import" href="../t-calendar/t-calendar.html">
+<link rel="import" href="../t-password-input/t-password-input.html">
+<link rel="import" href="../t-button/t-button.html">
+<link rel="import" href="../t-text-container/travel-element-styles.html">
+<link rel="import" href="./t-sign-up-api.html">
+<!--
+    `t-sign-up` is a registration component used for registrating new users.
+    This component considers email as default username.
+    The email id is validated for its uniqueness using API call.
+    'on-t-sign-up-validate-email' event is fired when validation needs to be done.
+    The event handler should use 't-user-availability-api' component's 'checkAvailability' method to check availability.
+    'on-t-sign-up-register' is fired while saving user data.
+    The event handler should use 't-sign-up-api' component's 'signUp' method to save user.
+    't-sign-up-go-signin' event is fired once the user is successfully registered.
+
+Example:
+        without event handlers
+        <t-sign-up></t-sign-up>
+
+        with event handlers
+        <t-sign-up
+            on-t-sign-up-register="registerEventHandler" 
+            on-t-sign-up-validate-email="checkAvailabilityEventHandler">
+        </t-sign-up>-->
+<dom-module id="t-sign-up">
+    <template>
+        <style include="iron-flex"></style>
+        <style include="iron-positioning"></style>
+        <style include="travel-element-styles">
+        :host {
+            font-family: var(--primary-font-family, 'Open sans');
+            font-size: var(--font-12, 12px);
+            display: block;
+        }
+        
+        .loader-container {
+            position: relative;
+        }
+        
+        #loader {
+            position: absolute;
+            right: 10px;
+            bottom: 5px;
+            transform: scale(0.5);
+        }
+        </style>
+        <t-notify id="notify"></t-notify>
+        <div class="secondary-text section">
+            <t-input id="firstName" value="{{firstName}}" type="text" error-message="You missed this." pattern="[a-zA-Z ']*" max-length="50" label="First Name" class="margin-bottom-medium" required auto-validate></t-input>
+            <t-input id="lastName" value="{{lastName}}" type="text" error-message="You missed this." pattern="[a-zA-Z ']*" max-length="50" label="Last Name" class="margin-bottom-medium" required auto-validate></t-input>
+            <t-calendar id="dateOfBirth" format="dd mmm, yyyy" selected-date="{{dateOfBirth}}" max="{{_getMaxDateOfBirth(minAge)}}" label="Date Of Birth" is-dob class="margin-bottom-medium" error-message="You missed this." required></t-calendar>
+            <div class="loader-container">
+                <t-input id="emailId" value="{{emailId}}" type="text" label="Email" on-change="_userNameAvailability" class="margin-bottom-medium" pattern='^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$' error-message="Invalid email!" required></t-input>
+                <template is="dom-if" if="[[userChecking]]">
+                    <t-loader id="loader" active></t-loader>
+                </template>
+            </div>
+            <label class="margin-bottom block">Note : email will be used as your username.</label>
+            <t-password-input id="password" value="{{password}}" class="margin-bottom-medium" required>
+            </t-password-input>
+            <label class="margin-bottom block">By clicking 'Create Account' button, you agree to
+                <a href$="[[policiesUrl]]" target="_blank" class$="{{_checkIfUrl(policiesUrl)}}">policy</a> and
+                <a href$="[[termsUrl]]" target="_blank" class$="{{_checkIfUrl(termsUrl)}}">terms of use</a>.
+            </label>
+            <t-button id="btnCreateAccount" class="primary block margin-bottom" label="Create Account" on-click="_saveNewUser">
+            </t-button>
+            <div class="margin-bottom">If you are an existing user <a class="link-style" on-tap="_goToSignInPage">sign in</a> here</div>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-sign-up',
+
+    properties: {
+
+        /**
+         * first name of user.
+         * This field is required.
+         */
+        firstName: {
+            type: String,
+            notify: true
+        },
+
+        /**
+         * last nae of user.
+         * This field is required.
+         */
+        lastName: {
+            type: String,
+            notify: true
+        },
+
+        /**
+         * Email id of user.
+         * This is a required field and is used as username in application.
+         */
+        emailId: {
+            type: String,
+            notify: true
+        },
+
+        /**
+         * Password.
+         * Atleast 8 characters.
+         */
+        password: {
+            type: String,
+            notify: true
+        },
+
+        /**
+         * Pass a string as URL for policy
+         */
+        policiesUrl: {
+            type: String
+        },
+
+        /**
+         *  Pass a string as URL for term and condition
+         */
+        termsUrl: {
+            type: String
+        },
+
+        /**
+         *  Pass the minimum age of the User to get registered
+         */
+        minAge: {
+            type: Number,
+            value: 11
+        }
+
+
+    },
+
+    _checkIfUrl: function(url) {
+        if (url.length > 0) {
+            return 'link-style';
+        }
+    },
+
+    _getMaxDateOfBirth: function(minAge) {
+        var date = new Date();
+        return new Date(date.setFullYear(date.getFullYear() - minAge));
+    },
+
+    _userNameAvailability: function() {
+
+        if (!this.$.btnCreateAccount.disabled && this.emailId && this.$.emailId.validate()) {
+            this.fire('t-sign-up-validate-email', {
+                email: this.emailId
+            });
+            this.userChecking = true;
+            this.$.notify.active = false;
+        }
+    },
+
+    _saveNewUser: function() {
+        if (!this.validate() || this.$.btnCreateAccount.disabled)
+            return;
+        this.fire('t-sign-up-register', this._generateRequest());
+        this.$.notify.active = false;
+        this._disableButton(this.$.btnCreateAccount);
+    },
+
+    _goToSignInPage: function() {
+        this.fire('t-sign-up-go-signin');
+    },
+
+    _generateRequest: function() {
+        return {
+            email: this.emailId,
+            password: this.password,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            dateOfBirth: new Date(this.dateOfBirth)
+        };
+    },
+
+    /*Run the method when the response comes back with response */
+    onEmailValidateSuccess: function() {
+        this.userChecking = false;
+    },
+
+    /*Run the method when the response comes back with Already Used Email */
+    onEmailValidateFailure: function(response) {
+        if (!response || !response.message) {
+            console.error('response can not be null');
+            return;
+        }
+        this.userChecking = false;
+        this._notify(response);
+    },
+
+
+    /*Run the method when the response comes back with Already Used Email */
+    onSaveUserSuccess: function(response) {
+        if (!response) {
+            this._enableButton(this.$.btnCreateAccount);
+            console.error('response can not be null');
+        }
+    },
+
+    /*Run the method when the response comes back with Already Used Email */
+    onSaveUserFailure: function(response) {
+        if (!response || !response.message) {
+            console.error('response can not be null');
+            return;
+        }
+        this._enableButton(this.$.btnCreateAccount);
+        this._notify(response);
+    },
+    /**
+     * To run the validate method in the entire component
+     * This is a required field.
+     */
+    validate: function() {
+        var check = true;
+        var x = this.querySelectorAll('[required]');
+        for (var i = 0; i < x.length; i++) {
+            if (!x[i].validate()) {
+                check = false;
+            }
+        }
+        return check;
+    },
+
+    _notify: function(response) {
+        if (!response || !response.message)
+            return;
+
+        // this.$.notify.message = (response.code+ ' - ' || '')  + response.message;
+        this.$.notify.message = response.message;
+        this.$.notify.active = true;
+    },
+
+    _disableButton: function(element) {
+        element.disabled = true;
+    },
+
+    _enableButton: function(element) {
+        element.disabled = false;
+    }
+});
+</script>

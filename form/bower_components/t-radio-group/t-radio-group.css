@@ -1,0 +1,84 @@
+
+    :host{
+      outline:0;
+      display: block;
+      font-family: var(--primary-font-family);
+    }
+    :host ::content t-radio-button{
+      display: block;
+    } 
+    :host([label]) label{
+      color: var(--form-label-color, #777);
+      font-size: var(--form-label-size, 16px);
+      display: block;
+      margin-bottom: var(--form-label-margin, 10px);
+    }
+    ::content t-radio-button {
+      margin-top: var(--radio-button-item-margin, 14px);
+      line-height: 1;
+    }
+    ::content t-radio-button:first-child {
+      margin-top: 0!important;
+    }
+
+    :host([pill-button]) ::content t-radio-button:not([checked]){
+      opacity: 0.5;
+    }
+    :host([pill-button]) ::content iron-selector{
+      display: -webkit-inline-flex;
+      display: -ms-inline-flexbox;
+      display: inline-flex;
+      width: auto;
+      border: 1px solid;
+      border-radius: var(--standard-border-radius, 2px);
+      overflow: hidden;
+      border-color: var(--radio-button-checked-color, #e0e0e0);
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box;
+    }
+    :host([pill-button]) ::content t-radio-button{
+      display: inline-block;
+      margin-top: 0!important;
+      position: relative;
+      padding: 8px 10px;
+      background: transparent;
+      border-left: 1px solid ;
+      border-color: var(--radio-button-checked-color, #e0e0e0);
+    }
+    :host([pill-button]) ::content t-radio-button:first-child{
+      border-left: 0!important;
+    }
+    :host([pill-button]) ::content #radioContainer{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    :host([pill-button]) ::content #radioLabel {
+      margin-left: 0;
+    }
+    :host([pill-button]) ::content #offRadio,
+    :host([pill-button]) ::content #onRadio{
+      width: 100%;
+      height: 100%;
+      border-radius: 0;
+      padding: 0px;
+      border: 0;
+      top: 0;
+      left: 0;
+    }
+    :host([pill-button]) ::content paper-ripple{
+       display: none; 
+    }
+
+    
+:host([radio-right]) ::content t-radio-button #radioLabel {
+  margin-left: 0;
+  margin-right: 10px;
+}
+:host([radio-right]) ::content t-radio-button #radioContainer {
+  order:2;
+}

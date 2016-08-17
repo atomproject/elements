@@ -1,0 +1,50 @@
+{
+    "name": "Stepper",
+    "properties": [
+    {
+        "name": "Data",
+        "fields": {
+            "singularLabel": {
+                "name":"Singular Label",
+                "type": "string",
+                "value": "Adult"
+            },
+            "pluralLabel": {
+                "name":"Plural Label",
+                "type": "string",
+                "value": "Adults"
+            },
+            "secondaryLabel": {
+                "name":"Secondary Label",
+                "type": "string",
+                "value": "(>12 years)"
+            },
+            "ico": {
+                "name":"Icon",
+                "type": "iconset",
+                "value": "icons:face"
+            }
+        }
+    },{
+        "name": "Properties",
+        "fields": {
+            "styled": {
+                "name":"Other Style",
+                "type": "boolean",
+                "value": false
+            },
+            "min": {
+                "name": "Min Number",
+                "type": "range",
+                "min": 0,
+                "max": 99
+            },
+            "max": {
+                "name": "Max Number",
+                "type": "range",
+                "min": 1,
+                "max": 100
+            }
+        }
+    }]
+}

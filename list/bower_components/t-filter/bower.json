@@ -1,0 +1,48 @@
+{
+  "name": "t-filter",
+  "version": "1.2.9",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.0",
+    "iron-collapse": "PolymerElements/iron-collapse#^1.0.3",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.0",
+    "iron-icon": "PolymerElements/iron-icon#^1.0.4",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.3",
+    "iron-list": "PolymerElements/iron-list#^1.1.0",
+    "paper-item": "PolymerElements/paper-item#^1.0.2",
+    "t-button": "atomelements/t-button#^1.0.0",
+    "t-checkbox": "atomelements/t-checkbox#^1.1.0",
+    "t-header": "travelnxtElements/t-header#^1.0.0",
+    "t-input": "atomelements/t-input#^1.0.0",
+    "t-range": "atomelements/t-range#^1.0.0",
+    "t-starrating": "travelnxtElements/t-starrating#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0",
+    "t-calendar": "atomelements/t-calendar#^1.0.0"
+  },
+  "devDependencies": {
+    "webcomponentsjs": "^0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6"
+  }
+}

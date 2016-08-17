@@ -1,0 +1,264 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html" />
+<link rel="import" href="../t-text-container/travel-element-styles.html" />
+<!--
+`t-result-item` is a flight result itinerary component. 
+This component is ideally used in result page to repeat each flight item. 
+
+Example:
+    <t-result-item show-twelve-hour-clock></t-result-item>
+-->
+<dom-module id="t-result-item">
+    <template>
+    <style include="iron-flex"></style>
+    <style include="travel-element-styles">
+        :host {
+            display: block;
+            font-family: var(--primary-font-family, 'Open Sans');
+        }
+        
+        #resultItem {
+            font-size: 10px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+        
+        .resultItem__content {
+            margin: 0 10px;
+        }
+        
+        span,
+        .stops {
+            line-height: 15px;
+        }
+        
+        .min-width {
+            max-width: 20%;
+            min-width: 5px;
+            height: 20px;
+        }
+        
+        .content-section {
+            overflow: hidden;
+        }
+        
+        .time {
+            font-size: 14px;
+        }
+        
+        img {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .content-section::content .resultItem-roundTrip:nth-child(2) {
+            margin-top: 10px;
+        }
+        
+        .timeSection {
+            min-width: 135px;
+        }
+        :host([is-hotel-selected]) #resultItem{
+            background: rgba(153, 153, 153, 0.2);
+        }
+        </style>
+        <template is="dom-if" if="{{priceLeft}}">
+            <style>
+                :host([price-left]) .content-section {
+                    order: 2;
+                }
+                
+                :host([price-left]) .price {
+                    min-width: 60px;
+                    text-align: left;
+                }
+                
+                :host([price-left]) .min-width {
+                    max-width: 100%;
+                }
+                
+                :host([price-left]) .duration,
+                :host([price-left]) .stops {
+                    text-align: right;
+                }
+            </style>
+        </template>
+            <div class="layout horizontal center border-bottom section-small" id="resultItem" on-tap="_hilightItem">
+                <div class="layout flex content-section secondary-text">
+                    <template is="dom-repeat" items="[[itinerary.legs]]">
+                        <div class="flex layout horizontal center resultItem-roundTrip">
+                            <div class="layout ">
+                                <img src$="[[_getAirlineLogo(item.segments)]]" alt$="[[_getAirlineName(item.segments)]]">
+                            </div>
+                            <div class="layout horizontal flex center resultItem__content">
+                                <div class="layout vertical flex timeSection">
+                                    <div class="layout horizontal margin-bottom time ellipsis primary-text">
+                                        <span>[[_getTime(item.departureTime)]]</span>
+                                        <span>&nbsp;</span>
+                                        <span class="font-12">[[_getAMPM(item.departureTime)]]</span>
+                                        <span>&nbsp;-&nbsp;</span>
+                                        <span>[[_getTime(item.arrivalTime)]]</span>
+                                        <span>&nbsp;</span>
+                                        <span class="font-12">{{_getAMPM(item.arrivalTime)}}</span>
+                                    </div>
+                                    <span class="airlineName ellipsis">[[_getAirlineName(item.segments)]]</span>
+                                </div>
+                                <span class=" min-width"></span>
+                                <div class="layout flex vertical">
+                                    <span class="margin-bottom secondary-text duration">{{_getFormattedDuration(item.totalJourneyDuration)}}</span>
+                                    <div class="stops ellipsis">
+                                        {{_getFormattedStops(item.noOfStops)}}
+                                        <span>|</span> {{item.cabinType}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <div class="layout center price text-right">
+                    <div class="layout vertical font-16 primary-text font-semi">
+                        <span class="font-12 secondary-text margin-bottom font-normal">{{itinerary.minFare.fare.currency}}</span>
+                        <span>{{_trimPrice(itinerary.minFare.fare.amount)}}</span>
+                    </div>
+                </div>
+            </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-result-item',
+
+    properties: {
+
+        /*Itinerary is the API json object to pass in the component which will populate the data*/
+        itinerary: {
+            type: Object,
+            value: function() {
+                return null;
+            }
+        },
+
+        /*Pass true to switch to 12 hour clock*/
+        showTwelveHourClock: {
+            type: Boolean,
+            value: false
+        },
+
+        /*Pass true to change the layout to shift the pricing on the left.*/
+        priceLeft: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+        },
+
+        /*The value will pass a default airline image when there is no image/ to handle mixed airline scenario*/
+        defaultLogo: {
+            type: String
+        },
+        
+        /*property takes care of hilight effect upon selecting the item*/
+        isHotelSelected: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value:false
+        }
+    },
+
+    _getFormattedDuration: function(delta) {
+
+        // calculate (and subtract) whole days
+        var days = Math.floor(delta / 1440);
+        delta -= days * 1440;
+
+        // calculate (and subtract) whole hours
+        var hours = Math.floor(delta / 60);
+        delta -= hours * 60;
+
+        // calculate (and subtract) whole minutes
+        var minutes = delta;
+
+        var formattedDuration = '';
+        if (days > 0)
+            formattedDuration = days + 'd ' + hours + 'h ';
+        else
+            formattedDuration = hours + 'h ';
+
+        if (minutes > 0)
+            formattedDuration = formattedDuration + minutes + 'm';
+
+        return formattedDuration;
+    },
+
+    _getAirlineLogo: function(segments) {
+        var code = segments[0].airline.code;
+        for (var i = segments.length - 1; i >= 1; i--) {
+            if (segments[i].airline.code != code)
+                return this.defaultLogo;
+        };
+        return segments[0].airline.imageUrl;
+    },
+
+    _getAirlineName: function(segments) {
+        var code = segments[0].airline.code;
+        for (var i = segments.length - 1; i >= 1; i--) {
+            if (segments[i].airline.code != code)
+                return 'Mixed Airlines';
+        };
+        return segments[0].airline.name;
+    },
+
+    _getAMPM: function(date) {
+        if (this.showTwelveHourClock) {
+            if (date.time.indexOf('AM') >= 0)
+                return 'am';
+            if (date.time.indexOf('PM') >= 0)
+                return 'pm';
+        }
+    },
+
+    _get24HourTime: function(time) {
+        var hours = parseInt(time.substr(0, 2));
+        if (time.indexOf('AM') != -1) {
+            if (hours < 10)
+                time = '0' + time;
+            if (hours == 12)
+                time = time.replace('12', '00');
+        }
+        if (time.indexOf('PM') != -1 && hours < 12) {
+            time = time.replace(hours, (hours + 12));
+        }
+        return time.trim();
+    },
+
+    _getTime: function(dateTime) {
+        var time = dateTime.time;
+        if (!this.showTwelveHourClock) {
+            time = this._get24HourTime(time);
+        }
+        return time.replace(/(AM|PM)/, '').trim().toLowerCase();
+    },
+
+    _trimPrice: function(price) {
+        return parseInt(price);
+    },
+
+    _getFormattedStops: function(stops) {
+        switch (stops) {
+            case 0:
+                return "Non-stop";
+            case 1:
+                return stops + " Stop";
+            default:
+                return stops + " Stops";
+        }
+    },
+    
+    _hilightItem: function() {
+        this.isHotelSelected = true;
+    }
+
+});
+</script>

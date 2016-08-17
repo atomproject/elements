@@ -1,0 +1,44 @@
+{
+  "name": "t-icon-selector",
+  "version": "1.0.0",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#^1.0.3",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.3",
+    "neon-animation": "PolymerElements/neon-animation#^1.0.4",
+    "paper-button": "PolymerElements/paper-button#^1.0.3",
+    "paper-dialog": "PolymerElements/paper-dialog#^1.0.1",
+    "paper-dialog-scrollable": "PolymerElements/paper-dialog-scrollable#^1.0.1",
+    "t-input": "atomelements/t-input#^1.0.0",
+    "t-section-header": "atomelements/t-section-header#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "^0.7.14",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6",
+    "t-shared-components": "atomelements/t-shared-components#^1.0.0"
+  }
+}

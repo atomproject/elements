@@ -1,0 +1,56 @@
+{
+    "name": "Table",
+    "properties": [{
+        "name": "Properties",
+        "fields": {
+            "hasHeaderRow": {
+                "name": "Different Header Row",
+                "type": "boolean",
+                "value": true
+            },
+            "sortable": {
+                "name": "Sortable",
+                "type": "boolean",
+                "value": true
+            },
+            "searchable": {
+                "name": "Searchable",
+                "type": "boolean",
+                "value": true
+            },
+            "bandedRows": {
+                "name": "Banded Rows",
+                "type": "boolean",
+                "value": true
+            },
+            "hoverable": {
+                "name": "Hoverable Rows",
+                "type": "boolean",
+                "value": false
+            },
+            "firstRowAsHeaders": {
+                "name": "Headers From Data",
+                "type": "boolean",
+                "value": true
+            }
+        }
+    }, {
+        "name": "Data",
+        "fields": {
+            "seedData": {
+                "name": "Table Data",
+                "type": "array",
+                "value": [
+                    ["Student Name", "Gender", "Class Level", "Home State"],
+                    ["Alexandra", "Female", "4. Senior", "CA"],
+                    ["Andrew", "Male", "1. Freshman", "SD"],
+                    ["Anna", "Female", "1. Freshman", "NC"],
+                    ["Becky", "Female", "2. Sophomore", "SD"]
+                ],
+                "url": "http://www.json-generator.com/api/json/get/bQODrtAkHS?indent=2",
+                "translator": "function translator(inp) {\nvar out, cols; if (!inp || !inp.length || !(inp[0] instanceof Object)) {throw('Invalid input type');} cols = Object.keys(inp[0]); out = inp.map(function(obj) {return cols.map(function(key) {return obj[key]; }); }); out.unshift(cols); return out; }",
+                "transform": "function transform(inp) {return inp.map(function(obj) {return {name: obj.name, age: obj.age }; });}"
+            }
+        }
+    }]
+}

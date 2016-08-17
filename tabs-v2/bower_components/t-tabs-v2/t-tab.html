@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../paper-tabs/paper-tab.html" />
+
+<dom-module id="t-tab">
+	<template>
+		<style>
+			:host{
+				outline: 0;
+			}
+			:host.iron-selected ::content .tab-content{
+				opacity: 1!important;
+			}
+			paper-tab{
+				height: 100%;
+			}
+			::content a {
+				text-decoration: none;
+				color: inherit;
+			}
+		</style>
+
+		<paper-tab noink>
+        	<content></content>
+		</paper-tab>
+	</template>
+</dom-module>
+
+<script>
+	Polymer({
+		is: "t-tab",
+
+
+	});	
+</script>

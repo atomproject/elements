@@ -1,0 +1,25 @@
+{
+    "name": "Form",
+    "properties": [{
+        "name": "Properties",
+        "fields": {
+            "labelPosition": {
+                "name": "Label Alignment",
+                "type": "options",
+                "values": ["Top", "Inline"],
+                "value": "Top"
+            },
+            "actionButton": {
+                "name": "Action Button",
+                "type": "options",
+                "values": ["Left", "Right", "Full"],
+                "value": "Left"
+            },
+            "submitButtonLabel": {
+                "name": "Action Button Label",
+                "type": "string",
+                "value": "Submit"
+            }
+        }
+    }]
+}

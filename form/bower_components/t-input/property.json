@@ -1,0 +1,39 @@
+{
+    "name": "Input Field",
+    "properties": [
+    {
+        "name": "Data",
+        "fields": {
+            "label": {
+                "name":"Label",
+                "type": "string",
+                "value": "label"
+            }
+        }
+    },{
+        "name": "Properties",
+        "fields": {
+            "required": {
+                "name": "Mandatory Field",
+                "type": "boolean",
+                "value": true
+            },
+            "charCounter": {
+                "name":"Character Counter",
+                "type": "boolean",
+                "value": false
+            },
+            "maxLength": {
+                "name": "Max. Characters",
+                "type": "range",
+                "min": 0,
+                "max": 20
+            },
+            "multiLine": {
+                "name": "Allow Multi Line Input",
+                "type": "boolean",
+                "value": false
+            }
+        }
+    }]
+}

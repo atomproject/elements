@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+    <title>t-mystique-auth demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../t-mystique-auth.html">
+    <link rel="import" href="../../t-shared-components/theme.html">
+
+    <style>
+        body {
+            font-family: 'Open Sans', monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <template is="dom-bind">
+        <span>The acquired token is: </span><b>{{response.authenticationToken}}</b>
+        <t-mystique-auth name="mystiquedemo"
+            cid="20043"
+            url="http://demo.travelnxt.com/api/Authentication/Authenticate/context"
+            token-response="{{response}}">
+        </t-mystique-auth>
+    </template>
+</body>
+
+</html>

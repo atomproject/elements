@@ -1,0 +1,49 @@
+{
+  "name": "t-data-feeder",
+  "authors": [
+    "Rahul Pilkhwal <rahul.pilkhwal@tavisca.com>",
+    "Shailesh Kumar Srivastava <ssrivastava@tavisca.com>",
+    "Sounak Pal <spal@tavisca.com>",
+    "Ajinkya Tejankar <tejankarajinkya@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "keywords": [
+    "Polymer",
+    "Web",
+    "Components"
+  ],
+  "homepage": "https://github.com/atomelements/t-data-feeder",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-icon": "PolymerElements/iron-icon#^1.0.4",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.3",
+    "iron-list": "PolymerElements/iron-list#^1.1.0",
+    "t-input": "atomelements/t-input#^1.0.0",
+    "polymer": "Polymer/polymer#^1.0.0"
+  },
+  "devDependencies": {
+    "web-component-tester": "*",
+    "webcomponentsjs": "^0.7.14",
+    "t-radio-group": "atomelements/t-radio-group#^1.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.6"
+  },
+  "_release": "0868dc5807",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "0868dc58078e69220a13d3c57dc906610034dda5"
+  },
+  "_source": "git://github.com/atomelements/t-data-feeder.git",
+  "_target": "master",
+  "_originalSource": "atomelements/t-data-feeder",
+  "_direct": true
+}

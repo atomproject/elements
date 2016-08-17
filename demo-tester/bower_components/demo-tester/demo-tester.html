@@ -1,0 +1,112 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<dom-module id="demo-tester">
+  <template>
+    <style>
+      :host {
+        display: block;
+        font-family: var(--primary-font-family, 'Open Sans');
+      }
+
+      code {
+        color: #df5000;
+      }
+
+      h4, h3, h2 {
+        font-weight: 600;
+        color: var(--header-text-color, #333);
+      }
+    </style>
+
+    <div class="section">
+      <h4>Boolean Value: <code>{{boolean}}</code></h4>
+    </div>
+
+    <div class="section">
+      <h4>Pill Options: <code>{{pillOptions}}</code></h4>
+    </div>
+
+    <div class="section">
+      <h4>Range Value: <code>{{range}}</code></h4>
+    </div>
+
+    <div class="section">
+      <h4>Dropdown Options: <code>{{dropdownOptions}}</code></h4>
+    </div>
+
+    <div class="section">
+      <h4>String Value: <code>{{input}}</code></h4>
+    </div>
+
+    <div class="section">
+      <h4>Icon Value: <code>{{icon}}</code></h4>
+    </div>
+
+    <div class="section">
+      <h4>List Values: <code>{{serialize(list)}}</code></h4>
+    </div>
+
+    <div class="section">
+      <h4>Object Value: <code>{{serialize(object)}}</code></h4>
+    </div>
+
+    <div class="section">
+      <h4>Array Value: <code>{{serialize(array)}}</code></h4>
+    </div>
+
+    <div class="section">
+      <h4>URL Value: <code>{{serialize(url)}}</code></h4>
+    </div>
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'demo-tester',
+
+      properties: {
+        input: {
+          type: String
+        },
+
+        icon: {
+          type: String
+        },
+
+        boolean: {
+          type: Boolean
+        },
+
+        list: {
+          type: Array
+        },
+
+        pillOptions: {
+          type: String
+        },
+
+        dropdownOptions: {
+          type: String
+        },
+
+        range: {
+          type: Number
+        },
+
+        object: {
+          type: Object
+        },
+
+        array: {
+          type: Array
+        },
+
+        url: {
+          type: String
+        }
+      }
+    });
+  })();
+  </script>
+</dom-module>

@@ -1,0 +1,112 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="t-checkviewport-behaviour.html">
+<!--<link rel="import" href="../iron-flex-layout/classes/iron-flex-layout.html"> -->
+<dom-module id="t-notify">
+    <template>
+        <style include="iron-flex">
+        :host {
+            display: none;
+            color: var(--light-color, #fff);
+            padding: 15px 10px;
+            font-family: var(--primary-font-family, 'Open sans');
+        }
+        
+        #body {
+            font-size: var(--font-14, 14px);
+            line-height: normal;
+        }
+        
+        .message{
+            margin-left: 10px;  
+        }
+
+        :host([type="error"]) #done,
+        :host([type="warn"]) #done,
+        :host([type="success"]) #error {
+            display: none;
+        }
+        
+        :host([active]) {
+            display: block;
+        }
+        
+        :host([type="error"]) {
+            background: var(--error-color, #da4646);
+        }
+
+        :host([type="success"]) {
+            background: var(--success-color, #7fad4d);
+        }
+        
+        :host([type="warn"]) {
+            background: var(--notify-color, #e3b255);
+        }
+        
+        </style>
+        <div id="body" class="layout horizontal">
+            <div>   
+                <iron-icon id="error" icon="[[errorIcon]]"></iron-icon>
+                <iron-icon id="done" icon="[[successIcon]]"></iron-icon>
+            </div>
+            <div class="flex message">{{message}}</div>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+
+    is: 't-notify',
+
+    behaviors:[TravelNxt.Behaviors.CheckViewport],
+    properties: {
+
+        /*Set this property to true to show the notification*/
+        active: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: false
+        },
+
+        /*Set this property to error, warn or success*/
+        type: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'error'
+        },
+        
+        /*Set the message of the notification*/
+        message: {
+            type: String,
+            value: ''
+        },
+        
+        /*Set the errorIcon of the notification*/
+        errorIcon: {
+            type: String,
+            value: 'error'
+        },
+        
+        /*Set the succesIcon of the notification*/
+        successIcon: {
+            type: String,
+            value: 'done'
+        }
+    },
+
+    observers: [
+        'scrollInView(active)'
+    ],
+
+    scrollInView: function(active) {
+        if(!active){
+        	return ;
+        }
+        if(!this.isElementInViewport(this)){
+        	this.scrollIntoView();
+        }
+    }
+
+});
+</script>

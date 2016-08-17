@@ -1,0 +1,430 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-shared-components/jquery.html">
+
+<link rel="import" href="colorpicker-dependency.html">
+<!-- <link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../paper-material/paper-material.html">
+`t-colorpicker` is a polymer component which lets the user choose a color. The color picker is built on top of spectrum.js
+ 
+ Follow this url for further assitance http://github.com/bgrins/spectrum
+  Note:Show Input and Initial
+  If you specify both the showInput and showInitial options, the CSS keeps things in order by wrapping the buttons to the bottom row, and shrinking the input. Note: this is all customizable via CSS.
+
+Example:
+
+    <t-colorpicker label="Select one"></t-colorpicker>
+-->
+
+<dom-module id="t-colorpicker">
+<link rel="import" type="css" href="colorpicker.css">
+
+
+  <template>
+    <label id="label">{{label}}</label>
+    <div class="containerColor">
+      <input id="color" value="{{value}}" />
+      <span id="colorContainer"></span>
+      <span id="val" on-click="show">{{value}}</span>
+    </div>
+  </template>
+
+</dom-module>
+
+<script>
+  Polymer({
+    is: 't-colorpicker',
+
+    properties: {
+    
+    /**
+     * Name property
+    */
+    name: {
+      type: String,
+      value: '',
+      reflectToAttribute: true
+    },
+    
+      /**
+      *label:  Text
+      */
+      label: {
+        type:String,
+        reflectToAttribute:true,
+        value:'Pick a color'
+      },
+
+      /**
+       * No label float is to make the label either on the body or on the top.
+       */
+      noLabelFloat: {
+        type:Boolean,
+        reflectToAttribute:true,
+        value:false
+      },
+    
+      /**
+       * The initial color will be set with the color option. If you don't pass in a color, Spectrum will use the value attribute on the input.
+  The color parsing is based on the TinyColor plugin. This should parse any color string you throw at it.
+       */
+      color: {
+        type:String,
+        value:'#000000',
+        observer:'_hasColor'
+      },
+
+      /**
+       * Flat This means that it will always show up at full size, and be positioned as an inline-block element. Look to the left for a full sized flat picker.
+       */
+      flat: {
+        type:Boolean,
+        value:false
+      },
+
+
+      /**
+       * You can add an input to allow free form typing. The color parsing is very permissive in the allowed strings. See TinyColor for more details.
+       */
+      showInput: {
+        type:Boolean,
+        value:true  
+      },
+
+
+      /**
+       * Spectrum can show the color that was initially set when opening. This provides an easy way to click back to what was set when opened.
+       */
+      showInitial: {
+        type:Boolean,
+        value:true  
+      },
+
+
+      /**
+       * If you specify both the showInput, showInitial, and allowEmpty options, the CSS keeps things in order by wrapping the buttons to the bottom row, and shrinking the input. Note: this is all customizable via CSS.
+       */
+      allowEmpty: {
+        type:Boolean,
+        value:false
+      },
+
+
+      /**
+       * You can allow alpha transparency selection.
+       */
+      showAlpha: {
+        type:Boolean,
+        value:true
+      },
+
+
+      /**
+       * Spectrum can be automatically disabled if you pass in the disabled flag. Additionally, if the input that you initialize spectrum on is disabled, this will be the default value. Note: you cannot enable spectrum if the input is disabled (see below).
+       */
+      disabled: {
+        type:Boolean,
+        value:false,
+        reflectToAttribute:true,
+        notify:true,
+        observer:'_changeState'
+      },
+
+
+      /**
+       * If the localStorageKey option is defined, the selection will be saved in the browser's localStorage object
+       */
+      localStorageKey: {
+        type:String
+      },
+
+
+      /**
+       * Spectrum can show a palette below the colorpicker to make it convenient for users to choose from frequently or recently used colors. When the colorpicker is closed, the current color will be added to the palette if it isn't there already.
+       */
+      showPalette: {
+        type:Boolean,
+        value:false
+      },
+
+
+      /**
+       * If you'd like, spectrum can show the palettes you specify, and nothing else.
+       */
+      showPaletteOnly: {
+        type:Boolean,
+        value:false
+      },
+
+
+      /**
+       *Spectrum can show a button to toggle the colorpicker next to the palette. This way, the user can choose from a limited number of colors in the palette, but still be able to pick a color that's not in the palette.
+       */
+      togglePaletteOnly: {
+        type:Boolean,
+        value:false
+      },
+
+      /**
+       *You can have the colorpicker automatically hide after a palette color is selected.
+       */
+      hideAfterPaletteSelect: {
+        type:Boolean,
+        value:false
+      },
+
+      /**
+       * Spectrum can keep track of what has been selected by the user with the showSelectionPalette option..
+       */
+      showSelectionPalette: {
+        type:Boolean,
+        value:true
+      },
+
+
+      /**
+       * When clicking outside of the colorpicker, you can force it to fire a change event rather than having it revert the change. This is true by default.
+       */
+      clickoutFiresChange: {
+        type:Boolean,
+        value:true
+      },
+
+
+      /**
+       * You can set the button's text using cancelText and chooseText properties.
+       */
+      cancelText: {
+        type:String,
+        value: "cancelText"
+      },
+
+
+      /**
+       * You can set the button's text using cancelText and chooseText properties.
+       */
+      appendTo: {
+        type:String,
+        value: "#colorContainer"
+      },
+
+      /**
+       * You can set the button's text using cancelText and chooseText properties.
+       */
+      chooseText: {
+        type:String,
+        value: "chooseText"
+      },
+
+
+      /**
+       * You can also change the text on the Toggle Button with the options togglePaletteMoreText (default is "more") .
+       */
+      togglePaletteMoreText: {
+        type:String,
+        value:'more'
+      },
+
+
+      /**
+       * You can also change the text on the Toggle Button with the options togglePaletteLessText (default is "less").
+       */
+      togglePaletteLessText: {
+        type:String,
+        value:'less'
+      },
+
+
+      /**
+       * You can add an additional class name to the just the container element using the containerClassName property.
+       */
+      containerClassName: {
+        type:String
+      },
+
+
+      /**
+       * You can add an additional class name to just the replacer element using the replacerClassName property.
+       */
+      replacerClassName: {
+        type:String
+      },
+
+
+      /**
+       * You can set the format that is displayed in the text box. This will also change the format that is displayed in the titles from the palette swatches.
+       "hex","hex3","hsl","rgb","name", and none 
+       */
+      preferredFormat: {
+        type:String,
+        value:"hex"
+      },
+
+
+      /**
+       * This is how many elements are allowed in the selectionPallete at once.
+  Elements will be removed from the palette in first in - first out order if this limit is reached.
+       */
+      maxSelectionSize:{
+        type:Number
+      },
+
+
+      /**
+       * This attribute will put the format of the date selected in the place holder.
+       */
+      palette:{
+        type:Array
+      },
+
+
+      /**
+       * The default values inside of the selection palette. Make sure that showSelectionPalette and showPalette are both enabled.
+       */
+      selectionPalette: {
+        type:Array
+      },
+
+      /**
+       * The default values inside of the selection palette. Make sure that showSelectionPalette and showPalette are both enabled.
+       */
+      value: {
+        type:String,
+        value:"",
+        reflectToAttribute:true,
+        notify:true
+      }
+
+    },
+
+    attached:function(){
+      this._initiate();
+    },
+
+    ready:function(){
+      this._initiate();
+    },
+
+    _hasColor:function(){
+      if(this.color.length>0){
+        this.value = this.color;
+      }
+      this._initiate();
+    },
+    //to initiate the color picker...    
+    _initiate: function(){
+
+      var component = this;
+
+      var pickerSettings={
+
+          color: this.color,
+
+          flat: this.flat,
+
+          showInput: this.showInput,
+
+          hideAfterPaletteSelect: this.hideAfterPaletteSelect,
+
+          showInitial: this.showInitial,
+
+          allowEmpty: this.allowEmpty,
+
+          showAlpha: this.showAlpha,
+
+          disabled: this.disabled,
+
+          localStorageKey: this.localStorageKey,
+
+          showPalette: this.showPalette,
+
+          showPaletteOnly: this.showPaletteOnly,
+
+          togglePaletteOnly: this.togglePaletteOnly,
+
+          showSelectionPalette: this.showSelectionPalette,
+
+          clickoutFiresChange: this.clickoutFiresChange,
+
+          appendTo: this.appendTo,
+
+          togglePaletteMoreText: this.togglePaletteMoreText,
+
+          togglePaletteLessText: this.togglePaletteLessText,
+
+          containerClassName: this.containerClassName,
+
+          replacerClassName: this.replacerClassName,
+
+          preferredFormat: this.preferredFormat,
+
+          maxSelectionSize: this.maxSelectionSize,
+
+          palette: this.palette,
+
+          selectionPalette: this.selectionPalette,
+
+          change: function(color) {
+              //this.fire('color-selected');
+              
+          },
+
+          move: function(color) {
+              //this.fire('color-changed');
+          },
+
+          hide: function(color) {
+            component.value = $(this).val();
+            component.fire('color-selected');
+            /*if(component.noLabelFloat && component.value.length>0){
+              $('#label').hide();
+            }*/
+          }
+          
+      };
+      //console.log($(this.$.color))
+      $(this.$.color).spectrum(pickerSettings)
+      //alert(1);
+      //this._instance = this._input.spectrum(pickerSettings);
+      //this.picker = this._input.spectrum('picker');
+    },
+
+    show: function(){
+      $(this.$.color).spectrum('show');
+    },
+
+    /*
+    * Private method to clear the value
+    */
+    hide: function(){
+      $(this.$.color).spectrum('hide');
+    },
+
+    /*
+    * Public method to toggle the picker
+    */
+    toggle: function(){
+      $(this.$.color).spectrum('toggle');
+    },
+
+    /*
+    * Private method to toggle the state of the picker
+    */
+    _changeState: function(){
+      if(this.disabled){
+        $(this.$.color).spectrum('disable');
+      }else{
+        $(this.$.color).spectrum('enable');
+      }
+    },
+
+    /**
+     * Function to validate if the date is selected
+     */
+     
+    validate:function(){
+      return true;
+    }
+
+  });
+</script>

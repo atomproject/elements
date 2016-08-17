@@ -1,0 +1,39 @@
+{
+    "name": "Register or Sign Up",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "emailId": {
+                    "name": "emailId",
+                    "type": "string"
+                },
+                "firstName": {
+                    "name": "firstName",
+                    "type": "string"
+                },
+                "lastName": {
+                    "name": "lastName",
+                    "type": "string"
+                },
+                "minAge": {
+                    "name": "minAge",
+                    "type": "number",
+                    "value": 11
+                },
+                "password": {
+                    "name": "password",
+                    "type": "string"
+                },
+                "policiesUrl": {
+                    "name": "policiesUrl",
+                    "type": "string"
+                },
+                "termsUrl": {
+                    "name": "termsUrl",
+                    "type": "string"
+                }
+            }
+        }
+    ]
+}

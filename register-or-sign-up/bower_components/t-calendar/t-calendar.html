@@ -1,0 +1,326 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-input/iron-input.html">
+<link rel="import" href="../paper-material/paper-material.html">
+<link rel="import" href="../t-shared-components/jquery.html">
+<link rel="import" href="calendar-dependency.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="../paper-input/paper-input-behavior.html">
+<link rel="import" href="../paper-input/paper-input-error.html">
+<link rel="import" href="../t-input/t-input-container.html">
+<!--
+`t-calendar` is a polymer component which lets the user choose a date. The date picker is built on top of pickadate.js
+ 
+ Follow this url for further assitance http://amsul.ca/pickadate.js/date/
+
+Example:
+
+    <t-calendar label="Select one"></t-calendar>
+-->
+<dom-module id="t-calendar">
+    <link rel="import" type="css" href="date.css">
+    <template>
+        <t-input-container id="inputContainer" no-label-float="[[noLabelFloat]]" disabled$="[[disabled]]" invalid="[[invalid]]">
+            <label hidden$="[[!label]]">[[label]]</label>
+            <div style="width:100%">
+            <input  is="iron-input"  id="input"
+                bind-value="{{selectedDate}}">
+            </div>
+            <template is="dom-if" if="[[errorMessage]]">
+                <paper-input-error class="error" invalid="[[invalid]]">[[errorMessage]]</paper-input-error>
+            </template>
+         </t-input-container>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: 't-calendar',
+
+    properties: {
+
+        
+        /**
+         * Check is the component is required
+         */
+         required:Boolean,
+        
+        /**
+         * This attribute will return the selected date
+         */
+        selectedDate: {
+            type: String,
+            value: '',
+            reflectToAttribute: true,
+            notify: true,
+            observer: '_floatedLabel'
+        },
+
+        /**
+         * errorMessage is to put the error msg
+         */
+        errorMessage: {
+            type: String,
+            reflectToAttribute: true,
+            value: 'Please select a date!'
+        },
+
+        /**
+         * This attribute will put the format of the date selected in the place holder.
+         *@default: dddd, dd mmm, yyyy
+         */
+        format: {
+            type: String,
+            value: 'dddd, dd mmm, yyyy',
+            reflectToAttribute: true,
+            notify: true
+        },
+
+
+        /**
+         * This attribute will put the submit format of the date selected in the place holder.
+         *@default: yyyy,mm,dd
+         */
+        submitFormat: {
+            type: String,
+            value: 'yyyy,mm,dd',
+            notify: true
+        },
+
+        /**
+         * Pass the array of dates to be disabled
+         *@default: null
+         */
+        disabledDates: {
+            type: Array,
+            value: function() {
+                return null;
+            },
+            notify: true,
+            observer: '_setDisableDates'
+        },
+
+      
+        /**
+         * picker object will help you pass further methods
+         */
+        picker: Object,
+
+        _input: Object,
+
+        /**
+         * This is an object to put further methods on it.
+         */
+        _instance: Object,
+
+        /**
+         * This is an object to put further methods on it.
+         */
+        isDob: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true,
+            observer: '_manageRange'
+        },
+
+        min: {
+            type: Object,
+            value: function() {
+                return null;
+            },
+            notify: true
+
+        },
+
+        max: {
+            type: Object,
+            value: function() {
+                return null;
+            },
+            notify: true
+        },
+
+        _date: {
+            type: Object,
+            notify: true,
+            observer: '_dateFromObject'
+        },
+
+        /**
+         * Set to true to disable the floating label. The label disappears when the input value is
+         * not null.
+         */
+        noLabelFloat: {
+            type: Boolean,
+            value: false
+        },
+
+        /**
+         * True if the input is invalid. This property is set automatically when the input value
+         * changes if auto-validating, or when the `iron-input-valid` event is heard from a child.
+         */
+        invalid: {
+            type: Boolean,
+            reflectToAttribute:true,
+            value: false
+        },
+
+        /**
+         * The label for this input. If you're using PaperInputBehavior to
+         * implement your own paper-input-like element, bind this to
+         * `<label>`'s content and `hidden` property, e.g.
+         * `<label hidden$="[[!label]]">[[label]]</label>` in your `template`
+         */
+        label: {
+            type: String,
+            value: 'Select Date'
+        },
+    },
+
+    attached: function() {
+        this._initiate();
+        this._changeMinMax();
+        this.$.inputContainer.fireBlur = false;
+    },
+
+    _getMinMax: function() {
+        var range = {};
+        range.min = (this.min === null) ? true : this.min;
+        range.max = (this.max === null) ? false : this.max;
+
+        return range;
+    },
+
+    _dateFromObject: function() {
+        if (this.picker !== undefined) {
+            this.picker.set('select', this._date);
+            this.selectedDate = this.picker.get('select', this.format);
+        }
+    },
+
+    _changeMinMax: function() {
+        if (!this.min) {
+            this.min = new Date();
+            this.min.setFullYear(this.min.getFullYear() - 120);
+            if (this.max !== null) this.picker.set('max', this.max);
+        } else {
+            this.picker.set('min', this.min);
+            if (this.max !== null) this.picker.set('max', this.max);
+        }
+    },
+
+
+    //to initiate the date picker...  
+
+    _initiate: function() {
+        this._input = $(this.$.input);
+        var component = this;
+        // component.disabledDates=[[2015,8,12]];
+
+        var pickerSettings = {
+            component: this,
+            labelMonthNext: 'Go to the next month',
+            labelMonthPrev: 'Go to the previous month',
+            labelMonthSelect: 'Pick a month from the dropdown',
+            labelYearSelect: 'Pick a year from the dropdown',
+            weekdaysShort: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+            today: "",
+            clear: "",
+            close: "",
+            //selectMonths: true,
+            //selectYears: true,
+            format: component.format,
+            closeOnSelect: true,
+            selectMonths: component.isDob,
+            onOpen: function() {
+                component.opened  = true;
+            },
+            onClose: function() {
+                component.opened = false;
+                component.selectedDate = component.$.input.value;
+                $(document.activeElement).blur();
+                component.validate();
+                /*;
+                if (component._input.val() !== "") {
+                    component._input.addClass('yes-value').siblings('i').addClass('active');
+                } else {
+                    component._input.removeClass('yes-value').siblings('i').removeClass('active');
+                }*/
+            }
+        };
+
+        var range = this._getMinMax();
+        pickerSettings.selectYears = this.isDob ? 110 : false;
+        pickerSettings.min = range.min;
+        pickerSettings.max = range.max;
+        this._instance = this._input.pickadate(pickerSettings);
+        this.picker = this._input.pickadate('picker');
+    },
+
+    _setDisableDates: function() {
+        if (this.picker !== undefined) this.picker.set('disable', this.disabledDates);
+    },
+
+    _manageRange: function() {
+        var currentDate = new Date();
+        if (this.isDob) {
+
+            this.max = new Date();
+            this._initiate();
+        }
+    },
+
+    /*
+     * Private method to clear the value
+     */
+    _clear: function() {
+        this.picker.clear();
+        this.selectedDate = "";
+        this.$.input.value = "";
+    },
+
+
+    /*
+     * Private method to clear the value
+     */
+    _floatedLabel: function(newValue, oldValue) {
+        /*if (this.selectedDate.length > 0) {
+            this.classList.add('label-is-floating');
+        } else {
+            this.classList.remove('label-is-floating');
+        }
+*/
+        //component load condition
+        //patch ATOM-501 added picker as a condition
+        if (!this.picker) {
+            return;
+        }
+        if (!newValue && !oldValue) {
+            return;
+        }
+        //break loop condition 
+        if (newValue && oldValue && newValue == oldValue)
+            return;
+
+        this.picker.set('select', newValue, {
+            format: this.format
+        });
+
+    },
+    /**
+     * Function to validate if the date is selected
+     */
+    validate: function() {
+        if (this.required) {
+            if (this.selectedDate && this.selectedDate.length > 0) {
+                $(this).find('t-input-container').removeClass('invalid-input');
+                this.invalid = false;
+                return true;
+            }
+                $(this).find('t-input-container').addClass('invalid-input');
+                this.invalid = true;
+            return false;
+        }
+    }
+
+});
+</script>

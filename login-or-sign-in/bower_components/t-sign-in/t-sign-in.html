@@ -1,0 +1,120 @@
+<link rel="import" href="../polymer/polymer.html" />
+<link rel="import" href="../t-input/t-input.html" />
+<link rel="import" href="../t-button/t-button.html">
+<link rel="import" href="../t-text-container/travel-element-styles.html">
+<link rel="import" href="../t-notify/t-notify.html">
+<dom-module id="t-sign-in">
+    <template>
+        <style include="travel-element-styles">
+        :host {
+            font-family: var(--primary-font-family, 'Open sans');
+            font-size: var(--font-12, 12px);
+        }
+        
+        :host,
+        #login,
+        #forgotPassword {
+            display: block;
+        }
+        </style>
+        <t-notify id="notify" message="" type="error"></t-notify>
+        <div class="section">
+            <t-input class="margin-bottom-medium" id="username" value="{{username}}" label="Username" error-message="You missed this." required></t-input>
+            <t-input class="margin-bottom-medium" id="password" value="{{password}}" label="Password" type="password" error-message="You missed this." required></t-input>
+            <a href="javascript:void(0)" id="forgotPassword" on-click="_fgtPwdClick" class="link-style margin-bottom-medium">Forgot your password?</a>
+            <t-button id="login" class="primary block margin-bottom" noink label="Sign In" on-click="authenticate"></t-button>
+            <div class="secondary-text">Don't have an account yet? <a href="javascript:void(0)" on-click="_signUpClick" class="link-style">Sign up</a></div>
+        </div>
+    </template>
+</dom-module>
+<script>
+Polymer({
+    is: "t-sign-in",
+
+    properties: {
+        /*
+        Username
+         */
+        username: {
+            type: String,
+            notify: true
+        },
+
+        /*
+        Password
+         */
+        password: {
+            type: String,
+            notify: true
+        }
+
+    },
+
+    attached: function() {
+
+    },
+
+    /*
+    Triggers t-sign-in-authenticate event if data validations are passed. 
+    API component should listen to this event and authenticate user.
+     */
+    authenticate: function() {
+        if (this.validate() && !this.$.login.disabled) {
+            this.fire('t-sign-in-authenticate', {
+                username: this.username,
+                password: this.password
+            });
+            this.$.login.label = "Signing in...";
+            this.$.login.disabled = true;
+        }
+    },
+
+    /*
+    Validates username and password 
+     */
+    validate: function() {
+        var valid = this.$.username.validate();
+        valid = this.$.password.validate() && valid;
+        return valid;
+    },
+
+    /*
+    Callback for api component success event handler
+     */
+    onAuthenticateSuccess: function(e) {
+        this.$.notify.active = false;
+    },
+
+    /*
+    Callback for api component error event handler
+     */
+    onAuthenticateError: function(e) {
+        this.$.notify.active = true;
+        this.$.notify.message = e.detail.message;
+        this.$.login.label = "Sign In";
+        this.$.login.disabled = false;
+    },
+
+    /*
+    Forgot password link action handler
+     */
+    _fgtPwdClick: function() {
+        this.fire('t-sign-in-forgot-password');
+    },
+
+    /*
+    Sign up link action handler
+     */
+    _signUpClick: function() {
+        this.fire('t-sign-in-sign-up');
+    },
+
+    /**
+     * Event for api component to listen and authenticate user. Fired on login button click action or 'authenticate' API call
+     *
+     * @event t-sign-in-authenticate
+     * @param {{username:string, password:string}} 
+     */
+
+});
+</script>

@@ -1,0 +1,304 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-input/t-input-container.html">
+<link rel="import" href="../paper-input/paper-input-error.html">
+<link rel="import" href="../iron-form-element-behavior/iron-form-element-behavior.html">
+<link rel="import" href="../paper-input/paper-input-behavior.html">
+<!--
+`t-dropdown-menu` is similar to a native browser select element.
+`t-dropdown-menu` works with selectable content. The currently selected-tem is displayed in the control. If no item is selected, the `label` is
+displayed instead.
+
+There are 3 ways you can populate the dropdown.
+<h3>1. Passing Array of strings</h3>
+
+By passing an array of strings in dropdown array. In that case the string will be set to both label and value of the option.
+
+<h3>2. Passing Array of Objects</h3>
+
+By passing an array of objects in dropdown array. You have to provide additional labelKey value in the dropdown. In that case the respective value of the key will be set to both label and value of the option. And you can also pass valueKey if its different from label. 
+
+<h3>3. Passing content as dropdown-item</h3>
+
+You can pass content in <dropdown-item></dropdown-item>
+
+          '<t-dropdown label="Dinosaurs" required >
+                <dropdown-item value="some">1 <span>22</span></dropdown-item>
+                <dropdown-item>2</dropdown-item>
+                <dropdown-item>3</dropdown-item>
+          </t-dropdown>'
+
+
+@demo demo/index.html
+-->
+<dom-module id="t-dropdown">
+    <template>
+        <style>
+        :host {
+            display: block;
+            min-width: 100px;
+            width: 100%;
+            position: relative;
+            outline: 0;
+        }
+        #inner-content{
+            width: 100%;
+        }
+        select{
+            padding-right: 20px;
+        }
+        select::-ms-expand {
+            display: none;
+        }
+        .arrow{
+            content: '';
+            position: absolute;
+            right: 5px;
+            bottom: 10px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-top: 6px solid var( --form-label-color, #777);
+            clear: both;
+        }
+        </style>
+        <t-input-container id="container" fire-blur="{{validateOnBlur}}" no-label-float="[[noLabelFloat]]" always-float-label="[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]]" auto-validate$="[[autoValidate]]" disabled$="[[disabled]]" invalid="[[invalid]]">
+            <label hidden$="[[!label]]">[[label]]</label>
+            <div id="inner-content">
+                <select 
+                    id="input"
+                    class="paper-input-input" 
+                    on-focus="_boundOnFocus"
+                    on-blur="validate"
+                    on-change="_boundOnChange"
+                    disabled$="[[disabled]]"
+                    value$="{{selectedItem}}">
+                </select>
+            </div>
+            <template is="dom-if" if="[[errorMessage]]">
+                <paper-input-error class="error">[[errorMessage]]</paper-input-error>
+            </template>
+        </t-input-container>
+    <div id="contentDiv" hidden>
+        <content id="content" select="*"></content>
+    </div>
+    <div class="arrow"></div>
+    </template>
+</dom-module>
+<script>
+(function() {
+    'use strict';
+
+    Polymer({
+        is: 't-dropdown',
+
+        behaviors: [
+          Polymer.PaperInputBehavior,
+          Polymer.IronFormElementBehavior
+        ],
+
+        properties: {
+
+            /**
+             * The Key of the object you want to set the value with!
+             */
+            valueKey: {
+                type: String,
+                value:''
+            },
+
+            /**
+             * The key of the object, you want to set the label of the options with.
+             */
+            labelKey: {
+                type: String,
+                value:''
+            },
+
+            /**
+             * The last selected item. An item is selected if the dropdown menu has
+             * a child with class `dropdown-content`, and that child triggers an
+             * `iron-select` event with the selected `item` in the `detail`.
+             */
+            selectedItem: {
+                type: String,
+                value:null,
+                notify: true,
+                observer:'_valueChanged'
+            },
+
+            /**
+             * The label for the dropdown.
+             */
+            label: {
+                type: String,
+                value: 'Dropdown'
+            },
+
+            /**
+             * True if the dropdown is opened. Otherwise, false.
+             */
+            opened: {
+                type: Boolean,
+                notify: true,
+                reflectToAttribute: true,
+                value: false
+            },
+
+            /**
+             * True if the dropdown is required. Otherwise, false.
+             */
+            required: {
+                type: Boolean,
+                notify: true,
+                reflectToAttribute: true,
+                value: false
+            },
+
+            /**
+             * errorMessage is to put the error msg
+             */
+            errorMessage: {
+                type: String,
+                reflectToAttribute: true,
+                value: 'Please select a value!'
+            },
+
+            /**
+             * Set to true to disable the floating label. Bind this to the
+             * `<paper-input-container>`'s `noLabelFloat` property.
+             */
+            noLabelFloat: {
+                type: Boolean,
+                value: false,
+                reflectToAttribute: true
+            },
+
+            /**
+             * Set to true to always float the label. Bind this to the
+             * `<paper-input-container>`'s `alwaysFloatLabel` property.
+             */
+            alwaysFloatLabel: {
+                type: Boolean,
+                value: false
+            },
+
+            /**
+             * Set the array to be itterated 
+             */
+            dropdownArray: {
+                type: Array,
+                notify:true,
+                value:function(){return [];},
+                observer: '_populateDropdown'
+            }
+
+        },
+
+        _populateDropdown: function(){
+            var dropdownArray = this.dropdownArray,
+            comp = this;
+            if(dropdownArray.length > 0){
+                var select = this.$.input;
+                this._setFirstOption(select);
+                    if(typeof dropdownArray[0] == 'string'){
+                        for(var x = 1 ; x < dropdownArray.length + 1 ; x++){
+                            select.options[x] = new Option(dropdownArray[x - 1], dropdownArray[x - 1]);
+                        }
+                    }else{
+                        if(!comp.valueKey || !comp.labelKey){
+                            console.warn('Please mention the keys to bind for label and value of your array of objects!');
+                            return;
+                        }
+                        for(var x = 1 ; x < dropdownArray.length + 1 ; x++){
+                            select.options[x] = new Option(dropdownArray[x - 1][comp.labelKey], dropdownArray[x - 1][comp.valueKey]);
+                        }
+                    }
+            }else{
+                this._populateWithContent();
+            }
+            //debugger;
+        },
+
+        _setFirstOption: function(select){
+            select.options[0] = new Option('Select ' + this.label);
+            select.options[0].disabled = true;
+        },
+
+        _populateWithContent: function(){
+            var select = this.$.input,
+            contentElements = this.contentElements;
+            if(contentElements.length <= 0){
+                console.warn('Please Provide a dropdownArray or some list of <dropdown-item> inside dropdown!');
+                return;
+            }
+            this._setFirstOption(select);
+            for(var x = 1; x < contentElements.length + 1; x++){
+                var value = contentElements[x - 1].getAttribute('value') || contentElements[x - 1].textContent;
+                select.options[x] = new Option(contentElements[x - 1].textContent, value);
+            }
+        },
+        /**
+         * The content elements that is contained by the dropdown menu, if any.
+         */
+        get contentElements() {
+            return Polymer.dom(this.$.content).getDistributedNodes();
+        },
+
+        _valueChanged: function(){
+            // NOTE(cdata): Due to timing, a preselected value in a `IronSelectable`
+            // child will cause an `iron-select` event to fire while the element is
+            // still in a `DocumentFragment`. This has the effect of causing
+            // handlers not to fire. So, we double check this value on attached:
+            var contentElement = this.$.input,
+                selectedItem = this.selectedItem,
+                component = this;
+            setTimeout(function() {
+                if (contentElement && selectedItem) {
+                    contentElement.value = selectedItem;
+                } else if (contentElement) {
+                    contentElement.value = null;
+                }
+                component.$.container._handleValue(contentElement);
+            }, 100);
+        },
+
+        _boundOnFocus: function(){
+            this.opened = true;
+        },
+
+        _boundOnChange: function(target){
+            this.selectedItem = this.$.input.value;
+            this.$.container._handleValue(target);
+        },
+
+        //function to clear the value of the dropdown
+        clear: function(){
+            this.selectedItem = null;
+        },
+
+        //function to validate the select box and return boolean
+        validate: function() {
+            this.opened = false;
+
+            if (this.required && !this.hidden && this.$.input.value == ''){
+                this.$.container.invalid = true;
+                this.$.container.classList.add('invalid-input');
+                return false;
+            }
+            this.$.container.invalid = false;
+            this.$.container.classList.remove('invalid-input');
+            return true;
+        }
+    });
+})();
+</script>
