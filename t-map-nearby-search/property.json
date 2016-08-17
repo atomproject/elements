@@ -1,0 +1,58 @@
+{
+    "name": "Map Nearby Search",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "auto": {
+                    "name": "auto",
+                    "type": "boolean",
+                    "value": false
+                },
+                "getPaginatedResults": {
+                    "name": "getPaginatedResults",
+                    "type": "boolean",
+                    "value": false
+                },
+                "globalSearch": {
+                    "name": "globalSearch",
+                    "type": "boolean",
+                    "value": false
+                },
+                "keyword": {
+                    "name": "keyword",
+                    "type": "string",
+                    "value": null
+                },
+                "latitude": {
+                    "name": "latitude",
+                    "type": "number",
+                    "value": null
+                },
+                "longitude": {
+                    "name": "longitude",
+                    "type": "number",
+                    "value": null
+                },
+                "map": {
+                    "name": "map",
+                    "type": "object"
+                },
+                "radius": {
+                    "name": "radius",
+                    "type": "number",
+                    "value": null
+                },
+                "results": {
+                    "name": "results",
+                    "type": "object"
+                },
+                "types": {
+                    "name": "types",
+                    "type": "string",
+                    "value": null
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,20 @@
+{
+    "name": "Scaffold",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "responsiveWidth": {
+                    "name": "responsiveWidth",
+                    "type": "string",
+                    "value": ": 1280px"
+                },
+                "scaffoldType": {
+                    "name": "scaffoldType",
+                    "type": "string",
+                    "value": ": simple"
+                }
+            }
+        }
+    ]
+}

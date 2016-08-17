@@ -1,0 +1,24 @@
+{
+    "name": "Data Source",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "params": {
+                    "name": "params",
+                    "type": "string",
+                    "value": ""
+                },
+                "response": {
+                    "name": "response",
+                    "type": "object"
+                },
+                "url": {
+                    "name": "url",
+                    "type": "string",
+                    "value": ""
+                }
+            }
+        }
+    ]
+}

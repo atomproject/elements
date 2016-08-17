@@ -1,0 +1,71 @@
+{
+    "name": "Dropdown Menu",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "alwaysFloatLabel": {
+                    "name": "alwaysFloatLabel",
+                    "type": "boolean",
+                    "value": false
+                },
+                "contentElement": {
+                    "name": "contentElement",
+                    "type": "object"
+                },
+                "errorMessage": {
+                    "name": "errorMessage",
+                    "type": "string",
+                    "value": "Please select a value!"
+                },
+                "horizontalAlign": {
+                    "name": "horizontalAlign",
+                    "type": "string",
+                    "value": "right"
+                },
+                "keyBindings": {
+                    "name": "keyBindings",
+                    "type": "object"
+                },
+                "label": {
+                    "name": "label",
+                    "type": "string"
+                },
+                "noAnimations": {
+                    "name": "noAnimations",
+                    "type": "boolean",
+                    "value": false
+                },
+                "noLabelFloat": {
+                    "name": "noLabelFloat",
+                    "type": "boolean",
+                    "value": false
+                },
+                "opened": {
+                    "name": "opened",
+                    "type": "boolean",
+                    "value": false
+                },
+                "placeholder": {
+                    "name": "placeholder",
+                    "type": "string"
+                },
+                "required": {
+                    "name": "required",
+                    "type": "boolean",
+                    "value": false
+                },
+                "verticalAlign": {
+                    "name": "verticalAlign",
+                    "type": "string",
+                    "value": "top"
+                },
+                "verticalAlignTop": {
+                    "name": "verticalAlignTop",
+                    "type": "boolean",
+                    "value": false
+                }
+            }
+        }
+    ]
+}

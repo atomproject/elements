@@ -1,0 +1,25 @@
+{
+    "name": "Checkbox",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "checkboxRight": {
+                    "name": "checkboxRight",
+                    "type": "boolean",
+                    "value": false
+                },
+                "checked": {
+                    "name": "checked",
+                    "type": "boolean",
+                    "value": false
+                },
+                "toggles": {
+                    "name": "toggles",
+                    "type": "boolean",
+                    "value": true
+                }
+            }
+        }
+    ]
+}

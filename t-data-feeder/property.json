@@ -1,0 +1,19 @@
+{
+    "name": "Data Feeder",
+    "properties": [
+        {
+            "name": "Properties",
+            "fields": {
+                "data": {
+                    "name": "data",
+                    "type": "object"
+                },
+                "placeholder": {
+                    "name": "placeholder",
+                    "type": "string",
+                    "value": "Add Item"
+                }
+            }
+        }
+    ]
+}
